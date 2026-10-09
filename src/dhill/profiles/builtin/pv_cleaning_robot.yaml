@@ -1,0 +1,105 @@
+# Illustrative waterless PV-cleaning robot (about 35 kg, DEWA-study weight class). NOT a real product.
+# Operates on module surfaces that follow the NOCT relation, so its underside sees a hot surface.
+schema_version: 1
+id: pv_cleaning_robot
+name: PV-cleaning robot (illustrative)
+description: >
+  Low-profile dry-cleaning robot that crawls on solar module surfaces. Aluminium
+  body, brush payload, no LiDAR (edge and obstacle sensors only), passive cooling.
+  The supporting surface is a PV module, hotter than sand or pavement in full sun.
+category: pv-cleaning
+evidence_level: L0
+
+parameters:
+  geometry:
+    _source: assumption
+    _rel_sigma: 0.03
+    length_m: 0.9
+    width_m: 0.5
+    height_m: 0.18
+    char_length_m: 0.9
+  surface:
+    _source: assumption
+    alpha_clean: {value: 0.40, source: textbook, note: "Aluminium-grey coating"}
+    alpha_dust: {value: 0.68, note: "Dust-coated surface"}
+    emissivity: 0.80
+    dust_m0_g_m2: 2.0
+  shell:
+    heat_capacity_j_k: {value: 9000, note: "About 10 kg aluminium body"}
+  interior:
+    heat_capacity_j_k: {value: 12000, note: "Brush assembly, frame and enclosed air"}
+  battery:
+    heat_capacity_j_k: 3500
+    cells_series: {value: 7, source: datasheet, rel_sigma: 0}
+    cells_parallel: {value: 4, source: datasheet, rel_sigma: 0}
+    cell_capacity_ah: {value: 5.0, source: datasheet}
+    cell_resistance_25c_ohm: 0.025
+    resistance_ea_j_mol: 20000
+    ocv_v0: 3.40
+    ocv_slope: 0.75
+    max_discharge_c_rate: 1.5
+    ageing_ea_j_mol: {value: 50000, source: textbook}
+  compute:
+    heat_capacity_j_k: 120
+    nominal_power_w: 6
+    min_power_fraction: 0.7
+    die_rise_k_per_w: 1.2
+  lidar:
+    heat_capacity_j_k: 60
+    power_w: 1.0
+    exposed_area_m2: 0.004
+    alpha: 0.8
+    range_clear_m: 3.0
+  motors:
+    heat_capacity_j_k: 1500
+    loss_fraction_in_motor: 0.6
+    drive_efficiency: 0.65
+  coupling:
+    ua_shell_interior_w_k: 5
+    ua_battery_interior_w_k: 2.5
+    ua_compute_interior_w_k: 0.8
+    ua_lidar_interior_w_k: 0.1
+    ua_lidar_ambient_w_k: 0.15
+    ua_motors_interior_w_k: 0.6
+    ua_motors_ambient_w_k: 1.5
+    h_bottom_w_m2k: {value: 25.0, note: "Belt and wheel contact with the module surface plus radiative exchange"}
+    vent_flow_m3_s: 0.0
+    filter_ref_g_m2: 5.0
+  power:
+    comms_w: 2
+    standby_w: 2
+    dcdc_efficiency: {value: 0.92, source: datasheet}
+    payload_heat_fraction: 0.4
+  cooling:
+    capacity_w: 0
+  perception:
+    nominal_speed_ms: 0.2
+    decel_ms2: 2.0
+    reaction_s: 0.3
+    margin_m: 0.2
+  environment:
+    _source: assumption
+    albedo: {value: 0.20, source: textbook, note: "Module glass and surroundings"}
+    ground_rise_k_per_kw_m2: {value: 31, source: textbook, note: "PV module NOCT relation: (45-20)/800 K per W/m2"}
+    wind_exponent: 0.2
+    deposition_velocity_m_s: 0.004
+    rain_clear_mm_h: 1.0
+    mass_ext_eff_m2_g: 0.7
+
+limits:
+  battery: {limit_c: 60, margin_k: 5, source: datasheet, note: "Cell discharge limit 60 degC (Samsung INR21700-50E datasheet)"}
+  compute_die: {limit_c: 99, margin_k: 14, source: assumption, note: "Embedded controller assumed similar to a 99 degC throttle class"}
+  lidar: {limit_c: 70, margin_k: 5, source: assumption, note: "Edge and obstacle sensors, not a spinning LiDAR"}
+  motor: {limit_c: 130, margin_k: 15, source: assumption}
+  interior: {limit_c: 75, margin_k: 3, source: assumption}
+
+modes:
+  drive: {mech_w: 30}
+  work: {mech_w: 25, payload_w: 30}
+  idle: {mech_w: 0}
+
+operations:
+  soc_reserve: 0.15
+  soc_start: 0.95
+  min_scale: 0.3
+  risk_quantile: 0.95

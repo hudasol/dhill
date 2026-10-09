@@ -1,0 +1,109 @@
+# Illustrative medium inspection UGV (about 150 kg class). NOT a real product.
+# Evidence level L0: most values are textbook figures or explicit assumptions.
+# Replace with datasheet values (L1) and calibrate on telemetry (L2).
+schema_version: 1
+id: ugv_medium_inspection
+name: Medium inspection UGV (illustrative)
+description: >
+  Tracked or wheeled inspection and patrol UGV with a top-mounted LiDAR, an
+  embedded GPU compute module, a 1.5 kWh Li-ion pack and a small active
+  cooling unit. Desert-tan paint. Parameters are illustrative.
+category: ugv
+evidence_level: L0
+
+parameters:
+  geometry:
+    _source: assumption
+    _rel_sigma: 0.03
+    length_m: 1.1
+    width_m: 0.75
+    height_m: 0.55
+    char_length_m: 0.55
+  surface:
+    _source: assumption
+    alpha_clean: {value: 0.55, source: textbook, note: "Light desert-tan paint; textbook absorptance range 0.4-0.6 (verify for the real paint)"}
+    alpha_dust: {value: 0.70, note: "Dust-coated tan surface"}
+    emissivity: {value: 0.90, source: textbook, note: "Paints and plastics 0.90-0.96"}
+    dust_m0_g_m2: 2.0
+  shell:
+    heat_capacity_j_k: {value: 19800, note: "About 22 kg of aluminium and composite panels"}
+  interior:
+    heat_capacity_j_k: {value: 25000, note: "Chassis frame, cabling and enclosed air"}
+  battery:
+    heat_capacity_j_k: {value: 9400, note: "84 cells at about 70 g plus housing"}
+    cells_series: {value: 14, source: datasheet, rel_sigma: 0}
+    cells_parallel: {value: 6, source: datasheet, rel_sigma: 0}
+    cell_capacity_ah: {value: 5.0, source: datasheet, note: "21700 NMC-class cell, Samsung INR21700-50E datasheet"}
+    cell_resistance_25c_ohm: {value: 0.025, note: "DC resistance assumed; datasheet gives AC impedance only"}
+    resistance_ea_j_mol: 20000
+    ocv_v0: {value: 3.40, note: "Linearised OCV curve"}
+    ocv_slope: {value: 0.75, note: "Linearised OCV curve"}
+    max_discharge_c_rate: {value: 1.5, source: datasheet, note: "Cell continuous rating is higher; pack limit chosen conservatively"}
+    ageing_ea_j_mol: {value: 50000, source: textbook, note: "Rule of thumb: ageing roughly doubles per 10 K near 300 K"}
+  compute:
+    heat_capacity_j_k: {value: 800, note: "About 0.9 kg heat-sink block"}
+    nominal_power_w: {value: 45, note: "Embedded GPU module at mission load"}
+    min_power_fraction: 0.5
+    die_rise_k_per_w: {value: 0.35, note: "Die above module node; from thermal design guide class values"}
+  lidar:
+    heat_capacity_j_k: 400
+    power_w: {value: 14, source: datasheet, note: "Typical mid-range spinning/solid-state unit; check the fitted sensor"}
+    exposed_area_m2: 0.02
+    alpha: {value: 0.85, source: textbook, note: "Black plastic housing"}
+    range_clear_m: {value: 40, note: "Reference range for a 10% reflectivity target; verify against datasheet"}
+  motors:
+    heat_capacity_j_k: 3600
+    loss_fraction_in_motor: 0.6
+    drive_efficiency: 0.7
+  coupling:
+    ua_shell_interior_w_k: 14
+    ua_battery_interior_w_k: 5
+    ua_compute_interior_w_k: 4
+    ua_lidar_interior_w_k: 0.4
+    ua_lidar_ambient_w_k: 0.5
+    ua_motors_interior_w_k: 1.0
+    ua_motors_ambient_w_k: 3.0
+    h_bottom_w_m2k: 8.0
+    vent_flow_m3_s: 0.0
+    filter_ref_g_m2: 5.0
+  power:
+    comms_w: 8
+    standby_w: 12
+    dcdc_efficiency: {value: 0.92, source: datasheet}
+    payload_heat_fraction: 0.5
+  cooling:
+    capacity_w: 120
+    cop: 1.2
+    setpoint_c: 45
+    gain_w_k: 15
+  perception:
+    nominal_speed_ms: 1.5
+    decel_ms2: 1.0
+    reaction_s: 0.6
+    margin_m: 3.0
+  environment:
+    _source: assumption
+    albedo: {value: 0.30, source: textbook, note: "Desert sand 0.25-0.40"}
+    ground_rise_k_per_kw_m2: 25
+    wind_exponent: 0.2
+    deposition_velocity_m_s: {value: 0.004, note: "PM10 fixed-velocity value from PV soiling practice"}
+    rain_clear_mm_h: 1.0
+    mass_ext_eff_m2_g: 0.7
+
+limits:
+  battery: {limit_c: 60, margin_k: 5, source: datasheet, note: "Cell discharge limit 60 degC (Samsung INR21700-50E datasheet); charging limit 45 degC"}
+  compute_die: {limit_c: 99, margin_k: 14, source: datasheet, note: "Software throttling at 99 degC on-die (NVIDIA Jetson Orin thermal specification); target 85 degC"}
+  lidar: {limit_c: 55, margin_k: 3, source: datasheet, note: "Operating range to 55 degC (Livox Mid-360 specification), applied to housing temperature"}
+  motor: {limit_c: 140, margin_k: 15, source: assumption, note: "Class F insulation 155 degC less hot-spot allowance"}
+  interior: {limit_c: 70, margin_k: 3, source: assumption, note: "Typical industrial electronics ambient rating"}
+
+modes:
+  drive: {mech_w: 400}
+  work: {mech_w: 300, payload_w: 60}
+  idle: {mech_w: 0}
+
+operations:
+  soc_reserve: 0.15
+  soc_start: 0.95
+  min_scale: 0.3
+  risk_quantile: 0.95
