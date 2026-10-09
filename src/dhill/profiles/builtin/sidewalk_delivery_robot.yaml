@@ -1,0 +1,105 @@
+# Illustrative sidewalk delivery robot (about 35 kg). NOT a real product.
+# Passive cooling with a filtered vent, white body, small LiDAR.
+schema_version: 1
+id: sidewalk_delivery_robot
+name: Sidewalk delivery robot (illustrative)
+description: >
+  Six-wheeled or four-wheeled last-mile delivery robot for residential
+  communities. White body, filtered natural/forced ventilation, no active
+  cooling, embedded GPU compute and a compact LiDAR. Parameters are illustrative.
+category: delivery
+evidence_level: L0
+
+parameters:
+  geometry:
+    _source: assumption
+    _rel_sigma: 0.03
+    length_m: 0.75
+    width_m: 0.55
+    height_m: 0.60
+    char_length_m: 0.60
+  surface:
+    _source: assumption
+    alpha_clean: {value: 0.35, source: textbook, note: "White painted plastic 0.25-0.40"}
+    alpha_dust: {value: 0.62, note: "Dust-coated white surface drifts toward sand colour"}
+    emissivity: {value: 0.92, source: textbook}
+    dust_m0_g_m2: 2.0
+  shell:
+    heat_capacity_j_k: {value: 7200, note: "About 8 kg of plastic and aluminium shell"}
+  interior:
+    heat_capacity_j_k: {value: 9000, note: "Frame, cabling, enclosed air and payload bay"}
+  battery:
+    heat_capacity_j_k: {value: 5200, note: "About 4 kg pack"}
+    cells_series: {value: 10, source: datasheet, rel_sigma: 0}
+    cells_parallel: {value: 4, source: datasheet, rel_sigma: 0}
+    cell_capacity_ah: {value: 5.0, source: datasheet, note: "21700 NMC-class cell, Samsung INR21700-50E datasheet"}
+    cell_resistance_25c_ohm: 0.025
+    resistance_ea_j_mol: 20000
+    ocv_v0: 3.40
+    ocv_slope: 0.75
+    max_discharge_c_rate: 1.5
+    ageing_ea_j_mol: {value: 50000, source: textbook}
+  compute:
+    heat_capacity_j_k: 450
+    nominal_power_w: {value: 22, note: "Embedded GPU module in a mid power mode"}
+    min_power_fraction: 0.55
+    die_rise_k_per_w: 0.4
+  lidar:
+    heat_capacity_j_k: 300
+    power_w: 8
+    exposed_area_m2: 0.012
+    alpha: {value: 0.85, source: textbook}
+    range_clear_m: 25
+  motors:
+    heat_capacity_j_k: 1800
+    loss_fraction_in_motor: 0.6
+    drive_efficiency: 0.7
+  coupling:
+    ua_shell_interior_w_k: 6
+    ua_battery_interior_w_k: 3
+    ua_compute_interior_w_k: 2.5
+    ua_lidar_interior_w_k: 0.3
+    ua_lidar_ambient_w_k: 0.4
+    ua_motors_interior_w_k: 0.6
+    ua_motors_ambient_w_k: 2.0
+    h_bottom_w_m2k: 10.0
+    vent_flow_m3_s: {value: 0.006, note: "Small filtered fan, clean-filter flow"}
+    filter_ref_g_m2: 4.0
+  power:
+    comms_w: 5
+    standby_w: 6
+    dcdc_efficiency: {value: 0.92, source: datasheet}
+    payload_heat_fraction: 0.3
+  cooling:
+    capacity_w: 0
+  perception:
+    nominal_speed_ms: 1.8
+    decel_ms2: 1.2
+    reaction_s: 0.5
+    margin_m: 1.5
+  environment:
+    _source: assumption
+    albedo: {value: 0.25, source: textbook, note: "Concrete and paving 0.2-0.3"}
+    ground_rise_k_per_kw_m2: 30
+    wind_exponent: 0.25
+    deposition_velocity_m_s: 0.004
+    rain_clear_mm_h: 1.0
+    mass_ext_eff_m2_g: 0.7
+
+limits:
+  battery: {limit_c: 60, margin_k: 5, source: datasheet, note: "Cell discharge limit 60 degC (Samsung INR21700-50E datasheet)"}
+  compute_die: {limit_c: 99, margin_k: 14, source: datasheet, note: "Software throttling at 99 degC on-die (NVIDIA Jetson Orin thermal specification); target 85 degC"}
+  lidar: {limit_c: 55, margin_k: 3, source: datasheet, note: "Operating range to 55 degC (Livox Mid-360 class), applied to housing temperature"}
+  motor: {limit_c: 140, margin_k: 15, source: assumption, note: "Class F insulation 155 degC less hot-spot allowance"}
+  interior: {limit_c: 70, margin_k: 3, source: assumption}
+
+modes:
+  drive: {mech_w: 70}
+  work: {mech_w: 60, payload_w: 5}
+  idle: {mech_w: 0}
+
+operations:
+  soc_reserve: 0.15
+  soc_start: 0.95
+  min_scale: 0.3
+  risk_quantile: 0.95
