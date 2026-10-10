@@ -1,0 +1,13 @@
+services:
+  dhill:
+    build: .
+    ports: ["8080:8080"]
+    environment:
+      # DHILL_API_KEY: change-me      # enable to require X-API-Key on /v1
+      DHILL_AUDIT_LOG: /data/audit.jsonl
+    volumes: ["dhill-data:/data"]
+    read_only: true
+    tmpfs: ["/tmp"]
+    security_opt: ["no-new-privileges:true"]
+volumes:
+  dhill-data:
