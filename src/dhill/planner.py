@@ -9,7 +9,7 @@ A naive fixed-shift schedule is evaluated against the same envelope so the benef
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 import numpy as np
 from pydantic import BaseModel
@@ -23,6 +23,7 @@ class Block(BaseModel):
     start_utc: str
     scale: float
     work_hours: float
+    age_equiv_h: float = 0.0
 
 
 class Plan(BaseModel):
@@ -30,6 +31,7 @@ class Plan(BaseModel):
     completed_work_h: float
     demand_work_h: float
     status: str
+    age_equiv_h: float = 0.0
 
 
 class Comparison(BaseModel):
@@ -38,6 +40,7 @@ class Comparison(BaseModel):
     naive_at_risk_blocks: int
     naive_total_blocks: int
     dhill_at_risk_blocks: int = 0
+    ageing_blind: Plan | None = None
 
 
 @dataclass
@@ -47,6 +50,7 @@ class PlannerSpec:
     max_concurrent: int | None = None
     demand_work_h: float = 1e9
     time_penalty: float = 1e-4
+    age_penalty: float = 0.02  # work-hours given up per battery-ageing hour (25 degC equivalent)
 
 
 def _slots_per(hours: float, step_min: float) -> int:
@@ -65,7 +69,10 @@ def plan_fleet(timelines: dict[str, Timeline], spec: PlannerSpec) -> Plan:
     # variables: x[r,t] binary, then z (completed work)
     w = np.array([[s.scale * spec.block_h for s in timelines[r].slots] for r in robots])
     c = np.zeros(n_x + 1)
-    c[:n_x] = (spec.time_penalty * np.arange(n_t)[None, :].repeat(nr, 0)).ravel() * (w > 0).ravel()
+    age = np.array([[s.age_equiv_h for s in timelines[r].slots] for r in robots])
+    c[:n_x] = (
+        spec.time_penalty * np.arange(n_t)[None, :].repeat(nr, 0) + spec.age_penalty * age
+    ).ravel() * (w > 0).ravel()
     c[n_x] = -1.0
     rows, lo, hi = [], [], []
     for r in range(nr):
@@ -113,6 +120,7 @@ def plan_fleet(timelines: dict[str, Timeline], spec: PlannerSpec) -> Plan:
             start_utc=timelines[robots[r]].slots[t].start_utc,
             scale=timelines[robots[r]].slots[t].scale,
             work_hours=float(w[r, t]),
+            age_equiv_h=float(age[r, t]),
         )
         for r in range(nr)
         for t in range(n_t)
@@ -125,6 +133,7 @@ def plan_fleet(timelines: dict[str, Timeline], spec: PlannerSpec) -> Plan:
         completed_work_h=round(min(done, spec.demand_work_h), 3),
         demand_work_h=spec.demand_work_h,
         status="optimal" if res.success else str(res.message),
+        age_equiv_h=round(float(sum(b.age_equiv_h for b in blocks)), 3),
     )
 
 
@@ -184,4 +193,11 @@ def compare(
 ) -> Comparison:
     d = plan_fleet(timelines, spec)
     n, risk = naive_shift(timelines, spec, shift[0], shift[1], local_offset_h)
-    return Comparison(dhill=d, naive=n, naive_at_risk_blocks=risk, naive_total_blocks=len(n.blocks))
+    blind = plan_fleet(timelines, replace(spec, age_penalty=0.0))
+    return Comparison(
+        dhill=d,
+        naive=n,
+        naive_at_risk_blocks=risk,
+        naive_total_blocks=len(n.blocks),
+        ageing_blind=blind,
+    )

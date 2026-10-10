@@ -217,14 +217,59 @@ class Envelope:
             ]
         )
         headroom = allow[None, None, :] - risk_peak
+        hard = np.array([self.limits[c].limit_c if c in self.limits else np.inf for c in comps])
+        p_exceed = np.mean(peaks_c > hard[None, None, None, :], axis=2)
+        age_h = res.age_equiv_s.reshape(s_n, k_n, m).mean(axis=2) / 3600.0
         soc = res.min_soc.reshape(s_n, k_n, m)
         risk_soc = np.quantile(soc, 1.0 - self.q, axis=2, method="lower")
         return {
             "headroom": headroom,
             "risk_peak_c": risk_peak,
             "risk_min_soc": risk_soc,
+            "peaks_c": peaks_c,
+            "p_exceed": p_exceed,
+            "age_equiv_h": age_h,
             "comps": comps,
         }
+
+    def time_to_limit(
+        self, idx: int, duration_h: float, mode: str, scale: float = 1.0, shade: float = 0.0
+    ):
+        """Minutes until the risk-quantile temperature first reaches a component's allowed limit.
+
+        Runs the mission at ``scale`` (default full scale: what happens if the advice is ignored)
+        and takes the risk quantile across Monte Carlo samples at every step. Returns
+        ``(minutes, component)`` for the earliest crossing, or ``(None, None)`` if none occurs
+        within the window.
+        """
+        soak, _ = self._soak_state(np.array([idx]))
+        tp = self.params
+        m = self.cfg.n_mc
+        loads = loadlib.mission_loads(self.profile, np.full(m, scale), mode)
+        res = simulate(
+            tp,
+            self.forcing,
+            loads,
+            soak,
+            np.full(m, idx),
+            self._steps(duration_h),
+            shade=np.full(m, shade),
+            record_every=1,
+        )
+        comps = list(COMPONENTS)
+        best: tuple[float, str] | None = None
+        for c in comps:
+            if c not in self.limits:
+                continue
+            series = res.t_die_k if c == "compute_die" else res.t_k[:, :, _NODE[c]]
+            q = k_to_c(np.quantile(series, self.q, axis=0, method="higher"))
+            allow = self.limits[c].limit_c - self.limits[c].margin_k
+            hit = np.where(q >= allow)[0]
+            if hit.size:
+                minutes = float(res.rec_step[hit[0]] * res.dt_s / 60.0)
+                if best is None or minutes < best[0]:
+                    best = (minutes, c)
+        return (round(best[0], 1), best[1]) if best else (None, None)
 
     def _feasible(self, scan: dict, scales: np.ndarray, caps: np.ndarray) -> np.ndarray:
         thermal_ok = np.min(scan["headroom"], axis=2) >= 0.0
@@ -338,6 +383,9 @@ class Envelope:
         i0, i1 = self._idx(t0), self._idx(t1)
         starts = np.arange(i0, i1 + 1, stride)
         scales, caps = self.best_scale(starts, duration_h, mode, shade)
+        age = self.scan(starts, np.maximum(scales, 0.0)[:, None], duration_h, mode, shade)[
+            "age_equiv_h"
+        ][:, 0]
         slots = []
         for i, s in enumerate(starts):
             sc = float(scales[i])
@@ -354,6 +402,7 @@ class Envelope:
                     limiting_component=name,
                     headroom_k=round(head, 2),
                     risk_min_soc=round(float(probe["risk_min_soc"][0, 0]), 3),
+                    age_equiv_h=round(float(age[i]), 3) if sc > 0 else 0.0,
                     perception_limited=bool(caps[i] < 0.999 and sc >= caps[i] - 0.01),
                 )
             )
@@ -447,7 +496,19 @@ class Envelope:
         if one["risk_min_soc"][0, 0] < pr.operations.soc_reserve:
             reasons.append("State-of-charge reserve would be breached for this duration.")
         shade_req = nxt_full = nxt_op = None
+        ttl_min = ttl_comp = None
         if action != "GO":
+            ttl_min, ttl_comp = self.time_to_limit(idx, duration_h, mode, 1.0, shade)
+            if ttl_min is not None and ttl_min <= 0.0:
+                reasons.append(
+                    f"{ttl_comp.replace('_', ' ')} is already at its allowed limit when the mission starts "
+                    "(after the parked soak in these conditions)."
+                )
+            elif ttl_min is not None:
+                reasons.append(
+                    f"Ignoring this advice, {ttl_comp.replace('_', ' ')} would reach its allowed limit "
+                    f"after about {ttl_min:.0f} min at full scale."
+                )
             shade_req = self.shade_required(idx, duration_h, mode)
             if shade_req is None:
                 reasons.append(
@@ -466,6 +527,7 @@ class Envelope:
                 margin_k=self.limits[c].margin_k,
                 risk_peak_c=round(float(one["risk_peak_c"][0, 0, k]), 2),
                 headroom_k=round(float(head[k]), 2),
+                p_exceed_limit=round(float(one["p_exceed"][0, 0, k]), 3),
             )
             for k, c in enumerate(comps)
             if c in self.limits
@@ -490,6 +552,9 @@ class Envelope:
             ),
             perception_limited=perc_limited,
             shade_required_fraction=shade_req,
+            time_to_limit_min=ttl_min,
+            time_to_limit_component=ttl_comp,
+            max_p_exceed_limit=max(c.p_exceed_limit for c in components),
             next_full_scale_start_utc=nxt_full,
             next_operable_start_utc=nxt_op,
             reasons=reasons,

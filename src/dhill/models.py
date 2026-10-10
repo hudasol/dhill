@@ -15,6 +15,9 @@ class ComponentMargin(BaseModel):
     margin_k: float = Field(description="Safety margin that must remain below the hard limit")
     risk_peak_c: float = Field(description="Risk-quantile peak temperature over the mission")
     headroom_k: float = Field(description="limit - margin - risk peak; negative means violated")
+    p_exceed_limit: float = Field(
+        default=0.0, description="Share of Monte Carlo samples whose peak exceeds the hard limit"
+    )
 
 
 class Perception(BaseModel):
@@ -42,6 +45,12 @@ class Decision(BaseModel):
         default=None,
         description="Share of the mission in shade needed for full-scale operation, if not GO",
     )
+    time_to_limit_min: float | None = Field(
+        default=None,
+        description="Minutes until the risk-quantile temperature reaches an allowed limit at full scale",
+    )
+    time_to_limit_component: str | None = None
+    max_p_exceed_limit: float = 0.0
     next_full_scale_start_utc: str | None = None
     next_operable_start_utc: str | None = None
     reasons: list[str] = Field(default_factory=list)
@@ -60,6 +69,10 @@ class Slot(BaseModel):
     limiting_component: str
     headroom_k: float
     risk_min_soc: float
+    age_equiv_h: float = Field(
+        default=0.0,
+        description="Mean battery ageing of the mission, in hours at 25 degC equivalent",
+    )
     perception_limited: bool = False
 
 

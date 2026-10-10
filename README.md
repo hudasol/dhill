@@ -4,7 +4,7 @@
 
 *Know when your robot should rest in the shade.*
 
-> **Status: v0.4.0, working proof of concept (TRL 3).** The engine, API, dashboard, planner and calibration run and are tested. Bundled robot profiles are **illustrative (evidence level L0)**; nothing here has been validated against field data. See [Honest limits](#honest-limits).
+> **Status: v0.5.0, working proof of concept (TRL 3).** The engine, API, dashboard, planner and calibration run and are tested. Bundled robot profiles are **illustrative (evidence level L0)**; nothing here has been validated against field data. See [Honest limits](#honest-limits).
 
 ---
 
@@ -22,9 +22,9 @@ For a robot profile, a mission, a place and a time, Dhill returns a decision wit
 | **DERATE** | Run at a reduced speed/power scale; Dhill finds the largest safe scale and names the binding constraint |
 | **PARK** | Not safe even at the minimum scale; Dhill reports the shade fraction that would help and the next feasible window |
 
-Every decision carries the profile's **evidence level** (L0 uncalibrated, L1 datasheet-parameterised, L2 field-calibrated, L3 independently validated) and the share of parameters that are assumptions.
+Non-GO decisions also report the **probability of exceeding a hard limit** and the **time to limit** at full scale. Every decision carries the profile's **evidence level** (L0 uncalibrated, L1 datasheet-parameterised, L2 field-calibrated, L3 independently validated) and the share of parameters that are assumptions.
 
-Also included: a multi-day **timeline**, a **fleet scheduler** (mixed-integer programme with rest gaps and concurrency limits), **calibration** from telemetry with confidence intervals and an identifiability flag, an offline **dashboard**, a **REST API**, and a **ROS 2 telemetry recorder**.
+Also included: a multi-day **timeline**, a **fleet scheduler** (mixed-integer programme with rest gaps, concurrency limits and a battery-ageing penalty), a **sensitivity analysis** that ranks which unknown parameter to measure first ([`docs/sensitivity.md`](docs/sensitivity.md)), a **policy comparison** against simple operator rules on a hidden robot ([`docs/policy-comparison.md`](docs/policy-comparison.md)), **calibration** from telemetry with confidence intervals and an identifiability flag, an offline **dashboard**, a **REST API**, and a **ROS 2 telemetry recorder**.
 
 ## Quick start
 
@@ -33,6 +33,7 @@ pip install -e ".[dev]"
 dhill list sites
 dhill decide  --site sweihan --scenario heatwave --at 2026-08-05T09:00
 dhill timeline --site sweihan --scenario heatwave --step-min 120
+dhill sensitivity --profile ugv_medium_inspection --site sweihan --scenario heatwave --at 2026-08-05T09:00
 dhill plan --robots ugv_medium_inspection sidewalk_delivery_robot
 dhill serve            # dashboard at http://127.0.0.1:8080
 # live forecast and PM10 (Open-Meteo, falls back to synthetic with a warning)
@@ -82,11 +83,12 @@ Abu Dhabi's Smart and Autonomous Systems Council has directed a move from pilots
 - **L0 profiles.** At least 80% of bundled parameters are assumptions. Treat outputs as method demonstrations, not operating authorisations.
 - **No field validation yet.** The validation protocol ([`docs/validation-protocol.md`](docs/validation-protocol.md)) defines the bench and field steps needed for L2 and L3.
 - **Calibration tests are synthetic** and share a model with the data generator.
-- **Not implemented from the plan:** time-to-limit and exceedance probability outputs; battery-ageing penalty in the scheduler. See [`docs/requirements-traceability.md`](docs/requirements-traceability.md).
-- **ROS 2 node** has not been run on a live ROS graph; its logic is unit tested.
+- **The policy comparison is synthetic**: the engine and the hidden robot share a model structure. A conservative rule (air ≤ 40 °C) was competitive in some cases. See [`docs/policy-comparison.md`](docs/policy-comparison.md) and [`docs/requirements-traceability.md`](docs/requirements-traceability.md).
+- **ROS 2 node** has not been run on a live ROS graph (ROS package servers were unreachable from the build environment); its logic is unit tested.
 - **No compliance claims** against MIL-STD-810H, IEC 60529, ISO 13482 or similar.
 - **Not the EDGE ATP 2026 ChallengeOn track**, which concerns connectivity.
-- **Novelty is unchecked**: a literature search (IEEE Xplore, Scopus) is still to do before claiming it.
+- **Novelty is unchecked**: the search protocol is in [`docs/literature-search-protocol.md`](docs/literature-search-protocol.md) but has not been run.
+- **Next real step:** one instrumented robot run, using [`docs/field-test-kit.md`](docs/field-test-kit.md) and a pre-registered prediction.
 
 ## Repository map
 

@@ -76,13 +76,13 @@ $("f").addEventListener("submit",async ev=>{
 });
 function render(tl,d){
   const rows=tl.slots.map(s=>`<div class="row"><span class="t">${esc(s.start_utc.slice(8,10)+" "+s.start_utc.slice(11,13))}h</span><span class="lab ${s.action}"><b>${s.action}</b> ${s.scale.toFixed(2)}</span><span class="bar"><i class="${s.action}" style="width:${Math.round(s.scale*100)}%"></i></span><span class="lab">${esc(s.limiting_component.replace(/_/g," "))}</span></div>`).join("");
-  const comp=d.components.map(c=>`<tr><td>${esc(c.component.replace(/_/g," "))}</td><td>${c.risk_peak_c.toFixed(1)} °C</td><td>${c.limit_c.toFixed(0)} °C</td><td class="${c.headroom_k<0?"neg":""}">${c.headroom_k>0?"+":""}${c.headroom_k.toFixed(1)} K</td></tr>`).join("");
+  const comp=d.components.map(c=>`<tr><td>${esc(c.component.replace(/_/g," "))}</td><td>${c.risk_peak_c.toFixed(1)} °C</td><td>${c.limit_c.toFixed(0)} °C</td><td class="${c.headroom_k<0?"neg":""}">${c.headroom_k>0?"+":""}${c.headroom_k.toFixed(1)} K</td><td>${(c.p_exceed_limit*100).toFixed(1)}%</td></tr>`).join("");
   $("out").innerHTML=`
   <div class="card"><h2 style="margin:0 0 8px;font-size:16px">Hour-by-hour decision <span style="color:var(--mute);font-weight:400">· ${esc(tl.profile_id)} · ${esc(tl.site)} · ${esc(tl.weather_source)} · ${tl.duration_h} h missions (UTC)</span></h2>${rows}
   <p class="note">${tl.productive_hours.toFixed(1)} productive hours (scale-weighted). Filled bar = GO, hatched = DERATE, empty = PARK.</p></div>
   <div class="card"><h2 style="margin:0 0 8px;font-size:16px">First restricted window: ${esc(d.start_utc)} <span class="badge ${d.action}">${d.action}</span> scale ${d.scale.toFixed(2)}</h2>
   <ul>${d.reasons.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>
-  <table><thead><tr><th>Component</th><th>Risk-quantile peak</th><th>Limit</th><th>Headroom after margin</th></tr></thead><tbody>${comp}</tbody></table>
+  <table><thead><tr><th>Component</th><th>Risk-quantile peak</th><th>Limit</th><th>Headroom after margin</th><th>P(exceed hard limit)</th></tr></thead><tbody>${comp}</tbody></table>
   <p class="note">LiDAR range ${d.perception.lidar_range_m} m at PM10 ${d.perception.pm10_window_max_ugm3} µg/m³ → max safe speed ${d.perception.max_safe_speed_ms} m/s.
   ${d.next_full_scale_start_utc?"Next full-scale window: "+esc(d.next_full_scale_start_utc)+".":""} ${d.shade_required_fraction!=null?"Full scale feasible with ~"+Math.round(d.shade_required_fraction*100)+"% of the mission in shade.":""}</p>
   <p class="note"><b>${esc(d.evidence_text)}</b> · ${Math.round(d.assumption_fraction*100)}% of parameters are assumptions · ${d.mc_samples} Monte Carlo samples at the ${Math.round(d.risk_quantile*100)}% risk quantile.<br>${esc(d.caveat)}</p></div>`;

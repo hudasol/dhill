@@ -77,7 +77,7 @@ def cmd_decide(args) -> int:
     )
     for r in d.reasons:
         print(f"  - {r}")
-    print("  component        risk peak   limit  headroom")
+    print("  component        risk peak   limit  headroom   P(exceed hard limit)")
     for c in d.components:
         print(
             f"  {c.component:<14} {c.risk_peak_c:>8.1f}  {c.limit_c:>6.0f}  {c.headroom_k:>+7.1f} K"
@@ -131,6 +131,11 @@ def cmd_plan(args) -> int:
     )
     for b in cmp.dhill.blocks:
         print(f"  {b.start_utc[5:16]}  {b.robot:<26} scale {b.scale:.2f}")
+    if cmp.ageing_blind is not None:
+        print(
+            f"Battery ageing: {cmp.dhill.age_equiv_h:.1f} h (25 degC equivalent) vs "
+            f"{cmp.ageing_blind.age_equiv_h:.1f} h if ageing is ignored"
+        )
     print(
         f"Fixed 08:00-17:00 shift at full speed: {cmp.naive.completed_work_h:.1f} h usable, "
         f"{cmp.naive_at_risk_blocks} of {cmp.naive_total_blocks} blocks would breach a limit"
@@ -176,6 +181,33 @@ def cmd_demo_telemetry(args) -> int:
     save_telemetry_csv(tel, args.out)
     print(
         f"wrote {args.out} ({tel.n} rows); true alpha_clean=0.52, ua_shell_interior=14, shell C=24000 (hidden from the fit)"
+    )
+    return 0
+
+
+def cmd_sensitivity(args) -> int:
+    from .sensitivity import tornado
+
+    prof = load_profile(args.profile)
+    rep = tornado(prof, get_weather(args), args.at, args.duration_h, args.mode, args.scale)
+    if args.json:
+        print(rep.model_dump_json(indent=2))
+        return 0
+    print(
+        f"{rep.profile_id}  {rep.start_utc}  scale {rep.scale:g}: {rep.binding_component} peaks at "
+        f"{rep.nominal_peak_c:.1f} C against an allowed {rep.allowed_c:.0f} C; prior spread about +/-{rep.total_sd_k:.1f} K"
+    )
+    print(
+        " rank  parameter                                 source      sigma  swing(K)  share  gain if measured(K)"
+    )
+    cum = 0.0
+    for r in rep.rows[: args.top]:
+        cum += r.share
+        print(
+            f" {r.rank:>3}   {r.key:<40} {r.source:<10} {r.sigma:>5.2f}  {r.swing_k:>7.2f}  {r.share:>5.0%}  {r.measured_gain_k:>7.2f}"
+        )
+    print(
+        f" top {min(args.top, len(rep.rows))} parameters carry {cum:.0%} of the (additive) variance; measure those first"
     )
     return 0
 
@@ -241,6 +273,13 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--hours", type=float, default=18.0)
     s.add_argument("--out", default="telemetry_demo.csv")
     s.set_defaults(fn=cmd_demo_telemetry)
+
+    s = sub.add_parser("sensitivity", help="rank parameters by effect on the binding component")
+    _common(s)
+    s.add_argument("--at", required=True, help="UTC mission start, e.g. 2026-08-05T05:00")
+    s.add_argument("--scale", type=float, default=1.0)
+    s.add_argument("--top", type=int, default=10)
+    s.set_defaults(fn=cmd_sensitivity)
 
     s = sub.add_parser("list", help="list profiles, sites or scenarios")
     s.add_argument("what", choices=["profiles", "sites", "scenarios"])
