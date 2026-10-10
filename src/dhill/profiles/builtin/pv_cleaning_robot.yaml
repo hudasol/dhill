@@ -35,8 +35,8 @@ parameters:
     cell_capacity_ah: {value: 5.0, source: datasheet}
     cell_resistance_25c_ohm: 0.025
     resistance_ea_j_mol: 20000
-    ocv_v0: 3.40
-    ocv_slope: 0.75
+    ocv_v0: {value: 3.40, rel_sigma: 0.02}
+    ocv_slope: {value: 0.75, rel_sigma: 0.05}
     max_discharge_c_rate: 1.5
     ageing_ea_j_mol: {value: 50000, source: textbook}
   compute:
