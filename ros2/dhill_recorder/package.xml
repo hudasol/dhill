@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>dhill_recorder</name>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
   <description>Telemetry recorder for Dhill thermal calibration</description>
   <maintainer email="hudamueen2407@gmail.com">Huda Mueen</maintainer>
   <license>TBD</license>
