@@ -8,4 +8,4 @@ Each entry maps to a commit on `main`. Tags could not be created from the build 
 | v0.1.0 | 1e75158 | Thermal network, battery, dust and perception physics; profiles; tests |
 | v0.2.0 | 06b57fc | Weather providers, envelope decisions, fleet planner, calibration, CLI |
 | v0.3.0 | 0a59a22 | REST API, offline dashboard, ROS 2 recorder, Docker, CI |
-| v0.4.0 | see `git log` | Documentation set, results, parameter reference, release script, README rewrite |
+| v0.4.0 | 0e1dcb7 | Documentation set, results, parameter reference, release script, README rewrite |
