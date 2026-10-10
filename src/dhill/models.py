@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 
 Action = Literal["GO", "DERATE", "PARK"]
 
@@ -73,6 +73,7 @@ class Timeline(BaseModel):
     evidence_level: str
     slots: list[Slot]
 
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def productive_hours(self) -> float:
         return sum(s.scale for s in self.slots) * self.step_min / 60.0

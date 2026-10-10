@@ -59,6 +59,8 @@ def builtin_profile_ids() -> list[str]:
 
 def load_builtin(profile_id: str) -> Profile:
     """Load a built-in profile by id."""
+    if not profile_id or not all(c.isalnum() or c in "-_" for c in profile_id):
+        raise KeyError(f"unknown profile '{profile_id}'; available: {builtin_profile_ids()}")
     files = resources.files(_BUILTIN_PKG)
     target = files.joinpath(f"{profile_id}.yaml")
     if not target.is_file():
