@@ -130,3 +130,32 @@ def test_decision_carries_evidence_and_caveat(env):
 def test_unknown_mode_rejected(env):
     with pytest.raises(KeyError):
         env.decide("2026-08-05T00:00", 1.0, mode="fly")
+
+
+def test_exceedance_probability_ordering(env):
+    go = env.decide("2026-08-05T00:00", 1.0)
+    park = env.decide("2026-08-05T09:00", 1.0)
+    assert 0.0 <= go.max_p_exceed_limit <= 0.1  # GO keeps the risk quantile below limit less margin
+    assert park.max_p_exceed_limit > go.max_p_exceed_limit
+    assert all(0.0 <= c.p_exceed_limit <= 1.0 for c in park.components)
+
+
+def test_time_to_limit_reported_only_when_not_go(env):
+    go = env.decide("2026-08-05T00:00", 1.0)
+    assert go.time_to_limit_min is None
+    d = env.decide("2026-08-05T04:00", 1.0)
+    if d.action != "GO":
+        assert d.time_to_limit_min is not None and 0 <= d.time_to_limit_min <= 60
+        assert d.time_to_limit_component in {c.component for c in d.components}
+
+
+def test_time_to_limit_shrinks_when_hotter():
+    p = load_builtin("ugv_medium_inspection")
+    cool = Envelope(
+        p, synthetic_weather("abu_dhabi", "summer_clear", days=2), EngineConfig(n_mc=32)
+    )
+    hot = Envelope(p, synthetic_weather("sweihan", "heatwave", days=2), EngineConfig(n_mc=32))
+    t_cool, _ = cool.time_to_limit(cool._idx("2026-08-05T05:00"), 2.0, "drive")
+    t_hot, _ = hot.time_to_limit(hot._idx("2026-08-05T05:00"), 2.0, "drive")
+    assert t_hot is not None
+    assert t_cool is None or t_hot <= t_cool

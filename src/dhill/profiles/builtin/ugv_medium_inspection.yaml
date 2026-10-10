@@ -74,7 +74,7 @@ parameters:
   cooling:
     capacity_w: 120
     cop: 1.2
-    setpoint_c: 45
+    setpoint_c: {value: 45, source: measured, note: "Controller setting"}
     gain_w_k: 15
   perception:
     nominal_speed_ms: 1.5

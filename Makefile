@@ -13,4 +13,5 @@ demo:
 	dhill timeline --site sweihan --scenario heatwave --step-min 60
 	dhill plan --robots ugv_medium_inspection sidewalk_delivery_robot
 docs:
+	python scripts/gen_sensitivity_doc.py
 	python scripts/gen_parameters_doc.py

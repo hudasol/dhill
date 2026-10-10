@@ -5,11 +5,11 @@ Requirement IDs refer to `plan.md` section 5. Status is stated honestly: where t
 | ID | Status | Implementation | Verified by |
 |---|---|---|---|
 | FR-01 | Met | `Envelope.decide` | `tests/test_envelope.py` |
-| FR-02 | Partly | Limiting constraint and headroom (K) per component reported; time-to-limit and exceedance probability not yet | `test_go_decision_has_nonnegative_headroom...` |
+| FR-02 | Met | Limiting constraint, headroom (K), hard-limit exceedance probability and time-to-limit reported | `test_go_decision_has_nonnegative_headroom...` |
 | FR-03 | Met, method changed | Grid-then-refine search instead of bisection; shade requirement by grid and refine | `test_derate_scale_is_actually_feasible...`, `test_shade_requirement...` |
 | FR-04 | Met | `physics/dust.py`, `thermal.simulate` | `test_physics_basic.py`, `test_dust_*` |
 | FR-05 | Met | `Envelope.timeline` (multi-day) | `test_night_go_midday_park...` |
-| FR-06 | Partly | MILP with rest gap and concurrency; no ageing penalty yet | `tests/test_planner_calibrate_cli.py` |
+| FR-06 | Met | MILP with rest gap, concurrency and a battery-ageing penalty | `tests/test_planner_calibrate_cli.py` |
 | FR-07 | Met | `calibrate.calibrate` with Jacobian CIs and identifiability flag | recovery test (synthetic only) |
 | FR-08 | Met | `weather/` | `tests/test_weather.py` (recorded Open-Meteo response, mocked transport) |
 | FR-09 | Met | CLI, library, REST | `tests/test_api.py`, CLI tests |

@@ -99,3 +99,21 @@ def test_cli_lists_and_errors(capsys):
     assert cli.main(["list", "profiles"]) == 0
     assert "ugv_medium_inspection" in capsys.readouterr().out
     assert cli.main(["decide", "--profile", "nope"]) == 2
+
+
+def test_ageing_penalty_reduces_ageing_without_losing_work(timelines):
+    spec = PlannerSpec(block_h=1.0, rest_h=0.5, demand_work_h=6.0, age_penalty=0.05)
+    aware = plan_fleet(timelines, spec)
+    from dataclasses import replace
+
+    blind = plan_fleet(timelines, replace(spec, age_penalty=0.0))
+    assert aware.completed_work_h == pytest.approx(blind.completed_work_h)
+    assert aware.age_equiv_h <= blind.age_equiv_h + 1e-9
+    assert aware.age_equiv_h > 0
+
+
+def test_slots_carry_ageing(timelines):
+    slots = timelines["ugv_medium_inspection"].slots
+    assert all(s.age_equiv_h >= 0 for s in slots)
+    assert any(s.age_equiv_h > 0 for s in slots if s.scale > 0)
+    assert all(s.age_equiv_h == 0 for s in slots if s.scale == 0)

@@ -1,7 +1,7 @@
 # Model card
 
 **Model:** six-node lumped thermal network with battery, dust and perception sub-models and a Monte Carlo decision layer.
-**Version:** 0.4.0. **Maturity:** TRL 3 (analytical and synthetic proof of concept). **Evidence level of shipped profiles:** L0.
+**Version:** 0.5.0. **Maturity:** TRL 3 (analytical and synthetic proof of concept). **Evidence level of shipped profiles:** L0.
 
 ## Intended use
 Decide, for a stated robot, site, forecast and mission window, whether to run at full scale, derate, or park; and to schedule fleets around those windows. Decision support for engineers and planners.
@@ -27,3 +27,6 @@ Parameters are sampled lognormally with spreads set by provenance (measured 2%, 
 
 ## Validation status
 Unit tests against textbook values; energy-balance closure; monotonicity in power, shade and ambient; synthetic recovery of hidden parameters with hold-out error; no field validation yet. See `docs/validation-protocol.md`.
+
+## v0.5.0 additions
+Hard-limit exceedance probability and time-to-limit; battery-ageing term in the scheduler; one-at-a-time sensitivity analysis (`docs/sensitivity.md`); policy comparison on a hidden synthetic robot (`docs/policy-comparison.md`). Same evidence limits apply: all of it is L0/synthetic.

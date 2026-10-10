@@ -254,6 +254,6 @@ Dhill is built as a product, not a demo: versioned API, offline container, SBOM,
 - Open-Meteo documentation: https://open-meteo.com/en/docs and https://open-meteo.com/en/docs/air-quality-api
 - EDGE ATP 2026 challenge: https://challengeon.atrc.ae/en/challenges/atp2026
 
-## 17. Status at v0.4.0
+## 17. Status at v0.5.0
 
-Delivered: all roadmap stages through v0.4.0 (see `CHANGELOG.md`). Deviations from this plan, kept visible: exceedance probability and time-to-limit not implemented; scheduler has no battery-ageing penalty; derate uses grid-then-refine rather than bisection; ROS 2 node not run on a live graph; repository tags could not be pushed from the build environment (`scripts/tag-releases.sh` provided); GitHub About text and topics could not be edited from the build environment (paste-ready text in the final report). Open decisions in section 15 remain open.
+Delivered: all roadmap stages through v0.5.0 (see `CHANGELOG.md`). Deviations from this plan, kept visible: (exceedance probability, time-to-limit and the ageing penalty were added in v0.5.0); derate uses grid-then-refine rather than bisection; ROS 2 node not run on a live graph; repository tags could not be pushed from the build environment (`scripts/tag-releases.sh` provided); GitHub About text and topics could not be edited from the build environment (paste-ready text in the final report). Open decisions in section 15 remain open.
