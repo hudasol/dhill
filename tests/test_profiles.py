@@ -68,7 +68,7 @@ def test_with_overrides_does_not_mutate():
     p = load_builtin("ugv_medium_inspection")
     q = p.with_overrides({"surface.alpha_clean": 0.2})
     assert q.value("surface.alpha_clean") == 0.2
-    assert p.value("surface.alpha_clean") == 0.55
+    assert p.value("surface.alpha_clean") == 0.40
 
 
 def test_load_unknown_builtin():

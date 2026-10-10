@@ -7,7 +7,7 @@ name: Medium inspection UGV (illustrative)
 description: >
   Tracked or wheeled inspection and patrol UGV with a top-mounted LiDAR, an
   embedded GPU compute module, a 1.5 kWh Li-ion pack and a small active
-  cooling unit. Desert-tan paint. Parameters are illustrative.
+  cooling unit. Light desert-grey paint. Parameters are illustrative.
 category: ugv
 evidence_level: L0
 
@@ -21,8 +21,8 @@ parameters:
     char_length_m: 0.55
   surface:
     _source: assumption
-    alpha_clean: {value: 0.55, source: textbook, note: "Light desert-tan paint; textbook absorptance range 0.4-0.6 (verify for the real paint)"}
-    alpha_dust: {value: 0.70, note: "Dust-coated tan surface"}
+    alpha_clean: {value: 0.40, source: textbook, note: "Light desert-grey paint; textbook absorptance range 0.3-0.6 (verify for the real paint)"}
+    alpha_dust: {value: 0.60, note: "Dust-coated light surface drifts toward sand colour"}
     emissivity: {value: 0.90, source: textbook, note: "Paints and plastics 0.90-0.96"}
     dust_m0_g_m2: 2.0
   shell:
@@ -36,8 +36,8 @@ parameters:
     cell_capacity_ah: {value: 5.0, source: datasheet, note: "21700 NMC-class cell, Samsung INR21700-50E datasheet"}
     cell_resistance_25c_ohm: {value: 0.025, note: "DC resistance assumed; datasheet gives AC impedance only"}
     resistance_ea_j_mol: 20000
-    ocv_v0: {value: 3.40, note: "Linearised OCV curve"}
-    ocv_slope: {value: 0.75, note: "Linearised OCV curve"}
+    ocv_v0: {value: 3.40, rel_sigma: 0.02, note: "Linearised OCV curve"}
+    ocv_slope: {value: 0.75, rel_sigma: 0.05, note: "Linearised OCV curve"}
     max_discharge_c_rate: {value: 1.5, source: datasheet, note: "Cell continuous rating is higher; pack limit chosen conservatively"}
     ageing_ea_j_mol: {value: 50000, source: textbook, note: "Rule of thumb: ageing roughly doubles per 10 K near 300 K"}
   compute:
@@ -47,7 +47,7 @@ parameters:
     die_rise_k_per_w: {value: 0.35, note: "Die above module node; from thermal design guide class values"}
   lidar:
     heat_capacity_j_k: 400
-    power_w: {value: 14, source: datasheet, note: "Typical mid-range spinning/solid-state unit; check the fitted sensor"}
+    power_w: {value: 14, source: assumption, note: "Typical spinning-unit class; check the fitted sensor"}
     exposed_area_m2: 0.02
     alpha: {value: 0.85, source: textbook, note: "Black plastic housing"}
     range_clear_m: {value: 40, note: "Reference range for a 10% reflectivity target; verify against datasheet"}
@@ -56,11 +56,11 @@ parameters:
     loss_fraction_in_motor: 0.6
     drive_efficiency: 0.7
   coupling:
-    ua_shell_interior_w_k: 14
+    ua_shell_interior_w_k: 18
     ua_battery_interior_w_k: 5
-    ua_compute_interior_w_k: 4
+    ua_compute_interior_w_k: 8
     ua_lidar_interior_w_k: 0.4
-    ua_lidar_ambient_w_k: 0.5
+    ua_lidar_ambient_w_k: 0.9
     ua_motors_interior_w_k: 1.0
     ua_motors_ambient_w_k: 3.0
     h_bottom_w_m2k: 8.0
@@ -93,7 +93,7 @@ parameters:
 limits:
   battery: {limit_c: 60, margin_k: 5, source: datasheet, note: "Cell discharge limit 60 degC (Samsung INR21700-50E datasheet); charging limit 45 degC"}
   compute_die: {limit_c: 99, margin_k: 14, source: datasheet, note: "Software throttling at 99 degC on-die (NVIDIA Jetson Orin thermal specification); target 85 degC"}
-  lidar: {limit_c: 55, margin_k: 3, source: datasheet, note: "Operating range to 55 degC (Livox Mid-360 specification), applied to housing temperature"}
+  lidar: {limit_c: 80, margin_k: 3, source: assumption, note: "Vendor ambient ratings are about 55-60 degC; the node here is the sensor housing, so an internal limit of 80 degC is assumed. Replace with the vendor internal-temperature limit."}
   motor: {limit_c: 140, margin_k: 15, source: assumption, note: "Class F insulation 155 degC less hot-spot allowance"}
   interior: {limit_c: 70, margin_k: 3, source: assumption, note: "Typical industrial electronics ambient rating"}
 

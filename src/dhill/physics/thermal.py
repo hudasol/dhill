@@ -192,7 +192,7 @@ class ThermalParams:
             if not mc or n == 1:
                 return np.full(n, base, dtype=float)
             sig = profile.sigma(key) * sigma_scale
-            out = base * rng.lognormal(mean=0.0, sigma=sig, size=n) if sig > 0 else np.full(n, base)
+            out = base * np.exp(sig * lhs_normal(rng, n)) if sig > 0 else np.full(n, base)
             out[0] = base
             d = PARAMS[key]
             if not (d.optional and base == d.default):
@@ -223,9 +223,9 @@ class ThermalParams:
         irr = np.ones(n)
         wnd = np.ones(n)
         if mc and n > 1:
-            d_temp = rng.normal(0.0, weather_sigma[0] * sigma_scale, n)
-            irr = rng.lognormal(0.0, weather_sigma[1] * sigma_scale, n)
-            wnd = rng.lognormal(0.0, weather_sigma[2] * sigma_scale, n)
+            d_temp = weather_sigma[0] * sigma_scale * lhs_normal(rng, n)
+            irr = np.exp(weather_sigma[1] * sigma_scale * lhs_normal(rng, n))
+            wnd = np.exp(weather_sigma[2] * sigma_scale * lhs_normal(rng, n))
             d_temp[0], irr[0], wnd[0] = 0.0, 1.0, 1.0
         alpha_clean = np.clip(val("surface.alpha_clean"), 0.05, 0.98)
         alpha_dust = np.clip(val("surface.alpha_dust"), 0.05, 0.98)
@@ -305,6 +305,14 @@ class ThermalParams:
         for k, v in kwargs.items():
             out[k] = np.broadcast_to(np.asarray(v, dtype=float), (self.n,)).copy()
         return replace(self, **out)
+
+
+def lhs_normal(rng: np.random.Generator, n: int) -> np.ndarray:
+    """Latin-hypercube standard-normal draws: stratified, so quantile estimates are less noisy."""
+    from scipy.stats import norm
+
+    u = (rng.permutation(n) + rng.random(n)) / n
+    return norm.ppf(u)
 
 
 def _at(x, k: int):
