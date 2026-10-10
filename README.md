@@ -87,7 +87,7 @@ Abu Dhabi's Smart and Autonomous Systems Council has directed a move from pilots
 - **ROS 2 node** has not been run on a live ROS graph (ROS package servers were unreachable from the build environment); its logic is unit tested.
 - **No compliance claims** against MIL-STD-810H, IEC 60529, ISO 13482 or similar.
 - **Not the EDGE ATP 2026 ChallengeOn track**, which concerns connectivity.
-- **Novelty is unchecked**: the search protocol is in [`docs/literature-search-protocol.md`](docs/literature-search-protocol.md) but has not been run.
+- **Novelty is only partly checked.** A shallow web pass (`docs/literature-log.md`) found no tool combining these elements, but the closest work (Moore et al. 2012 on temperature-aware field robots; `desert-av-reliability`, a UAE sensor-reliability model) overlaps in part. IEEE Xplore and Scopus have not been searched.
 - **Next real step:** one instrumented robot run, using [`docs/field-test-kit.md`](docs/field-test-kit.md) and a pre-registered prediction.
 
 ## Repository map
