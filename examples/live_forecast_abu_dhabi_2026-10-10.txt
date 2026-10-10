@@ -1,0 +1,28 @@
+Captured on the owner's machine on 2026-10-10 with:  dhill timeline --site abu_dhabi --source live
+Live Open-Meteo forecast (CAMS PM10), illustrative L0 profile. Not field data; first 24 slots shown.
+
+ugv_medium_inspection @ abu_dhabi  (open-meteo, L0)  1 h missions
+10-10T00:00  GO     1.00 #################### battery
+10-10T01:00  GO     1.00 #################### battery
+10-10T02:00  GO     1.00 #################### battery
+10-10T03:00  GO     1.00 #################### compute_die
+10-10T04:00  GO     1.00 #################### compute_die
+10-10T05:00  DERATE 0.98 #################### compute_die
+10-10T06:00  DERATE 0.74 ###############      battery
+10-10T07:00  PARK   0.00                      battery
+10-10T08:00  PARK   0.00                      battery
+10-10T09:00  PARK   0.00                      battery
+10-10T10:00  PARK   0.00                      battery
+10-10T11:00  PARK   0.00                      battery
+10-10T12:00  DERATE 0.50 ##########           battery
+10-10T13:00  DERATE 0.94 ###################  battery
+10-10T14:00  GO     1.00 #################### battery
+10-10T15:00  GO     1.00 #################### battery
+10-10T16:00  GO     1.00 #################### battery
+10-10T17:00  GO     1.00 #################### battery
+10-10T18:00  GO     1.00 #################### battery
+10-10T19:00  GO     1.00 #################### battery
+10-10T20:00  GO     1.00 #################### battery
+10-10T21:00  GO     1.00 #################### battery
+10-10T22:00  GO     1.00 #################### battery
+10-10T23:00  GO     1.00 #################### battery

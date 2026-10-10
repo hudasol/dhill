@@ -56,6 +56,10 @@ Versus a fixed 08:00 to 17:00 full-speed shift, the scheduler completes the same
 
 A second result is worth stating plainly (`examples/value_of_calibration.py`): a nominal model that ignores parameter uncertainty is unsafe in 8 slots against a hidden "true" robot that runs hotter than assumed, while the uncertainty-aware envelope is not. Calibration cut hold-out temperature error from 1.2 K to 0.4 K. Details and caveats in [`docs/results.md`](docs/results.md).
 
+![Dhill dashboard: hour-by-hour GO / DERATE / PARK for the illustrative UGV at Sweihan in a synthetic heatwave](docs/img/dashboard.png)
+
+*Dashboard, illustrative L0 robot, synthetic heatwave at Sweihan.* A real live-forecast run is in [`examples/`](examples/) (Abu Dhabi, 10 October 2026: GO overnight, PARK 07:00 to 11:00 UTC, GO again from 14:00 UTC).
+
 ## How it works
 
 ```mermaid

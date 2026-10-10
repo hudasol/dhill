@@ -52,3 +52,7 @@ Reading the table:
 - Carrying uncertainty keeps every slot safe at the cost of about 5 hours of caution.
 - Calibration cut hold-out temperature error from about 1.2 K to 0.4 K, but only five parameters were fitted; the rest keep their prior spread, so the calibrated envelope is still conservative. More fitted parameters and a real field campaign (validation protocol, level L3) are what close that gap. Calibration here made the robot's true heat visible, not more permissive.
 - The calibration step is an inverse crime (the same model generates and fits the data). Recovery on real telemetry will be harder; see the model card.
+
+## 4. Live forecast run
+
+`examples/live_forecast_abu_dhabi_2026-10-10.txt` is a real run on Open-Meteo data for Abu Dhabi on 10 October 2026: the illustrative UGV is GO overnight, derates 05:00 to 06:00 UTC, is parked 07:00 to 11:00 UTC, and returns to GO from 14:00 UTC. Same caveats: L0 profile, no field validation.
