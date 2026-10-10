@@ -4,83 +4,94 @@
 
 *Know when your robot should rest in the shade.*
 
-> **Status: pre-alpha (`v0.0.1`, planning release).** The architecture, requirements and validation plan are in [`plan.md`](plan.md). Working code lands in the tagged releases listed under [Roadmap](#roadmap). Nothing here is validated against field data yet.
+> **Status: v0.4.0, working proof of concept (TRL 3).** The engine, API, dashboard, planner and calibration run and are tested. Bundled robot profiles are **illustrative (evidence level L0)**; nothing here has been validated against field data. See [Honest limits](#honest-limits).
 
 ---
 
 ## The problem
 
-Autonomous ground systems in the Gulf work in air above 50 °C, under direct sun, and in some of the heaviest airborne dust measured anywhere. Operators decide when to run with blanket rules ("nothing at midday") or with the air-temperature rating on a datasheet. Neither accounts for:
-
-- solar heating of the chassis, which can push internal temperatures well above ambient,
-- the heat the robot generates itself during the planned mission,
-- dust on LiDAR windows, filters and heat-sinks,
-- the thermal history of the robot before it starts.
-
-The result is robots that are parked unnecessarily or that throttle, shut down or age their batteries early in the field.
+Autonomous ground systems in the Gulf work in air near 50 °C, in direct sun, and in some of the heaviest airborne dust measured anywhere. Operators decide when to run with blanket rules ("nothing at midday") or the air-temperature rating on a datasheet. Neither accounts for solar heating of the chassis, the heat the robot makes during its own mission, dust on LiDAR windows, filters and heat sinks, or the robot's thermal history before it starts. Robots end up parked unnecessarily, or throttle, shut down and age their batteries early.
 
 ## What Dhill does
 
-For a robot profile, a mission, a place and a time, Dhill returns an operating decision with reasons:
+For a robot profile, a mission, a place and a time, Dhill returns a decision with reasons:
 
 | Decision | Meaning |
 |---|---|
-| **GO** | Every component stays inside limits for the whole mission, with the stated confidence |
-| **DERATE** | Run at a reduced power/speed scale (Dhill computes the largest safe scale) |
-| **PARK** | Do not run; Dhill reports the shade fraction that would make operation feasible |
+| **GO** | Every component stays inside its limit less a margin, for the whole mission, at a 95% risk quantile |
+| **DERATE** | Run at a reduced speed/power scale; Dhill finds the largest safe scale and names the binding constraint |
+| **PARK** | Not safe even at the minimum scale; Dhill reports the shade fraction that would help and the next feasible window |
 
-Each decision includes the limiting component, margin to limit, time-to-limit, probability of exceedance, battery ageing cost, a dust-limited maximum speed, and an **evidence level** (L0 uncalibrated, L1 datasheet-parameterised, L2 field-calibrated, L3 independently validated). Dhill never presents an uncalibrated decision as validated.
+Every decision carries the profile's **evidence level** (L0 uncalibrated, L1 datasheet-parameterised, L2 field-calibrated, L3 independently validated) and the share of parameters that are assumptions.
 
-On top of the decision engine:
+Also included: a multi-day **timeline**, a **fleet scheduler** (mixed-integer programme with rest gaps and concurrency limits), **calibration** from telemetry with confidence intervals and an identifiability flag, an offline **dashboard**, a **REST API**, and a **ROS 2 telemetry recorder**.
 
-- **Window timeline**: 72-hour GO/DERATE/PARK bands for a mission at any UAE location.
-- **Fleet scheduler**: assigns missions to robots and start times (mixed-integer programme) with cooldown and ageing penalty.
-- **Calibration**: fits thermal parameters from telemetry, with uncertainty and identifiability warnings.
-- **ROS 2 recorder**: logs robot temperatures, speed and power in the Dhill schema.
-- **Ops console and REST API**: runs offline, self-hosted, no cloud dependency.
+## Quick start
+
+```bash
+pip install -e ".[dev]"
+dhill list sites
+dhill decide  --site sweihan --scenario heatwave --at 2026-08-05T09:00
+dhill timeline --site sweihan --scenario heatwave --step-min 120
+dhill plan --robots ugv_medium_inspection sidewalk_delivery_robot
+dhill serve            # dashboard at http://127.0.0.1:8080
+# live forecast and PM10 (Open-Meteo, falls back to synthetic with a warning)
+dhill timeline --site abu_dhabi --source live
+```
+or `docker compose up`.
+
+## What it produces (synthetic weather, illustrative robot)
+
+```
+ugv_medium_inspection @ sweihan  (synthetic, L0)  1 h missions
+08-05T00:00  GO     1.00 ####################
+08-05T04:00  DERATE 0.57 ############
+08-05T06:00  PARK   0.00
+08-05T14:00  PARK   0.00
+08-05T16:00  DERATE 0.78 ################
+08-05T18:00  GO     1.00 ####################
+```
+
+Versus a fixed 08:00 to 17:00 full-speed shift, the scheduler completes the same 12 work-hours with no predicted limit breach, while the fixed shift would breach a limit in 22 of 24 blocks. That count is **relative to Dhill's own L0 model**: it shows what the method does, and is exactly what a field trial must test.
+
+A second result is worth stating plainly (`examples/value_of_calibration.py`): a nominal model that ignores parameter uncertainty is unsafe in 8 slots against a hidden "true" robot that runs hotter than assumed, while the uncertainty-aware envelope is not. Calibration cut hold-out temperature error from 1.2 K to 0.4 K. Details and caveats in [`docs/results.md`](docs/results.md).
 
 ## How it works
 
 ```mermaid
 flowchart LR
     W[Weather: Open-Meteo, CSV, synthetic] --> E
-    P[Robot profile YAML with provenance] --> E
-    M[Mission: power modes, duration] --> E
-    E[Envelope engine: thermal network, battery, dust, perception, Monte Carlo] --> D[GO / DERATE / PARK + reasons]
-    D --> S[Fleet scheduler]
-    T[Telemetry CSV / ROS 2 recorder] --> C[Calibration]
-    C --> P
+    P[Robot profile YAML, provenance per parameter] --> E
+    E[Envelope engine: six-node thermal network, battery, dust, LiDAR range, Monte Carlo] --> D[GO / DERATE / PARK + reasons]
+    D --> S[Fleet scheduler MILP]
+    T[Telemetry CSV / ROS 2 recorder] --> C[Calibration] --> P
 ```
 
-The thermal model is a six-node lumped network (shell, interior, battery, compute, LiDAR, motors) driven by solar load, wind, sky and ground radiation, mission power and dust. See [`plan.md`](plan.md) section 7 for the equations and assumptions.
+A batched backward-Euler solver integrates every start time, scale, shade level and Monte Carlo sample at once; a 72-hour hourly timeline with 64 samples takes about a second on a laptop. Parameter spreads follow their provenance (measured 2% to assumption 25%). See [`docs/architecture.md`](docs/architecture.md), [`docs/model-card.md`](docs/model-card.md) and [`docs/parameters.md`](docs/parameters.md).
 
 ## Why the UAE, why now
 
-Abu Dhabi's Smart and Autonomous Systems Council has directed a move from pilots to practical deployment of autonomous systems. Heat and dust are where pilots end and deployment begins. The mapping to UAE and Abu Dhabi strategies (AI Strategy 2031, Net Zero 2050, Operation 300bn, SAVI) is in [`plan.md`](plan.md) section 3.
-
-## Roadmap
-
-| Tag | Content |
-|---|---|
-| `v0.0.1` | Plan, README, scaffold (this release) |
-| `v0.1.0` | Physics core and unit tests |
-| `v0.2.0` | Envelope engine, weather providers, scheduler, calibration, CLI |
-| `v0.3.0` | REST API, offline ops console, ROS 2 recorder, Docker, CI |
-| `v0.4.0` | Documentation set: UAE alignment, EDGE integration, model card, validation protocol, threat model |
-| `v0.5.0` | First field-calibrated profile (needs an instrumented robot) |
-| `v1.0.0` | Independent validation and pilot |
+Abu Dhabi's Smart and Autonomous Systems Council has directed a move from pilots to practical deployment of autonomous systems; heat and dust are where pilots end and deployment begins. Mapping to UAE and Abu Dhabi strategies, with the items still to verify, is in [`docs/uae-alignment.md`](docs/uae-alignment.md). The path to industry adoption, without implying any endorsement, is in [`docs/edge-integration.md`](docs/edge-integration.md).
 
 ## Honest limits
 
-- Dhill is a **decision-support and research tool**. It is aligned to, not compliant with, standards such as MIL-STD-810H and IEC 60529, and it is not a substitute for accredited environmental testing.
-- Default robot parameters are textbook values, datasheet values or explicit assumptions. Each is tagged with its provenance.
-- Weather and dust inputs come from forecast models with coarse grids; local dust fronts can be missed.
-- Current maturity is TRL 3. Moving higher needs field data (see the validation plan).
+- **L0 profiles.** At least 80% of bundled parameters are assumptions. Treat outputs as method demonstrations, not operating authorisations.
+- **No field validation yet.** The validation protocol ([`docs/validation-protocol.md`](docs/validation-protocol.md)) defines the bench and field steps needed for L2 and L3.
+- **Calibration tests are synthetic** and share a model with the data generator.
+- **Not implemented from the plan:** time-to-limit and exceedance probability outputs; battery-ageing penalty in the scheduler. See [`docs/requirements-traceability.md`](docs/requirements-traceability.md).
+- **ROS 2 node** has not been run on a live ROS graph; its logic is unit tested.
+- **No compliance claims** against MIL-STD-810H, IEC 60529, ISO 13482 or similar.
+- **Not the EDGE ATP 2026 ChallengeOn track**, which concerns connectivity.
+- **Novelty is unchecked**: a literature search (IEEE Xplore, Scopus) is still to do before claiming it.
 
-## License
+## Repository map
 
-No licence has been selected yet; all rights reserved pending a decision (see `plan.md` section 15).
+`src/dhill/physics` models · `profiles` robot profiles · `weather` providers · `envelope.py` decisions · `planner.py` scheduling · `calibrate.py` fitting · `api` + `web` service · `ros2` recorder · `docs` documentation · `examples` studies · `tests` about 90 tests.
 
-## Author
+## Development
 
-Huda Mueen. Built for research and industry adoption in the UAE.
+`make install test lint`. CI runs ruff, pytest on Python 3.11 to 3.13, pip-audit and a CycloneDX SBOM. Release history in [`CHANGELOG.md`](CHANGELOG.md); the plan is in [`plan.md`](plan.md).
+
+## Licence
+
+No licence selected yet (all rights reserved by default); see [`docs/adr/0002-licensing.md`](docs/adr/0002-licensing.md).
