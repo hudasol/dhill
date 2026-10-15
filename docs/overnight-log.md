@@ -13,3 +13,4 @@ local time (UTC+4).
 - 15:17 Task 3 done: preregistration committed and pushed first (ffaad20), then script, 80 runs plus 400 route requests. 2 of 6 predictions hit (H1, H6); H2, H3, H4, H5 missed and are reported. A one off smoke run of seed 0 preceded the full run; recorded in the results.
 - 15:20 Task 4 done: review fixes committed one per change (assistant attribution, em dashes, contradictory traceability, stale outputs, README, model card, unused parameter); 17 open items in docs/known-issues.md; number check table included.
 - 15:21 Task 5 done: docs/proposals/aau-robotics-proposal.md and docs/proposals/edge-brief.md, numbers cited by path.
+- 15:24 Final report written (docs/overnight-report.md); 134 tests pass; all tasks finished, none abandoned.
