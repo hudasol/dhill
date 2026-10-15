@@ -176,7 +176,7 @@ def plan_steps(plan: Plan, graph: RouteGraph, nominal_speed_ms: float) -> list[S
     return steps
 
 
-def mission_minutes(steps: list[Step], include_delay: bool = True) -> float:
+def mission_minutes(steps: list[Step]) -> float:
     return float(sum(s.minutes for s in steps))
 
 
