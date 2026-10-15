@@ -18,7 +18,7 @@ and each pull request targets the branch below it. Merge them in order, starting
 | 3 Preregistered evaluation | `feature/prereg-eval` | https://github.com/hudasol/dhill/pull/4 | `docs/preregistration-v0.6.md` (committed first), `examples/prereg_eval.py`, `docs/prereg-results.md` |
 | 4 Adversarial review | `feature/adversarial-review` | https://github.com/hudasol/dhill/pull/5 | Review fixes and open items, `docs/known-issues.md` |
 | 5 Proposals | `feature/proposals` | https://github.com/hudasol/dhill/pull/6 | `docs/proposals/aau-robotics-proposal.md`, `docs/proposals/edge-brief.md` |
-| Report | `feature/overnight-report` | see below | this file |
+| Report | `feature/overnight-report` | https://github.com/hudasol/dhill/pull/7 | this file |
 
 Nothing was abandoned. One approach was replaced: the first envelope route search was exhaustive and took
 minutes per request for the Jackal; it now integrates the depot wait once per delay and searches a narrower
