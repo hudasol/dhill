@@ -9,9 +9,12 @@ from dhill.profiles.registry import PARAMS
 
 
 def test_builtin_profiles_present():
-    assert {"ugv_medium_inspection", "sidewalk_delivery_robot", "pv_cleaning_robot"} <= set(
-        builtin_profile_ids()
-    )
+    assert {
+        "ugv_medium_inspection",
+        "sidewalk_delivery_robot",
+        "pv_cleaning_robot",
+        "clearpath_jackal",
+    } <= set(builtin_profile_ids())
 
 
 @pytest.mark.parametrize("pid", builtin_profile_ids())
@@ -74,3 +77,28 @@ def test_with_overrides_does_not_mutate():
 def test_load_unknown_builtin():
     with pytest.raises(KeyError):
         load_profile("nope")
+
+
+def test_jackal_matches_datasheet_energy_and_runtime():
+    """Pack energy ~270 Wh and heavy use runtime ~2 h, from the manufacturer datasheet."""
+    import numpy as np
+
+    from dhill.loads import mission_loads
+
+    p = load_builtin("clearpath_jackal")
+    wh = (
+        p.value("battery.cells_series")
+        * p.value("battery.cells_parallel")
+        * p.value("battery.cell_capacity_ah")
+        * 3.6
+    )
+    assert wh == pytest.approx(270, rel=0.02)
+    ld = mission_loads(p, np.array([1.0]), "drive")
+    watts = float(
+        ld.p_drive_mech_w[0] / p.value("motors.drive_efficiency")
+        + (ld.p_compute_w[0] + ld.p_lidar_w[0] + ld.p_comms_w[0]) / p.value("power.dcdc_efficiency")
+    )
+    assert wh / watts == pytest.approx(2.0, rel=0.1)
+    assert p.value("geometry.length_m") == pytest.approx(0.508)
+    assert p.evidence_level == "L0"  # thermal parameters are still assumptions
+    assert p.assumption_fraction() > 0.5
