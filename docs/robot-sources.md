@@ -16,12 +16,14 @@ https://www.generationrobots.com/media/Jackal_mobile_robot_DataSheet_Sept2020.pd
 | Battery | Li ion, 270 Wh | pack energy (7S2P x 5.4 Ah x 3.6 V = 272 Wh) | datasheet energy; cells assumed |
 | Runtime | about 2 h heavy use, 8 h basic | drive mode power chosen so full scale draw is about 133 W | datasheet, tested |
 | Onboard computer | Intel Core i3-4330TE or i5-4570TE | 35 W class compute node | datasheet CPU; power is the Intel class value |
-| Operating ambient | **-20 to 45 degC** | not a model input; used as the comparison in the operating calendar | datasheet |
+| Operating ambient | **-20 to 45 degC** | consistency constraint on the assumed conductances (a test requires every component inside its hard limit at 45 degC in shade under sustained heavy use); also the comparison in the operating calendar | datasheet |
 | Cooling | none listed | cooling capacity zero | datasheet (absence) |
 
 Not in the datasheet, so assumed and flagged in the YAML: battery voltage and cell data, all heat capacities and
 conductances, paint absorptance, LiDAR (the base robot has none; the node models a typical add on), all
 component temperature limits, DC-DC efficiency, IP rating.
+
+The conductances `ua_shell_interior`, `ua_compute_interior` and `ua_battery_interior` are not measured. They were first scaled by area from the medium UGV profile, which made the robot overheat at 36 degC air, contradicting the rated 45 degC. They were then raised until the profile was consistent with the rating (see `tests/test_profiles.py`). This makes them plausible, not known.
 
 Result: 5 of 60 parameters are datasheet values, 83% are assumptions. The profile stays at evidence level L0.
 Reaching L1 needs the unit weighed, its pack and cell identified, and its component limits taken from the
