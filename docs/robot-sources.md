@@ -43,4 +43,4 @@ Sources: [datasheet](https://www.generationrobots.com/media/A-000000-01946/HUSKY
 ## Why this matters
 Both robots are rated to an ambient air temperature at or below 45 degC. Gulf summer afternoons exceed that, and
 a robot parked in sun runs hotter than the air. The Husky's own datasheet and manual disagree on its limit.
-The operating calendar (next step) quantifies how many hours per site and month fall outside such ratings.
+The operating calendar (`docs/operating-calendar.md`) quantifies how many hours per site and month fall outside such ratings.
