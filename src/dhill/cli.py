@@ -212,6 +212,58 @@ def cmd_sensitivity(args) -> int:
     return 0
 
 
+def cmd_calendar(args) -> int:
+    from .climatology import fetch_history, headline, operating_calendar, write_csv
+
+    prof = load_profile(args.profile)
+    sites = args.sites or ["abu_dhabi", "al_ain", "dubai", "sweihan", "liwa", "fujairah"]
+    hist = {}
+    for sid in sites:
+        print(
+            f"fetching {sid} {args.first_year}-{args.last_year} (cached after the first run)",
+            file=sys.stderr,
+        )
+        try:
+            hist[sid] = fetch_history(sid, args.first_year, args.last_year)
+        except WeatherUnavailable as exc:
+            print(f"warning: {sid} skipped: {exc}", file=sys.stderr)
+    if not hist:
+        print("error: no site history could be retrieved", file=sys.stderr)
+        return 2
+    cal = operating_calendar(
+        prof,
+        hist,
+        rated_max_c=args.rated_max_c,
+        mode=args.mode,
+        duration_h=args.duration_h,
+        n_mc=args.samples,
+        sigma_scale=args.sigma_scale,
+    )
+    if args.csv:
+        write_csv(cal, args.csv)
+    hl = headline(cal)
+    if args.json:
+        print(json.dumps({"headline": hl, "rows": [r.__dict__ for r in cal.rows]}, indent=1))
+        return 0
+    print(
+        f"{cal.profile_id} [{cal.evidence_level}]  {cal.first_year}-{cal.last_year}  rated ambient {cal.rated_max_c:g} C"
+    )
+    for sid in cal.sites():
+        print(f"\n{sid}")
+        print(" month   GO  DERATE  PARK   air>rated (all h / day h)")
+        for r in cal.by_site(sid):
+            print(
+                f"  {r.month:>3}  {r.go:>4.0%}  {r.derate:>5.0%}  {r.park:>5.0%}   {r.air_above_rated:>6.1%} / {r.air_above_rated_day:>6.1%}"
+            )
+    print("\nJune to September, hours weighted:")
+    for sid, v in hl["sites"].items():
+        print(
+            f"  {sid:<14} PARK {v['park']:.0%}  DERATE {v['derate']:.0%}  GO {v['go']:.0%}  air above rated {v['air_above_rated']:.1%}"
+        )
+    print("L0 profile: method demonstration, not an operating authorisation.")
+    return 0
+
+
 def cmd_list(args) -> int:
     if args.what == "profiles":
         for p in builtin_profile_ids():
@@ -280,6 +332,27 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--scale", type=float, default=1.0)
     s.add_argument("--top", type=int, default=10)
     s.set_defaults(fn=cmd_sensitivity)
+
+    s = sub.add_parser("calendar", help="operating calendar from historical weather")
+    s.add_argument("--profile", default="clearpath_jackal", help="built-in id or YAML path")
+    s.add_argument("--sites", nargs="*", choices=site_ids())
+    s.add_argument("--first-year", type=int, default=2015)
+    s.add_argument("--last-year", type=int, default=2025)
+    s.add_argument(
+        "--rated-max-c", type=float, default=45.0, help="manufacturer rated ambient limit"
+    )
+    s.add_argument("--mode", default="drive")
+    s.add_argument("--duration-h", type=float, default=1.0)
+    s.add_argument("--samples", type=int, default=64, help="Monte Carlo samples")
+    s.add_argument(
+        "--sigma-scale",
+        type=float,
+        default=1.0,
+        help="scale on parameter uncertainty; 0 gives an optimistic bound with exact parameters",
+    )
+    s.add_argument("--csv", help="write the monthly table as CSV")
+    s.add_argument("--json", action="store_true")
+    s.set_defaults(fn=cmd_calendar)
 
     s = sub.add_parser("list", help="list profiles, sites or scenarios")
     s.add_argument("what", choices=["profiles", "sites", "scenarios"])
