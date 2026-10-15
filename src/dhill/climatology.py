@@ -53,9 +53,10 @@ ACTIONS = ("GO", "DERATE", "PARK")
 
 
 # ---------------------------------------------------------------------- download and cache
-def cache_dir() -> Path:
-    root = Path(os.environ.get("DHILL_CACHE_DIR", Path.home() / ".cache" / "dhill"))
-    d = root / "climatology"
+def cache_dir(root: Path | None = None) -> Path:
+    """``<root>/climatology``; root defaults to ``$DHILL_CACHE_DIR`` or ``~/.cache/dhill``."""
+    root = root or Path(os.environ.get("DHILL_CACHE_DIR", Path.home() / ".cache" / "dhill"))
+    d = Path(root) / "climatology"
     d.mkdir(parents=True, exist_ok=True)
     return d
 
@@ -191,10 +192,11 @@ def load_site_record(
     pause_s: float = 1.0,
     sleep: Callable[[float], None] = time.sleep,
     log: Callable[[str], None] | None = None,
+    cache_root: Path | None = None,
 ) -> SiteRecord:
     """Assemble the hourly record for one site, downloading missing years (resumable)."""
     s = get_site(site) if isinstance(site, str) else site
-    root = cache_dir()
+    root = cache_dir(cache_root)
     parts: list[dict[str, np.ndarray]] = []
     pm_t: list[np.ndarray] = []
     pm_v: list[np.ndarray] = []
@@ -249,6 +251,39 @@ def load_site_record(
         pm10_ugm3=pm10,
         gaps=gaps,
     )
+
+
+def record_weather(rec: SiteRecord) -> Weather:
+    """The whole record as one ``Weather``; PM10 must be present for every hour."""
+    if not np.isfinite(rec.pm10_ugm3).all():
+        raise WeatherUnavailable(f"{rec.site.id}: PM10 missing for some hours")
+    return Weather(
+        times_utc=rec.times_utc,
+        t_air_c=rec.t_air_c,
+        dew_c=rec.dew_c,
+        wind10_ms=rec.wind10_ms,
+        pm10_ugm3=rec.pm10_ugm3,
+        precip_mm_h=rec.precip_mm_h,
+        lat=rec.site.lat,
+        lon=rec.site.lon,
+        altitude_m=rec.site.altitude_m,
+        ghi_wm2=rec.ghi_wm2,
+        source="open-meteo-archive",
+        label=rec.site.id,
+    )
+
+
+def fixture_weather(data_dir: Path, site: str = "abu_dhabi", year: int = 2024) -> Weather:
+    """Recorded weather from cached responses in ``data_dir`` (files named as in the cache)."""
+    import shutil
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        d = cache_dir(Path(tmp))
+        for f in Path(data_dir).glob(f"*_{site}_{year}.json"):
+            shutil.copy(f, d / f.name)
+        rec = load_site_record(site, (year,), offline=True, cache_root=Path(tmp))
+    return record_weather(rec)
 
 
 # ---------------------------------------------------------------------- day selection
