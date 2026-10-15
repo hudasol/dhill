@@ -1,0 +1,114 @@
+# Clearpath Jackal small outdoor UGV. Datasheet anchored, NOT field measured.
+# Taken from the manufacturer datasheet: mass, size, speed, battery energy, runtime,
+# drive power, onboard computer class, rated ambient range (see docs/robot-sources.md).
+# Everything thermal (heat capacities, conductances, absorptance) is an assumption scaled
+# from the illustrative medium UGV, so the evidence level stays L0 until the robot is
+# weighed, instrumented and calibrated.
+schema_version: 1
+id: clearpath_jackal
+name: Clearpath Jackal (datasheet anchored)
+description: >
+  Small outdoor wheeled UGV, 17 kg, 270 Wh lithium ion pack, 500 W drive, Intel
+  embedded computer, no active cooling. The manufacturer rates ambient operation from
+  -20 to 45 degC. The LiDAR node models a typical add on sensor; the base robot has none.
+category: ugv
+evidence_level: L0
+
+parameters:
+  geometry:
+    _source: datasheet
+    _rel_sigma: 0.02
+    length_m: 0.508
+    width_m: 0.430
+    height_m: 0.250
+    char_length_m: {value: 0.25, source: assumption, rel_sigma: 0.05, note: "Half the length, same convention as the other profiles"}
+  surface:
+    _source: assumption
+    alpha_clean: {value: 0.45, source: textbook, note: "Yellow and black body assumed; textbook yellow paint 0.4-0.5. Verify the paint on the real unit."}
+    alpha_dust: {value: 0.62, note: "Dust coated surface drifts toward sand colour"}
+    emissivity: {value: 0.90, source: textbook, note: "Paints and plastics 0.90-0.96"}
+    dust_m0_g_m2: 2.0
+  shell:
+    heat_capacity_j_k: {value: 5400, note: "About 6 kg of aluminium panels at 900 J/(kg K); total mass 17 kg is from the datasheet, the split is assumed"}
+  interior:
+    heat_capacity_j_k: {value: 6500, note: "Chassis, wheels, cabling and enclosed air; split of the 17 kg is assumed"}
+  battery:
+    heat_capacity_j_k: {value: 1700, note: "About 1.4 kg pack at roughly 1.2 kJ/(kg K); assumed"}
+    cells_series: {value: 7, source: assumption, rel_sigma: 0, note: "Datasheet lists 270 Wh but not voltage or cell count; 7S assumed (about 26 V nominal)"}
+    cells_parallel: {value: 2, source: assumption, rel_sigma: 0, note: "2P assumed so that pack energy matches the datasheet 270 Wh"}
+    cell_capacity_ah: {value: 5.4, source: assumption, rel_sigma: 0.02, note: "Fitted: 7 x 2 x 5.4 Ah x 3.6 V = 272 Wh, matching the datasheet 270 Wh"}
+    cell_resistance_25c_ohm: {value: 0.030, note: "DC resistance assumed, 18650 or 21700 class"}
+    resistance_ea_j_mol: 20000
+    ocv_v0: {value: 3.40, rel_sigma: 0.02, note: "Linearised OCV curve"}
+    ocv_slope: {value: 0.75, rel_sigma: 0.05, note: "Linearised OCV curve"}
+    max_discharge_c_rate: {value: 2.0, source: assumption, note: "500 W drive on a 270 Wh pack is about 1.9 C at the datasheet maximum"}
+    ageing_ea_j_mol: {value: 50000, source: textbook, note: "Rule of thumb: ageing roughly doubles per 10 K near 300 K"}
+  compute:
+    heat_capacity_j_k: {value: 350, note: "Small heat sink and board; assumed"}
+    nominal_power_w: {value: 35, source: datasheet, note: "Intel Core i3-4330TE / i5-4570TE class, 35 W TDP class; datasheet lists the CPUs, TDP figure is the Intel class value to verify"}
+    min_power_fraction: 0.3
+    die_rise_k_per_w: {value: 0.5, note: "Passive case to die rise, assumed"}
+  lidar:
+    heat_capacity_j_k: 300
+    power_w: {value: 8, source: assumption, note: "Typical add on 2D or small 3D unit; the base Jackal has no LiDAR"}
+    exposed_area_m2: 0.01
+    alpha: {value: 0.85, source: textbook, note: "Black plastic housing"}
+    range_clear_m: {value: 30, note: "Reference range for a 10% reflectivity target; depends on the fitted unit"}
+  motors:
+    heat_capacity_j_k: 1500
+    loss_fraction_in_motor: 0.6
+    drive_efficiency: 0.7
+  coupling:
+    ua_shell_interior_w_k: 4.4
+    ua_battery_interior_w_k: 1.2
+    ua_compute_interior_w_k: 2.0
+    ua_lidar_interior_w_k: 0.2
+    ua_lidar_ambient_w_k: 0.5
+    ua_motors_interior_w_k: 0.5
+    ua_motors_ambient_w_k: 1.5
+    h_bottom_w_m2k: 8.0
+    vent_flow_m3_s: 0.0
+    filter_ref_g_m2: 5.0
+  power:
+    comms_w: 5
+    standby_w: 8
+    dcdc_efficiency: {value: 0.90, source: assumption}
+    payload_heat_fraction: 0.5
+  cooling:
+    capacity_w: {value: 0, source: datasheet, note: "No active cooling unit is listed on the datasheet"}
+    cop: 1.0
+    setpoint_c: {value: 45, source: assumption, note: "Unused while capacity is zero"}
+    gain_w_k: 1
+  perception:
+    nominal_speed_ms: {value: 1.0, source: assumption, note: "Datasheet maximum is 2.0 m/s; 1.0 m/s assumed for inspection"}
+    decel_ms2: 1.5
+    reaction_s: 0.6
+    margin_m: 2.0
+  environment:
+    _source: assumption
+    albedo: {value: 0.30, source: textbook, note: "Desert sand 0.25-0.40"}
+    ground_rise_k_per_kw_m2: 25
+    wind_exponent: 0.2
+    deposition_velocity_m_s: {value: 0.004, note: "PM10 fixed-velocity value from PV soiling practice"}
+    rain_clear_mm_h: 1.0
+    mass_ext_eff_m2_g: 0.7
+
+limits:
+  battery: {limit_c: 60, margin_k: 5, source: assumption, note: "Typical Li ion discharge ceiling; the Jackal cell datasheet is not public. Replace with the cell limit."}
+  compute_die: {limit_c: 100, margin_k: 15, source: assumption, note: "Typical Intel junction ceiling class; verify on Intel ARK for the fitted CPU"}
+  lidar: {limit_c: 80, margin_k: 3, source: assumption, note: "Internal limit assumed for the sensor housing; replace with the vendor figure"}
+  motor: {limit_c: 140, margin_k: 15, source: assumption, note: "Class F insulation 155 degC less hot-spot allowance"}
+  interior: {limit_c: 70, margin_k: 3, source: assumption, note: "Typical industrial electronics rating; the manufacturer rates ambient air to 45 degC"}
+
+# Drive power is chosen so that total electrical draw at full scale is about 133 W,
+# i.e. 270 Wh over the datasheet "about 2 hours at heavy usage". Checked in tests.
+modes:
+  drive: {mech_w: 50}
+  work: {mech_w: 35, payload_w: 10}
+  idle: {mech_w: 0}
+
+operations:
+  soc_reserve: 0.15
+  soc_start: 0.95
+  min_scale: 0.3
+  risk_quantile: 0.95
