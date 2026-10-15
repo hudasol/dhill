@@ -1,6 +1,6 @@
 # Literature log
 
-**Status: preliminary web-search pass, 2026-10-10 (Claude, on behalf of the author). NOT a systematic search.**
+**Status: preliminary web search pass, 2026-10-10. NOT a systematic search.**
 IEEE Xplore, Scopus and Web of Science need institutional access and were not searched. OpenAlex, arXiv's API and
 Crossref could not be queried from the build environment (error / robots disallowed / rate limit). Google Scholar
 was not queried directly. Treat "no near-duplicate found" as "not found by a shallow search", and repeat the
