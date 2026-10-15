@@ -1,0 +1,225 @@
+case,start_utc_h,air_c,policy,runs,completed,violation_prob,minutes,reason
+abu_dhabi summer_clear synthetic,2,32.5,shortest,1,1.0,0.0,54.7,
+abu_dhabi summer_clear synthetic,2,32.5,air_rule,1,1.0,0.0,54.7,
+abu_dhabi summer_clear synthetic,2,32.5,envelope_l0,1,1.0,0.0,54.7,
+abu_dhabi summer_clear synthetic,2,32.5,envelope_l2,1,1.0,0.0,54.7,
+abu_dhabi summer_clear synthetic,4,35.2,shortest,1,0.98,0.02,54.7,
+abu_dhabi summer_clear synthetic,4,35.2,air_rule,1,0.98,0.02,54.7,
+abu_dhabi summer_clear synthetic,4,35.2,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+abu_dhabi summer_clear synthetic,4,35.2,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+abu_dhabi summer_clear synthetic,6,38.5,shortest,1,0.46,0.54,54.7,
+abu_dhabi summer_clear synthetic,6,38.5,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+abu_dhabi summer_clear synthetic,6,38.5,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+abu_dhabi summer_clear synthetic,6,38.5,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+abu_dhabi summer_clear synthetic,8,41.6,shortest,1,0.17,0.83,54.7,
+abu_dhabi summer_clear synthetic,8,41.6,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+abu_dhabi summer_clear synthetic,8,41.6,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+abu_dhabi summer_clear synthetic,8,41.6,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+abu_dhabi summer_clear synthetic,10,43.5,shortest,1,0.07,0.93,54.7,
+abu_dhabi summer_clear synthetic,10,43.5,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+abu_dhabi summer_clear synthetic,10,43.5,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+abu_dhabi summer_clear synthetic,10,43.5,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+abu_dhabi summer_clear synthetic,12,43.8,shortest,1,0.29,0.71,54.7,
+abu_dhabi summer_clear synthetic,12,43.8,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+abu_dhabi summer_clear synthetic,12,43.8,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+abu_dhabi summer_clear synthetic,12,43.8,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+abu_dhabi summer_clear synthetic,14,42.4,shortest,1,1.0,0.0,54.7,
+abu_dhabi summer_clear synthetic,14,42.4,air_rule,1,1.0,0.0,164.7,
+abu_dhabi summer_clear synthetic,14,42.4,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+abu_dhabi summer_clear synthetic,14,42.4,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,2,33.1,shortest,1,1.0,0.0,54.7,
+dubai humid_coastal synthetic,2,33.1,air_rule,1,1.0,0.0,54.7,
+dubai humid_coastal synthetic,2,33.1,envelope_l0,1,1.0,0.0,71.3,
+dubai humid_coastal synthetic,2,33.1,envelope_l2,0,0.0,,,search budget of 4000 evaluations exhausted
+dubai humid_coastal synthetic,4,35.0,shortest,1,0.95,0.05,54.7,
+dubai humid_coastal synthetic,4,35.0,air_rule,1,0.95,0.05,54.7,
+dubai humid_coastal synthetic,4,35.0,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,4,35.0,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,6,37.3,shortest,1,0.4,0.6,54.7,
+dubai humid_coastal synthetic,6,37.3,air_rule,1,0.4,0.6,54.7,
+dubai humid_coastal synthetic,6,37.3,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,6,37.3,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,8,39.4,shortest,1,0.21,0.79,54.7,
+dubai humid_coastal synthetic,8,39.4,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+dubai humid_coastal synthetic,8,39.4,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,8,39.4,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,10,40.7,shortest,1,0.12,0.88,54.7,
+dubai humid_coastal synthetic,10,40.7,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+dubai humid_coastal synthetic,10,40.7,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,10,40.7,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,12,40.8,shortest,1,0.44,0.56,54.7,
+dubai humid_coastal synthetic,12,40.8,air_rule,1,1.0,0.0,159.7,
+dubai humid_coastal synthetic,12,40.8,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,12,40.8,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,14,39.8,shortest,1,1.0,0.0,54.7,
+dubai humid_coastal synthetic,14,39.8,air_rule,1,1.0,0.0,54.7,
+dubai humid_coastal synthetic,14,39.8,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+dubai humid_coastal synthetic,14,39.8,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,2,34.2,shortest,1,1.0,0.0,54.7,
+sweihan heatwave synthetic,2,34.2,air_rule,1,1.0,0.0,54.7,
+sweihan heatwave synthetic,2,34.2,envelope_l0,0,0.0,,,search budget of 4000 evaluations exhausted
+sweihan heatwave synthetic,2,34.2,envelope_l2,0,0.0,,,search budget of 4000 evaluations exhausted
+sweihan heatwave synthetic,4,38.2,shortest,1,0.83,0.17,54.7,
+sweihan heatwave synthetic,4,38.2,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+sweihan heatwave synthetic,4,38.2,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,4,38.2,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,6,43.1,shortest,1,0.02,0.98,54.7,
+sweihan heatwave synthetic,6,43.1,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+sweihan heatwave synthetic,6,43.1,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,6,43.1,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,8,47.4,shortest,1,0.0,1.0,54.7,
+sweihan heatwave synthetic,8,47.4,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+sweihan heatwave synthetic,8,47.4,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,8,47.4,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,10,50.2,shortest,1,0.0,1.0,54.7,
+sweihan heatwave synthetic,10,50.2,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+sweihan heatwave synthetic,10,50.2,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,10,50.2,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,12,50.5,shortest,1,0.0,1.0,54.7,
+sweihan heatwave synthetic,12,50.5,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+sweihan heatwave synthetic,12,50.5,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,12,50.5,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,14,48.4,shortest,1,0.64,0.36,54.7,
+sweihan heatwave synthetic,14,48.4,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+sweihan heatwave synthetic,14,48.4,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+sweihan heatwave synthetic,14,48.4,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+al_ain winter_mild synthetic,2,13.7,shortest,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,2,13.7,air_rule,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,2,13.7,envelope_l0,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,2,13.7,envelope_l2,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,4,16.5,shortest,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,4,16.5,air_rule,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,4,16.5,envelope_l0,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,4,16.5,envelope_l2,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,6,20.1,shortest,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,6,20.1,air_rule,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,6,20.1,envelope_l0,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,6,20.1,envelope_l2,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,8,23.2,shortest,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,8,23.2,air_rule,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,8,23.2,envelope_l0,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,8,23.2,envelope_l2,1,1.0,0.0,58.0,
+al_ain winter_mild synthetic,10,25.2,shortest,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,10,25.2,air_rule,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,10,25.2,envelope_l0,1,1.0,0.0,58.0,
+al_ain winter_mild synthetic,10,25.2,envelope_l2,1,1.0,0.0,61.3,
+al_ain winter_mild synthetic,12,25.4,shortest,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,12,25.4,air_rule,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,12,25.4,envelope_l0,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,12,25.4,envelope_l2,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,14,23.9,shortest,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,14,23.9,air_rule,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,14,23.9,envelope_l0,1,1.0,0.0,54.7,
+al_ain winter_mild synthetic,14,23.9,envelope_l2,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",2,24.0,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",2,24.0,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",2,24.0,envelope_l0,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",2,24.0,envelope_l2,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",4,26.9,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",4,26.9,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",4,26.9,envelope_l0,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",4,26.9,envelope_l2,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",6,28.7,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",6,28.7,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",6,28.7,envelope_l0,1,1.0,0.0,58.0,
+"abu_dhabi 2024-04-14 real, median April day",6,28.7,envelope_l2,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-04-14 real, median April day",8,29.8,shortest,1,0.99,0.01,54.7,
+"abu_dhabi 2024-04-14 real, median April day",8,29.8,air_rule,1,0.99,0.01,54.7,
+"abu_dhabi 2024-04-14 real, median April day",8,29.8,envelope_l0,1,1.0,0.0,61.3,
+"abu_dhabi 2024-04-14 real, median April day",8,29.8,envelope_l2,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-04-14 real, median April day",10,30.3,shortest,1,0.99,0.01,54.7,
+"abu_dhabi 2024-04-14 real, median April day",10,30.3,air_rule,1,0.99,0.01,54.7,
+"abu_dhabi 2024-04-14 real, median April day",10,30.3,envelope_l0,1,1.0,0.0,61.3,
+"abu_dhabi 2024-04-14 real, median April day",10,30.3,envelope_l2,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-04-14 real, median April day",12,29.3,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",12,29.3,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",12,29.3,envelope_l0,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",12,29.3,envelope_l2,1,1.0,0.0,56.3,
+"abu_dhabi 2024-04-14 real, median April day",14,27.6,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",14,27.6,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",14,27.6,envelope_l0,1,1.0,0.0,54.7,
+"abu_dhabi 2024-04-14 real, median April day",14,27.6,envelope_l2,1,1.0,0.0,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",2,27.4,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",2,27.4,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",2,27.4,envelope_l0,1,1.0,0.0,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",2,27.4,envelope_l2,1,1.0,0.0,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",4,31.2,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",4,31.2,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",4,31.2,envelope_l0,1,1.0,0.0,71.3,
+"abu_dhabi 2024-05-07 real, hot May day",4,31.2,envelope_l2,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-05-07 real, hot May day",6,37.0,shortest,1,0.82,0.18,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",6,37.0,air_rule,1,0.82,0.18,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",6,37.0,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-05-07 real, hot May day",6,37.0,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-05-07 real, hot May day",8,40.8,shortest,1,0.24,0.76,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",8,40.8,air_rule,1,0.57,0.43,169.7,
+"abu_dhabi 2024-05-07 real, hot May day",8,40.8,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-05-07 real, hot May day",8,40.8,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-05-07 real, hot May day",10,39.9,shortest,1,0.61,0.39,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",10,39.9,air_rule,1,0.61,0.39,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",10,39.9,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-05-07 real, hot May day",10,39.9,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-05-07 real, hot May day",12,36.2,shortest,1,0.99,0.01,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",12,36.2,air_rule,1,0.99,0.01,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",12,36.2,envelope_l0,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-05-07 real, hot May day",12,36.2,envelope_l2,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-05-07 real, hot May day",14,31.6,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",14,31.6,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",14,31.6,envelope_l0,1,1.0,0.0,54.7,
+"abu_dhabi 2024-05-07 real, hot May day",14,31.6,envelope_l2,1,1.0,0.0,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",2,30.7,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",2,30.7,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",2,30.7,envelope_l0,1,1.0,0.0,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",2,30.7,envelope_l2,1,1.0,0.0,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",4,32.7,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",4,32.7,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",4,32.7,envelope_l0,1,1.0,0.0,61.3,
+"abu_dhabi 2024-09-04 real, hot September day",4,32.7,envelope_l2,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-09-04 real, hot September day",6,35.7,shortest,1,0.96,0.04,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",6,35.7,air_rule,1,0.96,0.04,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",6,35.7,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-09-04 real, hot September day",6,35.7,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-09-04 real, hot September day",8,39.2,shortest,1,0.44,0.56,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",8,39.2,air_rule,0,0.0,,,forecast air stays above 40 C for the whole window
+"abu_dhabi 2024-09-04 real, hot September day",8,39.2,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-09-04 real, hot September day",8,39.2,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-09-04 real, hot September day",10,41.6,shortest,1,0.12,0.88,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",10,41.6,air_rule,1,0.9,0.1,189.7,
+"abu_dhabi 2024-09-04 real, hot September day",10,41.6,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-09-04 real, hot September day",10,41.6,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-09-04 real, hot September day",12,40.6,shortest,1,0.78,0.22,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",12,40.6,air_rule,1,0.9,0.1,69.7,
+"abu_dhabi 2024-09-04 real, hot September day",12,40.6,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-09-04 real, hot September day",12,40.6,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-09-04 real, hot September day",14,36.7,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",14,36.7,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-09-04 real, hot September day",14,36.7,envelope_l0,1,1.0,0.0,71.3,
+"abu_dhabi 2024-09-04 real, hot September day",14,36.7,envelope_l2,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-10-12 real, median October day",2,27.8,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-10-12 real, median October day",2,27.8,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-10-12 real, median October day",2,27.8,envelope_l0,1,1.0,0.0,54.7,
+"abu_dhabi 2024-10-12 real, median October day",2,27.8,envelope_l2,1,1.0,0.0,54.7,
+"abu_dhabi 2024-10-12 real, median October day",4,29.6,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-10-12 real, median October day",4,29.6,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-10-12 real, median October day",4,29.6,envelope_l0,1,1.0,0.0,58.0,
+"abu_dhabi 2024-10-12 real, median October day",4,29.6,envelope_l2,1,1.0,0.0,63.0,
+"abu_dhabi 2024-10-12 real, median October day",6,33.2,shortest,1,0.96,0.04,54.7,
+"abu_dhabi 2024-10-12 real, median October day",6,33.2,air_rule,1,0.96,0.04,54.7,
+"abu_dhabi 2024-10-12 real, median October day",6,33.2,envelope_l0,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-10-12 real, median October day",6,33.2,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-10-12 real, median October day",8,35.4,shortest,1,0.86,0.14,54.7,
+"abu_dhabi 2024-10-12 real, median October day",8,35.4,air_rule,1,0.86,0.14,54.7,
+"abu_dhabi 2024-10-12 real, median October day",8,35.4,envelope_l0,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-10-12 real, median October day",8,35.4,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-10-12 real, median October day",10,35.2,shortest,1,0.95,0.05,54.7,
+"abu_dhabi 2024-10-12 real, median October day",10,35.2,air_rule,1,0.95,0.05,54.7,
+"abu_dhabi 2024-10-12 real, median October day",10,35.2,envelope_l0,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-10-12 real, median October day",10,35.2,envelope_l2,0,0.0,,,no path and pause combination keeps every limit in time
+"abu_dhabi 2024-10-12 real, median October day",12,34.3,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-10-12 real, median October day",12,34.3,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-10-12 real, median October day",12,34.3,envelope_l0,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-10-12 real, median October day",12,34.3,envelope_l2,0,0.0,,,search budget of 4000 evaluations exhausted
+"abu_dhabi 2024-10-12 real, median October day",14,32.5,shortest,1,1.0,0.0,54.7,
+"abu_dhabi 2024-10-12 real, median October day",14,32.5,air_rule,1,1.0,0.0,54.7,
+"abu_dhabi 2024-10-12 real, median October day",14,32.5,envelope_l0,1,1.0,0.0,54.7,
+"abu_dhabi 2024-10-12 real, median October day",14,32.5,envelope_l2,1,1.0,0.0,54.7,
