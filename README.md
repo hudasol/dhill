@@ -46,14 +46,14 @@ or `docker compose up`.
 ```
 ugv_medium_inspection @ sweihan  (synthetic, L0)  1 h missions
 08-05T00:00  GO     1.00 ####################
-08-05T04:00  DERATE 0.57 ############
+08-05T04:00  DERATE 0.56 ###########
 08-05T06:00  PARK   0.00
 08-05T14:00  PARK   0.00
-08-05T16:00  DERATE 0.78 ################
+08-05T16:00  DERATE 0.91 ##################
 08-05T18:00  GO     1.00 ####################
 ```
 
-Versus a fixed 08:00 to 17:00 full-speed shift, the scheduler completes the same 12 work-hours with no predicted limit breach, while the fixed shift would breach a limit in 22 of 24 blocks. That count is **relative to Dhill's own L0 model**: it shows what the method does, and is exactly what a field trial must test.
+Versus a fixed 08:00 to 17:00 full speed shift, the scheduler completes the same 12 work hours with no predicted limit breach, while the fixed shift would breach a limit in 20 of 24 blocks (`dhill plan --robots ugv_medium_inspection sidewalk_delivery_robot`). That count is **relative to Dhill's own L0 model**: it shows what the method does, and is exactly what a field trial must test.
 
 A second result is worth stating plainly (`examples/value_of_calibration.py`): a nominal model that ignores parameter uncertainty is unsafe in 8 slots against a hidden "true" robot that runs hotter than assumed, while the uncertainty-aware envelope is not. Calibration cut hold-out temperature error from 1.2 K to 0.4 K. Details and caveats in [`docs/results.md`](docs/results.md).
 
