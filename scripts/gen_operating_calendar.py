@@ -133,6 +133,13 @@ def plot(month_rows: list[dict]) -> None:
     fig.savefig(IMG, dpi=130, facecolor=fig.get_facecolor())
 
 
+def prof_limit(comp: str) -> str:
+    lim = load_profile(PROFILE).limits.get(comp)
+    if lim is None:
+        return "not defined"
+    return f"{lim.limit_c:g} degC hard, {lim.margin_k:g} K margin, source {lim.source}"
+
+
 def before_after(month_rows: list[dict]) -> list[str]:
     """Headline shares on the unfixed profile (kept CSV) and on the current one."""
     before = clim.headline(clim.read_month_csv(BEFORE_CSV))
@@ -257,32 +264,41 @@ def render(month_rows: list[dict], hours: list[dict], meta: dict) -> str:
         "",
         *table(month_rows, "share_air_above_rated"),
         "",
+        "## Before and after the profile fix",
+        "",
+        "Commit 6f38479 on branch `fix/jackal-rated-ambient` raised three assumed conductances (shell to interior 4.4 to",
+        "12.0 W/K, battery 1.2 to 2.0 W/K, compute 2.0 to 4.5 W/K) so that the profile stays inside its",
+        "limits at the rated ambient in shade. Before: `examples/before-fix/` (same weather, days, seeds).",
+        "",
+        *before_after(month_rows),
+        "",
         "## Candid reading",
         "",
-        f"1. **Here the datasheet is more credible than the profile.** Air above {meta['rated_ambient_c']:g} degC",
-        f"   is rare in this record ({pct(h['share_air_above_rated'])} of hours; the most is "
+        "1. **The calendar is as sensitive as this to three unmeasured numbers.** The change above comes",
+        "   only from the three conductances, which were chosen to match the datasheet rating, not",
+        "   measured (`docs/robot-sources.md` gives a plausibility check: all three sit at the upper end of",
+        "   what free convection and radiation can give). The absolute shares remain properties of the",
+        "   assumptions until those conductances are measured.",
+        f"2. **An ambient rating does not cover a robot in sun.** Air above {meta['rated_ambient_c']:g} degC is rare",
+        f"   in this record ({pct(h['share_air_above_rated'])} of hours; at most "
         f"{pct(worst['share_air_above_rated'])} at {worst['site']} in {MON[worst['month'] - 1]}),",
-        f"   yet the envelope withholds GO in {pct(1 - h['share_go'])} of hours. The table below shows",
-        "   why: with this profile GO is the majority decision only when the mission air stays at or",
-        f"   below {go_major:g} degC, and GO never occurs above {go_never:g} degC. The manufacturer rates the",
-        f"   robot to {meta['rated_ambient_c']:g} degC ambient. A profile that forbids full speed above",
-        f"   {go_never:g} degC contradicts its own datasheet, so the most likely explanation is that the",
-        "   assumed thermal parameters are too pessimistic, not that the Jackal is unsafe in mild air.",
-        f"2. **The binding component is `{top_comp}`** in {pct(top_share, 0)} of hours that are not GO",
-        "   (tightest component at full scale). The compute heat path in the profile (35 W class",
-        "   processor in an unventilated body, assumed shell to interior conductance 4.4 W/K, assumed",
-        "   die rise 0.5 K/W, assumed 85 degC allowed die temperature, no cooling) is entirely assumed.",
-        "   The real Jackal may have fans, a heat spreader to the chassis or a lower actual processor",
-        "   load; none of that is in the public datasheet.",
-        "3. **What the calendar does show.** The method works end to end on eleven years of recorded",
-        "   weather: per site and month it separates hours that need derating from hours that need",
-        "   parking, and the PARK share follows the summer and the inland sites as expected. The",
-        f"   GO share is {pct(go_jan, 0)} in January and {pct(go_jul, 0)} in July on average across sites;",
-        f"   the best month is {MON[best_go['month'] - 1]} at {best_go['site']} ({pct(best_go['share_go'], 0)}).",
-        f"   Missions starting 00:00 to 05:00 local are GO in {pct(night_go, 0)} of sampled night hours.",
-        "4. **Next step.** Measure the compute heat path (die temperature against processor load at",
-        "   two ambient temperatures, `docs/field-test-kit.md`), update the profile, and rerun this",
-        "   script. Until then the absolute shares should not be quoted as properties of the robot.",
+        f"   yet the envelope withholds GO in {pct(1 - h['share_go'])} of hours. With the fixed profile GO is",
+        f"   the majority decision only when the mission air stays at or below {go_major:g} degC, and GO never",
+        f"   occurs above {go_never:g} degC. The profile is consistent with the rating in shade by",
+        f"   construction; the remaining gap comes from solar load and from the {CFG.precondition_h:g} h parked soak in sun",
+        "   that precedes each mission in this method. A shaded or cooled shelter between missions would",
+        "   change the result and is not modelled here.",
+        f"3. **The binding component is `{top_comp}`** in {pct(top_share, 0)} of hours that are not GO",
+        f"   (tightest component at full scale). Its limit ({prof_limit(top_comp)}) is an assumption in the",
+        "   profile; the cell datasheet value is the next number to obtain.",
+        "4. **What the calendar does show.** The method runs end to end on eleven years of recorded",
+        "   weather and separates hours that need derating from hours that need parking per site and",
+        f"   month. The GO share is {pct(go_jan, 0)} in January and {pct(go_jul, 0)} in July on average across",
+        f"   sites; the best month is {MON[best_go['month'] - 1]} at {best_go['site']} "
+        f"({pct(best_go['share_go'], 0)}). Missions starting 00:00 to 05:00 local are GO in",
+        f"   {pct(night_go, 0)} of sampled night hours.",
+        "5. **Next step.** Measure shell to interior, battery and compute conductances and the battery",
+        "   limit on a real unit (`docs/field-test-kit.md`), update the profile, rerun this script.",
         "",
         "### GO share by mission air temperature (weighted sampled hours, all sites)",
         "",
