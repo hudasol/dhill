@@ -59,7 +59,7 @@ def tornado(
 
     def peaks(prof: Profile):
         env = Envelope(prof, weather, base_cfg)
-        idx = env._idx(start_utc)
+        idx = env.index_of(start_utc)
         r = env.scan(np.array([idx]), np.array([[scale]]), duration_h, mode, shade)
         return r["risk_peak_c"][0, 0], env
 
