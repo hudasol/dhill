@@ -15,7 +15,6 @@ import calendar
 import itertools
 import json
 import sys
-from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
@@ -68,7 +67,6 @@ def compute(offline: bool) -> dict:
         "pm10_first_cams_hour_utc": pm_first,
         "gaps": gaps,
         "weather_source": "Open-Meteo historical archive (reanalysis) and air quality API (CAMS)",
-        "generated_utc": datetime.now(UTC).strftime("%Y-%m-%dT%H:%MZ"),
     }
     META.write_text(json.dumps(meta, indent=2), encoding="utf-8")
     return meta
@@ -325,8 +323,6 @@ def render(month_rows: list[dict], hours: list[dict], meta: dict) -> str:
         "python scripts/gen_operating_calendar.py",
         "dhill calendar --profile clearpath_jackal --offline   # same table, from the cache",
         "```",
-        "",
-        f"Generated {meta['generated_utc']}.",
         "",
     ]
     return "\n".join(L)
