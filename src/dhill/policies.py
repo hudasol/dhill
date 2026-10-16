@@ -33,13 +33,13 @@ class Score:
 
 def slot_starts(env: Envelope, first_utc: str, last_utc: str, step_min: float = 60.0) -> np.ndarray:
     stride = int(round(step_min * 60.0 / env.cfg.dt_s))
-    return np.arange(env._idx(first_utc), env._idx(last_utc) + 1, stride)
+    return np.arange(env.index_of(first_utc), env.index_of(last_utc) + 1, stride)
 
 
 def ambient_threshold(
     env: Envelope, starts: np.ndarray, duration_h: float, limit_c: float
 ) -> np.ndarray:
-    n = env._steps(duration_h)
+    n = env.steps_for(duration_h)
     air = k_to_c(env.forcing.t_air_k)
     return np.array([1.0 if air[s : s + n + 1].max() <= limit_c else 0.0 for s in starts])
 

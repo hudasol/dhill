@@ -240,13 +240,13 @@ class PlanningProblem:
     def __post_init__(self) -> None:
         self.cfg.parked_shade = self.graph.waypoints[self.depot].shade
         self.env = Envelope(self.profile, self.weather, self.cfg)
-        self.request_idx = self.env._idx(self.request_utc)
+        self.request_idx = self.env.index_of(self.request_utc)
         self.stops = (self.depot, *self.checkpoints, self.depot)
 
     def soak(self, env: Envelope | None = None) -> State:
         """State after the parked soak at the depot before the request time."""
         e = env or self.env
-        st, _ = e._soak_state(np.array([self.request_idx]))
+        st, _ = e.soak_state(np.array([self.request_idx]))
         return st
 
     def shortest_legs(self) -> tuple[tuple[Segment, ...], ...]:
@@ -408,7 +408,7 @@ def score_plan(
 ) -> RouteScore:
     if plan is None:
         return RouteScore(policy, False, float("nan"), 0.0, 0.0)
-    st, _ = true_env._soak_state(np.array([pp.request_idx]))
+    st, _ = true_env.soak_state(np.array([pp.request_idx]))
     ex = execute(truth, true_env, true_env.params, plan, pp.graph, pp.request_idx, st)
     hard = np.array([truth.limits[c].limit_c if c in truth.limits else np.inf for c in ex.comps])
     viol = np.any(ex.peaks_c > hard[None, :], axis=1)
