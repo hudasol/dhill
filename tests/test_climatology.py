@@ -208,3 +208,19 @@ def test_published_before_after_table_is_computed():
     text = (ROOT / "docs" / "operating-calendar.md").read_text(encoding="utf-8")
     for line in gen.before_after(clim.read_month_csv(gen.MONTH_CSV)):
         assert line in text, line
+
+
+def test_readme_calendar_numbers_match_the_csv():
+    """README quotes the calendar headline; it must equal the code's result on both CSVs."""
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    after = clim.headline(
+        clim.read_month_csv(ROOT / "examples" / "operating_calendar_clearpath_jackal.csv")
+    )
+    before = clim.headline(
+        clim.read_month_csv(
+            ROOT / "examples" / "before-fix" / "operating_calendar_clearpath_jackal.csv"
+        )
+    )
+    for key in ("share_go", "share_derate", "share_park", "share_air_above_rated"):
+        assert f"{100 * after[key]:.1f} %" in readme, key
+    assert f"GO was {100 * before['share_go']:.1f} % before" in readme
