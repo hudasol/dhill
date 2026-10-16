@@ -94,7 +94,8 @@ class Envelope:
         pm[0] = 1.0
         self.pm_scale = pm
 
-    def _idx(self, when) -> int:
+    def index_of(self, when) -> int:
+        """Index on the engine's forcing grid at or after a UTC time."""
         return self.weather.index_of(when, self.cfg.dt_s)
 
     def _time_at(self, idx: int) -> np.datetime64:
@@ -103,7 +104,8 @@ class Envelope:
     def _fmt(self, idx: int) -> str:
         return str(self._time_at(idx).astype("datetime64[s]")) + "Z"
 
-    def _steps(self, hours: float) -> int:
+    def steps_for(self, hours: float) -> int:
+        """Number of solver steps covering ``hours`` (at least one)."""
         return max(1, int(round(hours * 3600.0 / self.cfg.dt_s)))
 
     # ------------------------------------------------------------------ perception
@@ -134,8 +136,11 @@ class Envelope:
         return np.array(out_cap), np.array(out_rng), np.array(out_pm)
 
     # ------------------------------------------------------------------ core scan
-    def _soak_state(self, starts: np.ndarray) -> tuple[State, int]:
-        """State after a parked soak before each start, per (start, mc) pair."""
+    def soak_state(self, starts: np.ndarray) -> tuple[State, int]:
+        """State after a parked soak before each start, per (start, mc) pair.
+
+        Returns the state (batch ``len(starts) * n_mc``) and the number of soak steps.
+        """
         s_n, m = starts.size, self.cfg.n_mc
         n_pre = self._steps(self.cfg.precondition_h) if self.cfg.precondition_h > 0 else 0
         pre_idx = np.maximum(starts - n_pre, 0)
@@ -161,6 +166,11 @@ class Envelope:
             # the soak is parked: do not carry its tiny discharge into mission SoC
             st.soc = soc0.copy()
         return st, n_pre
+
+    # private names kept as aliases for existing callers
+    _idx = index_of
+    _steps = steps_for
+    _soak_state = soak_state
 
     def scan(
         self, starts, scales, duration_h: float, mode: str, shade=0.0
