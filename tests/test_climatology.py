@@ -192,3 +192,19 @@ def test_published_headline_is_computed_from_the_csv():
         assert f"{100 * head[key]:.1f} %" in text, key
     meta = json.loads((ROOT / "examples" / "operating_calendar_meta.json").read_text())
     assert meta["profile_evidence_level"] == "L0"
+
+
+def test_published_before_after_table_is_computed():
+    """The before and after table in docs/operating-calendar.md equals the generator's output."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "gen_cal", ROOT / "scripts" / "gen_operating_calendar.py"
+    )
+    gen = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gen)
+    if not gen.MONTH_CSV.exists() or not gen.BEFORE_CSV.exists():
+        pytest.skip("calendar outputs not generated")
+    text = (ROOT / "docs" / "operating-calendar.md").read_text(encoding="utf-8")
+    for line in gen.before_after(clim.read_month_csv(gen.MONTH_CSV)):
+        assert line in text, line
