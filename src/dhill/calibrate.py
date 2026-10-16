@@ -19,9 +19,10 @@ from pydantic import BaseModel
 from scipy.optimize import least_squares
 
 from .physics.constants import c_to_k, k_to_c
-from .physics.thermal import Loads, State, ThermalParams, simulate
+from .physics.thermal import Loads, State, simulate
 from .profiles.registry import PARAMS
 from .profiles.schema import ParamSpec, Profile
+from .profiles.thermal_adapter import thermal_params
 from .weather.base import Weather
 
 NODE_COLS = {
@@ -112,7 +113,7 @@ def _simulate(
             / tel.dt_s
         )
     )
-    p = ThermalParams.from_profile(profile)
+    p = thermal_params(profile)
     if t0_k is None:
         t0 = np.empty(6)
         for c, j in NODE_COLS.items():
@@ -283,7 +284,7 @@ def synthetic_telemetry(
         "p_drive_mech_w": m.mech_w * scale,
         "p_payload_w": m.payload_w * scale,
     }
-    p = ThermalParams.from_profile(pr)
+    p = thermal_params(pr)
     start = int(
         round(float((t0 - weather.times_utc[0]).astype("timedelta64[s]").astype(float)) / dt_s)
     )

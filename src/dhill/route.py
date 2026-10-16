@@ -36,6 +36,7 @@ from .physics.constants import k_to_c
 from .physics.thermal import State, ThermalParams, lhs_normal, simulate
 from .profiles.registry import COMPONENTS
 from .profiles.schema import Profile
+from .profiles.thermal_adapter import thermal_params
 from .weather.base import Weather
 
 _NODE = {"battery": 2, "lidar": 4, "motor": 5, "interior": 1}
@@ -394,7 +395,7 @@ def truth_env(
         truth, weather, EngineConfig(n_mc=worlds, dt_s=dt_s, parked_shade=parked_shade, seed=seed)
     )
     rng = np.random.default_rng(seed)
-    p0 = ThermalParams.from_profile(truth, n=worlds)
+    p0 = thermal_params(truth, n=worlds)
     env.params = p0.replace_values(
         d_temp_k=sigma_t * lhs_normal(rng, worlds),
         irr_scale=np.exp(sigma_irr * lhs_normal(rng, worlds)),
