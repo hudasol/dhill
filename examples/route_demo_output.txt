@@ -67,64 +67,64 @@ ugv_medium_inspection   al_ain     2024-07-09    18:00   41.8  air_rule_40C     
 ugv_medium_inspection   al_ain     2024-07-09    18:00   41.8  envelope          yes       34.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        abu_dhabi  2024-07-02     6:00   31.0  shortest          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        abu_dhabi  2024-07-02     6:00   31.0  air_rule_40C      yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        abu_dhabi  2024-07-02     6:00   31.0  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        abu_dhabi  2024-07-02     9:00   36.2  shortest          yes       50.0     97.5%     2.5%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        abu_dhabi  2024-07-02     9:00   36.2  air_rule_40C      yes       50.0     97.5%     2.5%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-02     6:00   31.0  envelope          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-02     9:00   36.2  shortest          yes       50.0     98.5%     1.5%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-02     9:00   36.2  air_rule_40C      yes       50.0     98.5%     1.5%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        abu_dhabi  2024-07-02     9:00   36.2  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        abu_dhabi  2024-07-02    12:00   40.6  shortest          yes       50.0     29.0%    71.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        abu_dhabi  2024-07-02    12:00   40.6  air_rule_40C      yes      260.0     25.5%    74.5%  depot-gate-north-east-depot / 1.0 / 210 / -
+clearpath_jackal        abu_dhabi  2024-07-02    12:00   40.6  shortest          yes       50.0     38.0%    62.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-02    12:00   40.6  air_rule_40C      yes      260.0     57.0%    43.0%  depot-gate-north-east-depot / 1.0 / 210 / -
 clearpath_jackal        abu_dhabi  2024-07-02    12:00   40.6  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        abu_dhabi  2024-07-02    15:00   40.2  shortest          yes       50.0     32.5%    67.5%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        abu_dhabi  2024-07-02    15:00   40.2  air_rule_40C      yes       80.0     34.5%    65.5%  depot-gate-north-east-depot / 1.0 / 30 / -
-clearpath_jackal        abu_dhabi  2024-07-02    15:00   40.2  envelope           no        nan      0.0%     0.0%  -
+clearpath_jackal        abu_dhabi  2024-07-02    15:00   40.2  shortest          yes       50.0     48.5%    51.5%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-02    15:00   40.2  air_rule_40C      yes       80.0     59.5%    40.5%  depot-gate-north-east-depot / 1.0 / 30 / -
+clearpath_jackal        abu_dhabi  2024-07-02    15:00   40.2  envelope          yes      240.0    100.0%     0.0%  depot-canopy-north-canopy-east-canopy-depot / 0.7 / 120 / canopy 20 min
 clearpath_jackal        abu_dhabi  2024-07-02    18:00   36.1  shortest          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        abu_dhabi  2024-07-02    18:00   36.1  air_rule_40C      yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        abu_dhabi  2024-07-02    18:00   36.1  envelope           no        nan      0.0%     0.0%  -
+clearpath_jackal        abu_dhabi  2024-07-02    18:00   36.1  envelope          yes       74.0    100.0%     0.0%  depot-gate-north-east-depot / 0.7 / 0 / -
 clearpath_jackal        abu_dhabi  2024-07-04     6:00   34.2  shortest          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        abu_dhabi  2024-07-04     6:00   34.2  air_rule_40C      yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        abu_dhabi  2024-07-04     6:00   34.2  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        abu_dhabi  2024-07-04     9:00   37.4  shortest          yes       50.0     98.0%     2.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        abu_dhabi  2024-07-04     9:00   37.4  air_rule_40C      yes       50.0     98.0%     2.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-04     6:00   34.2  envelope          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-04     9:00   37.4  shortest          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-04     9:00   37.4  air_rule_40C      yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        abu_dhabi  2024-07-04     9:00   37.4  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        abu_dhabi  2024-07-04    12:00   38.8  shortest          yes       50.0     67.5%    32.5%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        abu_dhabi  2024-07-04    12:00   38.8  air_rule_40C      yes       50.0     67.5%    32.5%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-04    12:00   38.8  shortest          yes       50.0     81.5%    18.5%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-04    12:00   38.8  air_rule_40C      yes       50.0     81.5%    18.5%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        abu_dhabi  2024-07-04    12:00   38.8  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        abu_dhabi  2024-07-04    15:00   38.2  shortest          yes       50.0     77.0%    23.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        abu_dhabi  2024-07-04    15:00   38.2  air_rule_40C      yes       50.0     77.0%    23.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        abu_dhabi  2024-07-04    15:00   38.2  envelope           no        nan      0.0%     0.0%  -
+clearpath_jackal        abu_dhabi  2024-07-04    15:00   38.2  shortest          yes       50.0     86.5%    13.5%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-04    15:00   38.2  air_rule_40C      yes       50.0     86.5%    13.5%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        abu_dhabi  2024-07-04    15:00   38.2  envelope          yes      210.0    100.0%     0.0%  depot-canopy-north-canopy-east-canopy-depot / 0.7 / 90 / canopy 20 min
 clearpath_jackal        abu_dhabi  2024-07-04    18:00   36.2  shortest          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        abu_dhabi  2024-07-04    18:00   36.2  air_rule_40C      yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        abu_dhabi  2024-07-04    18:00   36.2  envelope           no        nan      0.0%     0.0%  -
+clearpath_jackal        abu_dhabi  2024-07-04    18:00   36.2  envelope          yes       74.0    100.0%     0.0%  depot-gate-north-east-depot / 0.7 / 0 / -
 clearpath_jackal        al_ain     2024-07-08     6:00   32.9  shortest          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        al_ain     2024-07-08     6:00   32.9  air_rule_40C      yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        al_ain     2024-07-08     6:00   32.9  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        al_ain     2024-07-08     9:00   42.2  shortest          yes       50.0     54.0%    46.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        al_ain     2024-07-08     6:00   32.9  envelope          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        al_ain     2024-07-08     9:00   42.2  shortest          yes       50.0     68.0%    32.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        al_ain     2024-07-08     9:00   42.2  air_rule_40C       no        nan      0.0%     0.0%  -
 clearpath_jackal        al_ain     2024-07-08     9:00   42.2  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        al_ain     2024-07-08    12:00   46.9  shortest          yes       50.0      0.5%    99.5%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        al_ain     2024-07-08    12:00   46.9  shortest          yes       50.0      2.0%    98.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        al_ain     2024-07-08    12:00   46.9  air_rule_40C       no        nan      0.0%     0.0%  -
 clearpath_jackal        al_ain     2024-07-08    12:00   46.9  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        al_ain     2024-07-08    15:00   48.6  shortest          yes       50.0      0.0%   100.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        al_ain     2024-07-08    15:00   48.6  shortest          yes       50.0      2.5%    97.5%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        al_ain     2024-07-08    15:00   48.6  air_rule_40C       no        nan      0.0%     0.0%  -
 clearpath_jackal        al_ain     2024-07-08    15:00   48.6  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        al_ain     2024-07-08    18:00   45.1  shortest          yes       50.0     33.0%    67.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        al_ain     2024-07-08    18:00   45.1  shortest          yes       50.0     96.0%     4.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        al_ain     2024-07-08    18:00   45.1  air_rule_40C      yes      230.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 180 / -
-clearpath_jackal        al_ain     2024-07-08    18:00   45.1  envelope           no        nan      0.0%     0.0%  -
+clearpath_jackal        al_ain     2024-07-08    18:00   45.1  envelope          yes      230.0    100.0%     0.0%  depot-gate-north-canopy-east-depot / 0.7 / 120 / canopy 20 min
 clearpath_jackal        al_ain     2024-07-09     6:00   32.8  shortest          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        al_ain     2024-07-09     6:00   32.8  air_rule_40C      yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        al_ain     2024-07-09     6:00   32.8  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        al_ain     2024-07-09     9:00   40.0  shortest          yes       50.0     82.0%    18.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        al_ain     2024-07-09     6:00   32.8  envelope          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        al_ain     2024-07-09     9:00   40.0  shortest          yes       50.0     88.0%    12.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        al_ain     2024-07-09     9:00   40.0  air_rule_40C       no        nan      0.0%     0.0%  -
 clearpath_jackal        al_ain     2024-07-09     9:00   40.0  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        al_ain     2024-07-09    12:00   46.3  shortest          yes       50.0      0.5%    99.5%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        al_ain     2024-07-09    12:00   46.3  shortest          yes       50.0      3.0%    97.0%  depot-gate-north-east-depot / 1.0 / 0 / -
 clearpath_jackal        al_ain     2024-07-09    12:00   46.3  air_rule_40C       no        nan      0.0%     0.0%  -
 clearpath_jackal        al_ain     2024-07-09    12:00   46.3  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        al_ain     2024-07-09    15:00   47.0  shortest          yes       50.0      1.0%    99.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        al_ain     2024-07-09    15:00   47.0  air_rule_40C      yes      290.0     98.5%     1.5%  depot-gate-north-east-depot / 1.0 / 240 / -
+clearpath_jackal        al_ain     2024-07-09    15:00   47.0  shortest          yes       50.0      7.0%    93.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        al_ain     2024-07-09    15:00   47.0  air_rule_40C      yes      290.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 240 / -
 clearpath_jackal        al_ain     2024-07-09    15:00   47.0  envelope           no        nan      0.0%     0.0%  -
-clearpath_jackal        al_ain     2024-07-09    18:00   41.8  shortest          yes       50.0     76.0%    24.0%  depot-gate-north-east-depot / 1.0 / 0 / -
-clearpath_jackal        al_ain     2024-07-09    18:00   41.8  air_rule_40C      yes      110.0     99.5%     0.5%  depot-gate-north-east-depot / 1.0 / 60 / -
-clearpath_jackal        al_ain     2024-07-09    18:00   41.8  envelope           no        nan      0.0%     0.0%  -
+clearpath_jackal        al_ain     2024-07-09    18:00   41.8  shortest          yes       50.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 0 / -
+clearpath_jackal        al_ain     2024-07-09    18:00   41.8  air_rule_40C      yes      110.0    100.0%     0.0%  depot-gate-north-east-depot / 1.0 / 60 / -
+clearpath_jackal        al_ain     2024-07-09    18:00   41.8  envelope          yes      124.0    100.0%     0.0%  depot-canopy-north-east-depot / 0.7 / 30 / canopy 20 min
 
 Summary per profile, site and policy
 profile                 site       policy            plannedmean finish  completion     P(viol)   risky
@@ -134,12 +134,12 @@ ugv_medium_inspection   abu_dhabi  envelope          10/10        34.2      100.
 ugv_medium_inspection   al_ain     shortest          10/10        34.0       99.9%        0.1%       0
 ugv_medium_inspection   al_ain     air_rule_40C       5/10       130.0       50.0%        0.0%       0
 ugv_medium_inspection   al_ain     envelope          10/10       108.0      100.0%        0.0%       0
-clearpath_jackal        abu_dhabi  shortest          10/10        50.0       80.2%       19.8%       4
-clearpath_jackal        abu_dhabi  air_rule_40C      10/10        74.0       80.0%       20.0%       4
-clearpath_jackal        abu_dhabi  envelope           0/10         nan        0.0%        0.0%       0
-clearpath_jackal        al_ain     shortest          10/10        50.0       44.7%       55.3%       8
-clearpath_jackal        al_ain     air_rule_40C       5/10       146.0       49.8%        0.4%       0
-clearpath_jackal        al_ain     envelope           0/10         nan        0.0%        0.0%       0
+clearpath_jackal        abu_dhabi  shortest          10/10        50.0       85.3%       14.7%       4
+clearpath_jackal        abu_dhabi  air_rule_40C      10/10        74.0       88.3%       11.7%       4
+clearpath_jackal        abu_dhabi  envelope           6/10       116.3       60.0%        0.0%       0
+clearpath_jackal        al_ain     shortest          10/10        50.0       56.7%       43.4%       6
+clearpath_jackal        al_ain     air_rule_40C       5/10       146.0       50.0%        0.0%       0
+clearpath_jackal        al_ain     envelope           4/10       113.5       40.0%        0.0%       0
 
 completion: share of (request, draw) pairs finished within the deadline with no hard
 limit exceeded; requests with no plan count as not completed. P(viol): mean share of
