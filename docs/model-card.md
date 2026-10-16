@@ -30,3 +30,6 @@ Unit tests against textbook values; energy-balance closure; monotonicity in powe
 
 ## v0.5.0 additions
 Hard-limit exceedance probability and time-to-limit; battery-ageing term in the scheduler; one-at-a-time sensitivity analysis (`docs/sensitivity.md`); policy comparison on a hidden synthetic robot (`docs/policy-comparison.md`). Same evidence limits apply: all of it is L0/synthetic.
+
+## Additions after v0.5.0 (unreleased, branches feature/operating-calendar, feature/route-sim, feature/prereg-eval)
+Operating calendar on recorded weather (`docs/operating-calendar.md`), patrol route simulation on the same solver (`docs/route-simulation.md`), and a preregistered evaluation (`docs/prereg-results.md`). No change to the physics or the decision rule. New evidence about the model itself: the 95 % risk quantile covered the hidden truth in 99.6 % of (slot, draw) pairs in a synthetic world that shares the model structure, so the stated quantile is conservative there; and the L0 Jackal profile contradicts its datasheet ambient rating.
