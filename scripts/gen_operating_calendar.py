@@ -33,6 +33,14 @@ MONTH_CSV = ROOT / "examples" / f"operating_calendar_{PROFILE}.csv"
 HOUR_CSV = ROOT / "examples" / f"operating_calendar_{PROFILE}_hours.csv"
 META = ROOT / "examples" / "operating_calendar_meta.json"
 IMG = ROOT / "docs" / "img" / "operating-calendar.png"
+BEFORE_CSV = ROOT / "examples" / "before-fix" / f"operating_calendar_{PROFILE}.csv"
+HEADLINE_KEYS = (
+    ("share_go", "GO"),
+    ("share_derate", "DERATE"),
+    ("share_park", "PARK"),
+    ("share_air_above_rated", "Air above the rated ambient (all recorded hours)"),
+    ("share_not_go_air_within_rating", "Not GO although mission air stays within the rating"),
+)
 DOC = ROOT / "docs" / "operating-calendar.md"
 MON = [calendar.month_abbr[m] for m in range(1, 13)]
 
@@ -123,6 +131,19 @@ def plot(month_rows: list[dict]) -> None:
     )
     IMG.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(IMG, dpi=130, facecolor=fig.get_facecolor())
+
+
+def before_after(month_rows: list[dict]) -> list[str]:
+    """Headline shares on the unfixed profile (kept CSV) and on the current one."""
+    before = clim.headline(clim.read_month_csv(BEFORE_CSV))
+    after = clim.headline(month_rows)
+    out = [
+        "| Share of hours | Before the fix | After the fix |",
+        "|---|---:|---:|",
+    ]
+    for key, label in HEADLINE_KEYS:
+        out.append(f"| {label} | {pct(before[key])} | {pct(after[key])} |")
+    return out
 
 
 def pct(x: float, nd: int = 1) -> str:
