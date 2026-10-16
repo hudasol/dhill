@@ -65,9 +65,16 @@ TRUTH = {
         "coupling.ua_shell_interior_w_k": 14.0,
         "shell.heat_capacity_j_k": 24000.0,
     },
+    # same relative changes as the medium UGV, applied to the Jackal profile's current values
     "clearpath_jackal": {
-        "surface.alpha_clean": 0.45 * 0.52 / 0.40,
-        "coupling.ua_shell_interior_w_k": 4.4 * 14.0 / 18.0,
+        "surface.alpha_clean": load_profile("clearpath_jackal").value("surface.alpha_clean")
+        * 0.52
+        / 0.40,
+        "coupling.ua_shell_interior_w_k": load_profile("clearpath_jackal").value(
+            "coupling.ua_shell_interior_w_k"
+        )
+        * 14.0
+        / 18.0,
     },
 }
 # Recorded days: two ordinary July days on the coast and the two hottest days of 2024 inland
