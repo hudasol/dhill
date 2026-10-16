@@ -45,6 +45,10 @@ def result_cell(h: dict, hid: str) -> str:
     )
 
 
+def same_bytes() -> bool:
+    return AFTER.exists() and BEFORE.read_bytes() == AFTER.read_bytes()
+
+
 def render(before: dict, after: dict) -> str:
     hb, ha = before["hypotheses"], after["hypotheses"]
     verdict = {True: "HIT", False: "MISS"}
@@ -84,7 +88,8 @@ def render(before: dict, after: dict) -> str:
     lines += [
         "",
         f"Hits before: {n_b} of {len(hb)}. Hits after: {n_a} of {len(ha)}.",
-        f"Raw per run results identical before and after: {'yes' if same_raw else 'no'}.",
+        f"Raw per run results identical before and after: {'yes' if same_raw else 'no'}. "
+        f"Result files byte identical: {'yes' if same_bytes() else 'no'}.",
         "",
         "## What changed and why",
         "",
@@ -92,9 +97,9 @@ def render(before: dict, after: dict) -> str:
     if not changed and same_raw:
         lines += [
             "Nothing changed. Every hit and miss of `docs/prereg-results.md` stands, and every number is",
-            "identical, because the evaluation never used the Jackal profile. The earlier statement that the",
-            "preregistered result described the unfixed Jackal profile was wrong; it described the medium",
-            "UGV, and so does this rerun.",
+            "identical, because the evaluation never used the Jackal profile. The preregistered result was",
+            "never evidence about the Jackal, before or after the fix; it describes the medium UGV in a",
+            "synthetic world.",
         ]
     elif not changed:
         lines += [
