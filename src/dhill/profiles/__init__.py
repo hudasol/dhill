@@ -2,6 +2,7 @@
 
 from .loader import builtin_profile_ids, load_builtin, load_profile, load_profile_file
 from .schema import Limit, Mode, Operations, ParamSpec, Profile
+from .thermal_adapter import thermal_params
 
 __all__ = [
     "Limit",
@@ -13,4 +14,5 @@ __all__ = [
     "load_builtin",
     "load_profile",
     "load_profile_file",
+    "thermal_params",
 ]
