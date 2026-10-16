@@ -14,3 +14,14 @@ local time (UTC+4).
 - 15:20 Task 4 done: review fixes committed one per change (assistant attribution, em dashes, contradictory traceability, stale outputs, README, model card, unused parameter); 17 open items in docs/known-issues.md; number check table included.
 - 15:21 Task 5 done: docs/proposals/aau-robotics-proposal.md and docs/proposals/edge-brief.md, numbers cited by path.
 - 15:24 Final report written (docs/overnight-report.md); 134 tests pass; all tasks finished, none abandoned.
+
+## Second session, 16 October 2026
+
+- 04:06 Verified state: main holds PR 1; fix/jackal-rated-ambient has three commits on main and no pull request; stacked branches unchanged; alt/* branches present and left alone. No commits on any branch in the previous 3 hours.
+- 04:09 Baseline gates: stacked tip (feature/overnight-report) 134 tests pass; fix/jackal-rated-ambient 111 tests pass; ruff clean on both.
+- 04:11 Task A done: reviewed the fix; rated ambient test present and passing; added a plausibility check of the three conductances to docs/robot-sources.md (upper end of plausible; need chassis conduction or fans not in the datasheet); opened https://github.com/hudasol/dhill/pull/8 into main.
+- 04:12 Task B: created feature/rebase-results from fix/jackal-rated-ambient and merged feature/overnight-report without conflicts (135 tests pass).
+- 04:20 Calendar rerun from the local cache (90 files, no download needed, no gaps): GO 63.9 %, DERATE 16.5 %, PARK 19.6 % (was 6.0, 69.6, 24.4); binding component now battery.
+- 04:31 Found and fixed a bug in examples/route_demo.py: the hidden true Jackal hard coded the old shell to interior conductance (4.4 x 14/18), which after the fix made it 3.5 times worse coupled than documented; now scaled from the profile's current values. Route demo rerun after the fix only.
+- 04:33 Preregistered rerun, same seeds, cases and code: result JSON byte identical to the original (checked with cmp); 2 of 6 hits unchanged because the evaluation uses only ugv_medium_inspection. Addendum written; original files untouched.
+- 04:32 Task B done: calendar, route and README numbers rebuilt and covered by tests (calendar headline and before and after table, route tables, README calendar numbers, addendum); 141 tests pass.
