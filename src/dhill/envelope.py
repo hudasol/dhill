@@ -26,12 +26,12 @@ from .physics import dust
 from .physics.constants import k_to_c
 from .physics.thermal import (
     State,
-    ThermalParams,
     lhs_normal,
     simulate,
 )
 from .profiles.registry import COMPONENTS
 from .profiles.schema import Profile
+from .profiles.thermal_adapter import thermal_params
 from .weather.base import Weather
 
 # index of each component's node in the thermal network (compute uses the die)
@@ -69,7 +69,7 @@ class Envelope:
         self.site = site or weather.label
         self.forcing = weather.to_forcing(self.cfg.dt_s)
         rng = np.random.default_rng(self.cfg.seed)
-        self.params = ThermalParams.from_profile(
+        self.params = thermal_params(
             profile, n=self.cfg.n_mc, mc=True, rng=rng, sigma_scale=self.cfg.sigma_scale
         )
         self.q = profile.operations.risk_quantile

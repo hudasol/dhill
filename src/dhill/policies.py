@@ -14,8 +14,9 @@ import numpy as np
 
 from .envelope import EngineConfig, Envelope
 from .physics.constants import k_to_c
-from .physics.thermal import ThermalParams, lhs_normal
+from .physics.thermal import lhs_normal
 from .profiles.schema import Profile
+from .profiles.thermal_adapter import thermal_params
 from .weather.base import Weather
 
 Policy = dict[str, np.ndarray]  # name -> scale per slot
@@ -81,7 +82,7 @@ def score_policies(
     cfg = EngineConfig(n_mc=worlds, precondition_h=1.5)
     env = Envelope(truth, weather, cfg)
     rng = np.random.default_rng(seed)
-    p0 = ThermalParams.from_profile(truth, n=worlds)  # true parameters, no parameter uncertainty
+    p0 = thermal_params(truth, n=worlds)  # true parameters, no parameter uncertainty
     env.params = p0.replace_values(
         d_temp_k=sigma_t * lhs_normal(rng, worlds),
         irr_scale=np.exp(sigma_irr * lhs_normal(rng, worlds)),
