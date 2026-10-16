@@ -46,16 +46,23 @@ or `docker compose up`.
 ```
 ugv_medium_inspection @ sweihan  (synthetic, L0)  1 h missions
 08-05T00:00  GO     1.00 ####################
-08-05T04:00  DERATE 0.57 ############
+08-05T04:00  DERATE 0.56 ###########
 08-05T06:00  PARK   0.00
 08-05T14:00  PARK   0.00
-08-05T16:00  DERATE 0.78 ################
+08-05T16:00  DERATE 0.91 ##################
 08-05T18:00  GO     1.00 ####################
 ```
 
-Versus a fixed 08:00 to 17:00 full-speed shift, the scheduler completes the same 12 work-hours with no predicted limit breach, while the fixed shift would breach a limit in 22 of 24 blocks. That count is **relative to Dhill's own L0 model**: it shows what the method does, and is exactly what a field trial must test.
+Versus a fixed 08:00 to 17:00 full speed shift, the scheduler completes the same 12 work hours with no predicted limit breach, while the fixed shift would breach a limit in 20 of 24 blocks (`dhill plan --robots ugv_medium_inspection sidewalk_delivery_robot`). That count is **relative to Dhill's own L0 model**: it shows what the method does, and is exactly what a field trial must test.
 
 A second result is worth stating plainly (`examples/value_of_calibration.py`): a nominal model that ignores parameter uncertainty is unsafe in 8 slots against a hidden "true" robot that runs hotter than assumed, while the uncertainty-aware envelope is not. Calibration cut hold-out temperature error from 1.2 K to 0.4 K. Details and caveats in [`docs/results.md`](docs/results.md).
+
+## Recorded weather, routes and a preregistered test (v0.6 work)
+
+- **Operating calendar** ([`docs/operating-calendar.md`](docs/operating-calendar.md)): eleven years (2015 to 2025) of recorded Open-Meteo weather at six UAE sites, run hour by hour through the envelope for the datasheet anchored but L0 Clearpath Jackal profile. The air exceeds the Jackal's rated 45 degC in 0.8 % of recorded hours, yet the profile returns GO in only 6.0 % of hours: it forbids full speed above about 20 degC air because of an assumed compute heat path. That contradicts the datasheet, and the document reads it as a profile problem to measure, not as a property of the robot.
+- **Route simulation** ([`docs/route-simulation.md`](docs/route-simulation.md)): a patrol graph with shaded segments, three planners, scored on a hidden hotter robot on recorded July 2024 days. The envelope changes the plan (shaded corridor, canopy wait, later start). It also loses: on the medium UGV it adds more than an hour of mean delay in Al Ain heat to remove a violation probability of 0.1 % on average (1.0 % at worst), and refuses every Jackal request. Python kinematic and thermal simulation, not Gazebo, not a physical test.
+- **Preregistered evaluation** ([`docs/preregistration-v0.6.md`](docs/preregistration-v0.6.md), [`docs/prereg-results.md`](docs/prereg-results.md)): predictions committed before the run; 2 of 6 hit. The envelope had no risky hour in any of 80 synthetic runs, but the 40 degC rule was slightly more productive and the 95 % risk quantile proved more conservative than its label.
+- Open review findings are listed in [`docs/known-issues.md`](docs/known-issues.md).
 
 ![Dhill dashboard: hour-by-hour GO / DERATE / PARK for the illustrative UGV at Sweihan in a synthetic heatwave](docs/img/dashboard.png)
 
@@ -72,7 +79,7 @@ flowchart LR
     T[Telemetry CSV / ROS 2 recorder] --> C[Calibration] --> P
 ```
 
-A batched backward-Euler solver integrates every start time, scale, shade level and Monte Carlo sample at once; a 72-hour hourly timeline with 64 samples takes about a second on a laptop. Parameter spreads follow their provenance (measured 2% to assumption 25%). See [`docs/architecture.md`](docs/architecture.md), [`docs/model-card.md`](docs/model-card.md) and [`docs/parameters.md`](docs/parameters.md).
+A batched backward-Euler solver integrates every start time, scale, shade level and Monte Carlo sample at once; a 72 hour hourly timeline with 64 samples took 2.3 s on a Windows laptop on 2026-10-15 (requirement NFR-02: under 10 s). Parameter spreads follow their provenance (measured 2% to assumption 25%). See [`docs/architecture.md`](docs/architecture.md), [`docs/model-card.md`](docs/model-card.md) and [`docs/parameters.md`](docs/parameters.md).
 
 ## Why the UAE, why now
 
@@ -88,11 +95,12 @@ Abu Dhabi's Smart and Autonomous Systems Council has directed a move from pilots
 - **No compliance claims** against MIL-STD-810H, IEC 60529, ISO 13482 or similar.
 - **Not the EDGE ATP 2026 ChallengeOn track**, which concerns connectivity.
 - **Novelty is only partly checked.** A shallow web pass (`docs/literature-log.md`) found no tool combining these elements, but the closest work (Moore et al. 2012 on temperature-aware field robots; `desert-av-reliability`, a UAE sensor-reliability model) overlaps in part. IEEE Xplore and Scopus have not been searched.
+- **The datasheet anchored Jackal profile is not credible yet.** It forbids full speed above about 20 degC air, against a 45 degC rating (`docs/operating-calendar.md`).
 - **Next real step:** one instrumented robot run, using [`docs/field-test-kit.md`](docs/field-test-kit.md) and a pre-registered prediction.
 
 ## Repository map
 
-`src/dhill/physics` models · `profiles` robot profiles · `weather` providers · `envelope.py` decisions · `planner.py` scheduling · `calibrate.py` fitting · `api` + `web` service · `ros2` recorder · `docs` documentation · `examples` studies · `tests` about 90 tests.
+`src/dhill/physics` models · `profiles` robot profiles · `weather` providers · `envelope.py` decisions · `planner.py` scheduling · `climatology.py` operating calendar · `route.py` route simulation · `calibrate.py` fitting · `api` + `web` service · `ros2` recorder · `docs` documentation · `examples` studies · `tests` 134 tests (`pytest --collect-only`, 2026-10-15).
 
 ## Development
 
