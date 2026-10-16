@@ -14,9 +14,9 @@ statement about how a real Jackal behaves, and it is not an operating authorisat
 
 Across 6 sites and 2015 to 2025, with months weighted by their
 length, the envelope for the L0 Jackal profile returns, for a 1 h drive mission started at a
-given hour: **GO 6.0 %**, **DERATE 69.6 %**, **PARK 24.4 %** of hours.
+given hour: **GO 63.9 %**, **DERATE 16.5 %**, **PARK 19.6 %** of hours.
 The air temperature alone exceeds the manufacturer's rated 45 degC in **0.8 %** of all recorded hours.
-In 93.2 % of hours the air stays within the rating for the whole
+In 35.3 % of hours the air stays within the rating for the whole
 mission and the envelope still does not return GO.
 
 ![Operating calendar heat map](img/operating-calendar.png)
@@ -25,34 +25,34 @@ mission and the envelope still does not return GO.
 
 | Site | Jan | Feb | Mar | Apr | May | Jun | Jul | Aug | Sep | Oct | Nov | Dec |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abu_dhabi | 7 | 6 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| al_ain | 37 | 8 | 7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 5 | 22 |
-| dubai | 20 | 26 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 5 |
-| sweihan | 41 | 30 | 15 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 6 | 26 |
-| liwa | 42 | 38 | 15 | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 31 |
-| fujairah | 14 | 10 | 13 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 8 |
+| abu_dhabi | 94 | 87 | 75 | 66 | 57 | 52 | 48 | 45 | 55 | 62 | 72 | 83 |
+| al_ain | 89 | 80 | 71 | 61 | 54 | 48 | 42 | 46 | 52 | 63 | 71 | 79 |
+| dubai | 86 | 86 | 75 | 66 | 57 | 52 | 46 | 49 | 56 | 63 | 72 | 83 |
+| sweihan | 88 | 80 | 74 | 62 | 55 | 49 | 32 | 43 | 52 | 63 | 71 | 82 |
+| liwa | 90 | 82 | 71 | 61 | 52 | 49 | 40 | 38 | 55 | 62 | 71 | 83 |
+| fujairah | 85 | 80 | 76 | 57 | 50 | 40 | 48 | 49 | 57 | 61 | 74 | 81 |
 
 ## Share of hours DERATE, percent
 
 | Site | Jan | Feb | Mar | Apr | May | Jun | Jul | Aug | Sep | Oct | Nov | Dec |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abu_dhabi | 92 | 91 | 87 | 79 | 67 | 62 | 58 | 58 | 62 | 72 | 86 | 98 |
-| al_ain | 62 | 85 | 81 | 70 | 63 | 56 | 54 | 55 | 62 | 72 | 82 | 75 |
-| dubai | 80 | 72 | 90 | 83 | 65 | 61 | 57 | 60 | 64 | 73 | 88 | 93 |
-| sweihan | 59 | 65 | 72 | 75 | 61 | 57 | 53 | 55 | 62 | 70 | 77 | 71 |
-| liwa | 57 | 54 | 68 | 65 | 62 | 58 | 52 | 54 | 63 | 71 | 83 | 69 |
-| fujairah | 84 | 85 | 79 | 68 | 58 | 55 | 59 | 62 | 65 | 72 | 87 | 89 |
+| abu_dhabi | 6 | 10 | 18 | 21 | 16 | 19 | 19 | 21 | 12 | 16 | 20 | 15 |
+| al_ain | 11 | 15 | 24 | 14 | 14 | 15 | 18 | 18 | 15 | 13 | 23 | 21 |
+| dubai | 14 | 12 | 20 | 23 | 16 | 14 | 18 | 17 | 14 | 16 | 19 | 17 |
+| sweihan | 12 | 17 | 18 | 18 | 11 | 12 | 28 | 18 | 14 | 12 | 18 | 16 |
+| liwa | 10 | 15 | 15 | 15 | 12 | 14 | 21 | 24 | 13 | 12 | 19 | 17 |
+| fujairah | 14 | 17 | 23 | 18 | 15 | 22 | 19 | 18 | 13 | 17 | 18 | 17 |
 
 ## Share of hours PARK, percent
 
 | Site | Jan | Feb | Mar | Apr | May | Jun | Jul | Aug | Sep | Oct | Nov | Dec |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abu_dhabi | 1 | 3 | 12 | 21 | 33 | 38 | 42 | 42 | 38 | 28 | 14 | 2 |
-| al_ain | 1 | 7 | 12 | 30 | 37 | 44 | 46 | 45 | 38 | 28 | 13 | 2 |
-| dubai | 0 | 2 | 10 | 17 | 35 | 39 | 42 | 40 | 36 | 27 | 12 | 2 |
-| sweihan | 0 | 5 | 12 | 25 | 39 | 43 | 47 | 45 | 38 | 30 | 18 | 3 |
-| liwa | 0 | 8 | 17 | 32 | 38 | 42 | 48 | 46 | 37 | 29 | 15 | 0 |
-| fujairah | 2 | 5 | 8 | 32 | 42 | 45 | 41 | 38 | 35 | 28 | 13 | 3 |
+| abu_dhabi | 0 | 3 | 8 | 13 | 28 | 28 | 32 | 34 | 32 | 22 | 8 | 2 |
+| al_ain | 0 | 5 | 5 | 25 | 32 | 38 | 40 | 36 | 32 | 23 | 6 | 0 |
+| dubai | 0 | 2 | 5 | 11 | 27 | 33 | 37 | 34 | 30 | 21 | 9 | 0 |
+| sweihan | 0 | 3 | 8 | 19 | 34 | 39 | 40 | 38 | 34 | 25 | 11 | 2 |
+| liwa | 0 | 3 | 14 | 24 | 35 | 37 | 39 | 38 | 32 | 26 | 10 | 0 |
+| fujairah | 1 | 3 | 1 | 25 | 35 | 38 | 33 | 32 | 29 | 22 | 8 | 2 |
 
 ## Share of recorded hours with air above 45 degC, percent
 
@@ -67,44 +67,58 @@ Counted over every hour of the record, not only the sampled days.
 | liwa | 0 | 0 | 0 | 0 | 1 | 6 | 10 | 8 | 1 | 0 | 0 | 0 |
 | fujairah | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
 
+## Before and after the profile fix
+
+Commit 6f38479 on branch `fix/jackal-rated-ambient` raised three assumed conductances (shell to interior 4.4 to
+12.0 W/K, battery 1.2 to 2.0 W/K, compute 2.0 to 4.5 W/K) so that the profile stays inside its
+limits at the rated ambient in shade. Before: `examples/before-fix/` (same weather, days, seeds).
+
+| Share of hours | Before the fix | After the fix |
+|---|---:|---:|
+| GO | 6.0 % | 63.9 % |
+| DERATE | 69.6 % | 16.5 % |
+| PARK | 24.4 % | 19.6 % |
+| Air above the rated ambient (all recorded hours) | 0.8 % | 0.8 % |
+| Not GO although mission air stays within the rating | 93.2 % | 35.3 % |
+
 ## Candid reading
 
-1. **Here the datasheet is more credible than the profile.** Air above 45 degC
-   is rare in this record (0.8 % of hours; the most is 9.8 % at liwa in Jul),
-   yet the envelope withholds GO in 94.0 % of hours. The table below shows
-   why: with this profile GO is the majority decision only when the mission air stays at or
-   below 15 degC, and GO never occurs above 20 degC. The manufacturer rates the
-   robot to 45 degC ambient. A profile that forbids full speed above
-   20 degC contradicts its own datasheet, so the most likely explanation is that the
-   assumed thermal parameters are too pessimistic, not that the Jackal is unsafe in mild air.
-2. **The binding component is `compute_die`** in 100 % of hours that are not GO
-   (tightest component at full scale). The compute heat path in the profile (35 W class
-   processor in an unventilated body, assumed shell to interior conductance 4.4 W/K, assumed
-   die rise 0.5 K/W, assumed 85 degC allowed die temperature, no cooling) is entirely assumed.
-   The real Jackal may have fans, a heat spreader to the chassis or a lower actual processor
-   load; none of that is in the public datasheet.
-3. **What the calendar does show.** The method works end to end on eleven years of recorded
-   weather: per site and month it separates hours that need derating from hours that need
-   parking, and the PARK share follows the summer and the inland sites as expected. The
-   GO share is 27 % in January and 0 % in July on average across sites;
-   the best month is Jan at liwa (42 %).
-   Missions starting 00:00 to 05:00 local are GO in 15 % of sampled night hours.
-4. **Next step.** Measure the compute heat path (die temperature against processor load at
-   two ambient temperatures, `docs/field-test-kit.md`), update the profile, and rerun this
-   script. Until then the absolute shares should not be quoted as properties of the robot.
+1. **The calendar is as sensitive as this to three unmeasured numbers.** The change above comes
+   only from the three conductances, which were chosen to match the datasheet rating, not
+   measured (`docs/robot-sources.md` gives a plausibility check: all three sit at the upper end of
+   what free convection and radiation can give). The absolute shares remain properties of the
+   assumptions until those conductances are measured.
+2. **An ambient rating does not cover a robot in sun.** Air above 45 degC is rare
+   in this record (0.8 % of hours; at most 9.8 % at liwa in Jul),
+   yet the envelope withholds GO in 36.1 % of hours. With the fixed profile GO is
+   the majority decision only when the mission air stays at or below 35 degC, and GO never
+   occurs above 40 degC. The profile is consistent with the rating in shade by
+   construction; the remaining gap comes from solar load and from the 1.5 h parked soak in sun
+   that precedes each mission in this method. A shaded or cooled shelter between missions would
+   change the result and is not modelled here.
+3. **The binding component is `battery`** in 90 % of hours that are not GO
+   (tightest component at full scale). Its limit (60 degC hard, 5 K margin, source assumption) is an assumption in the
+   profile; the cell datasheet value is the next number to obtain.
+4. **What the calendar does show.** The method runs end to end on eleven years of recorded
+   weather and separates hours that need derating from hours that need parking per site and
+   month. The GO share is 89 % in January and 43 % in July on average across
+   sites; the best month is Jan at abu_dhabi (94 %). Missions starting 00:00 to 05:00 local are GO in
+   100 % of sampled night hours.
+5. **Next step.** Measure shell to interior, battery and compute conductances and the battery
+   limit on a real unit (`docs/field-test-kit.md`), update the profile, rerun this script.
 
 ### GO share by mission air temperature (weighted sampled hours, all sites)
 
 | Mission air max (degC) | Hours | GO | DERATE | PARK | Median headroom at full scale (K) |
 |---|---:|---:|---:|---:|---:|
-| up to 15 | 232 | 100 % | 0 % | 0 % | +3.9 |
-| 15 to 20 | 901 | 33 % | 67 % | 0 % | -0.8 |
-| 20 to 25 | 1639 | 0 % | 100 % | 0 % | -6.2 |
-| 25 to 30 | 1813 | 0 % | 95 % | 5 % | -11.7 |
-| 30 to 35 | 2052 | 0 % | 78 % | 22 % | -16.6 |
-| 35 to 40 | 1282 | 0 % | 33 % | 67 % | -28.1 |
-| 40 to 45 | 651 | 0 % | 2 % | 98 % | -35.3 |
-| above 45 | 70 | 0 % | 0 % | 100 % | -39.1 |
+| up to 15 | 232 | 100 % | 0 % | 0 % | +21.8 |
+| 15 to 20 | 901 | 100 % | 0 % | 0 % | +17.4 |
+| 20 to 25 | 1639 | 93 % | 7 % | 0 % | +12.3 |
+| 25 to 30 | 1813 | 76 % | 23 % | 1 % | +6.9 |
+| 30 to 35 | 2052 | 63 % | 23 % | 14 % | +2.3 |
+| 35 to 40 | 1282 | 15 % | 29 % | 56 % | -9.5 |
+| 40 to 45 | 651 | 0 % | 10 % | 90 % | -16.4 |
+| above 45 | 70 | 0 % | 0 % | 100 % | -20.4 |
 
 ## Method
 
@@ -153,5 +167,3 @@ pip install -e ".[dev,plot]"
 python scripts/gen_operating_calendar.py
 dhill calendar --profile clearpath_jackal --offline   # same table, from the cache
 ```
-
-Generated 2026-10-15T10:55Z.

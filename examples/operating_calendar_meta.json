@@ -31,6 +31,5 @@
     "fujairah": "2022-08-04T00:00:00"
   },
   "gaps": [],
-  "weather_source": "Open-Meteo historical archive (reanalysis) and air quality API (CAMS)",
-  "generated_utc": "2026-10-15T10:55Z"
+  "weather_source": "Open-Meteo historical archive (reanalysis) and air quality API (CAMS)"
 }
