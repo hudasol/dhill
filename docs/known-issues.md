@@ -52,7 +52,7 @@ government pages and were not re-verified here; `docs/uae-alignment.md` already 
 
 ## Fixed on this branch
 
-- `docs/literature-log.md`: removed an assistant attribution from the status line.
+- `docs/literature-log.md`: removed an attribution to someone other than the author from the status line.
 - `plan.md`: two em dashes replaced.
 - `docs/requirements-traceability.md`: the deviations section contradicted the table; rows now point at
   the covering tests, and post v0.5 additions are listed.
