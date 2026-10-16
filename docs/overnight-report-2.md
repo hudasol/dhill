@@ -19,7 +19,7 @@ the fix branch, 134 on the stacked tip; ruff clean.
 | C Engine contract | `feature/engine-contract` | https://github.com/hudasol/dhill/pull/10 | Known issues 4 and 5 closed; outputs shown unchanged. |
 | D Evidence checks | `feature/evidence-checks` | https://github.com/hudasol/dhill/pull/11 | Known issues 6, 7, 8 and 13 closed; 10 partly closed. |
 | E Proposals refresh | `feature/proposals-refresh` | https://github.com/hudasol/dhill/pull/12 | Both proposals lead with the evidence limits; Jackal sensitivity added. |
-| Report | `feature/overnight-report-2` | see `docs/overnight-log.md` | This file. |
+| Report | `feature/overnight-report-2` | https://github.com/hudasol/dhill/pull/13 | This file. |
 
 Nothing was abandoned. Not done: the Moore et al. 2012 reference (known issue 10, second half) could not be
 verified and was left unchanged.
@@ -78,7 +78,7 @@ preregistered JSON was also compared byte for byte. An interleaved timing run sh
 ## What the owner must do by hand
 
 - **Merge order:** #8 into `main` first. Then #9, which contains the work of #2 to #7 on the fixed profile,
-  then #10, #11, #12 and the report pull request, each after the one below it, retargeting to `main` as each
+  then #10, #11, #12 and #13, each after the one below it, retargeting to `main` as each
   base merges. Close #2 to #7 as superseded by #9, or merge them in order before #9; do not merge them after it.
   Leave `alt/*` alone or delete them yourself.
 - **Direct commits to main:** a git instruction received during the session asked for commits straight to
