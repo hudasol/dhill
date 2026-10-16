@@ -414,7 +414,9 @@ def run_day(
     """Decision for a mission starting at every local hour of one day."""
     env = Envelope(profile, w, cfg or EngineConfig(), site=w.label)
     t_local0 = np.datetime64(local_date, "s") - np.timedelta64(LOCAL_OFFSET_H, "h")
-    starts = np.array([env.index_of(t_local0 + np.timedelta64(h, "h")) for h in range(24)], dtype=int)
+    starts = np.array(
+        [env.index_of(t_local0 + np.timedelta64(h, "h")) for h in range(24)], dtype=int
+    )
     scales, _ = env.best_scale(starts, duration_h, mode)
     full = env.scan(starts, np.ones((24, 1)), duration_h, mode)
     head = full["headroom"][:, 0, :]
