@@ -13,7 +13,7 @@ profile is consistent with its rated 45 degC ambient. The evaluation was rerun o
 with the same seeds, cases, policies and code.
 
 The preregistered evaluation uses only `ugv_medium_inspection` (preregistration, Fixed design), whose
-profile file is unchanged by the fix (sha256 prefix `141a14a9049d`). The Jackal
+profile file is unchanged by the fix (sha256 prefix `f7b42cb583ba`). The Jackal
 profile does not enter any of H1 to H6.
 
 ## Before and after
