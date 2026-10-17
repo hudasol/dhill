@@ -11,6 +11,7 @@ CASES = [
     ("ugv_medium_inspection", "drive", "2026-08-05T05:00"),
     ("sidewalk_delivery_robot", "drive", "2026-08-05T08:00"),
     ("pv_cleaning_robot", "work", "2026-08-05T05:00"),
+    ("clearpath_jackal", "drive", "2026-08-05T05:00"),
 ]
 
 out = [
