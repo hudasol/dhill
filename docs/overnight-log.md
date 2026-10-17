@@ -30,3 +30,13 @@ local time (UTC+4).
 - 05:34 Task D done (worked in a separate worktree while Task C regenerated): CAMS period calendar differs by at most 0.3 points; Al Ain 2024 sampling error at most 0.3 points a year, 4.3 points worst month; coverage bootstrap 0.9938 to 0.9982 (H5 still a miss, conservatism finding weaker); Aletihad URL verified and fixed, Moore et al. not verified; benchmark script added; known issues statuses with commits. First evidence run failed on a lint error and was rerun. https://github.com/hudasol/dhill/pull/11
 - 05:37 Task E done: Jackal section added to docs/sensitivity.md; both proposals refreshed and lead with evidence limits; review pass over touched files (two attribution lines reworded). 149 tests. https://github.com/hudasol/dhill/pull/12
 - 05:45 Benchmark: CPU load 87 % and laptop on battery, so absolute times (5 to 7 s) are not comparable with 2.3 s of 15 October; an interleaved before and after run showed no slowdown from Task C.
+
+## Third session, 18 October 2026
+
+- 01:08 Verified state: #8 merged into main (9fad97f); #9 to #13 open and stacked, #9 targeting fix/jackal-rated-ambient; #2 to #7 open on the unfixed profile; only my own merge in the previous 6 hours.
+- 01:10 Baseline on the stack tip: 149 tests pass, ruff clean.
+- 01:10 #2 to #7 are fully superseded: each head (feature/operating-calendar, route-sim, prereg-eval, adversarial-review, proposals, overnight-report) is an ancestor of feature/rebase-results (#9). Recommendation: close all six as superseded by #9; left open as instructed.
+- 01:13 CI failed on #9 to #13 (test on Python 3.11 to 3.13) although tests passed locally: the addendum hashed the profile YAML bytes, which differ between a Windows CRLF checkout and Linux. Fixed on the #9 branch (cdf59bd, cad3f94: line endings normalised before hashing), CI green.
+- 01:18 #9 retargeted to main and merged (fae7a2e); 141 tests on main.
+- 01:33 #10 to #13: main merged into each branch (no rebase) so CI tested the real merged result; each green, merged with a merge commit (d9a2ada, 5dd2803, 76336cb, 71a4925); gates on main after each; 149 tests on main; CI on main green.
+- 01:33 Task 1 done: main contains the fixed profile, climatology, route, preregistration v0.6 with results and addenda, known issues, evidence checks, proposals and both overnight reports. Nothing missing.
