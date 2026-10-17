@@ -447,12 +447,35 @@ def run_site(
     months: Iterable[int] = range(1, 13),
     cfg: EngineConfig | None = None,
     log: Callable[[str], None] | None = None,
+    first_day: str | None = None,
+    last_day: str | None = None,
+    every_day: bool = False,
 ) -> list[HourRow]:
+    """Hourly decisions for representative days (or every day) of each month.
+
+    ``first_day`` and ``last_day`` (local dates, inclusive) restrict which days may be selected;
+    PM10 fill medians still use every CAMS hour of the record. With ``every_day`` all days in the
+    window are run, each with weight ``1 / days in that month``, labelled ``all``.
+    """
     days, tmax = daily_max_by_local_day(rec)
+    keep = np.ones(days.size, dtype=bool)
+    if first_day is not None:
+        keep &= days >= np.datetime64(first_day, "D")
+    if last_day is not None:
+        keep &= days <= np.datetime64(last_day, "D")
+    days, tmax = days[keep], tmax[keep]
     pm_med = pm10_hourly_median(rec)
     out: list[HourRow] = []
     for mo in months:
-        for label, d, tm, wgt in select_days(days, tmax, mo):
+        if every_day:
+            sel = month_of(days) == mo
+            n = int(sel.sum())
+            chosen = [
+                ("all", d, float(t), 1.0 / n) for d, t in zip(days[sel], tmax[sel], strict=True)
+            ]
+        else:
+            chosen = select_days(days, tmax, mo)
+        for label, d, tm, wgt in chosen:
             w, fill = day_weather(rec, d, pm_med)
             src = "cams" if fill == 0 else ("cams_hourly_median" if fill == 1 else "mixed")
             for r in run_day(profile, w, d, cfg):
