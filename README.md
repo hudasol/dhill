@@ -102,7 +102,7 @@ Abu Dhabi's Smart and Autonomous Systems Council has directed a move from pilots
 
 ## Repository map
 
-`src/dhill/physics` models · `profiles` robot profiles · `weather` providers · `envelope.py` decisions · `planner.py` scheduling · `climatology.py` operating calendar · `route.py` route simulation · `calibrate.py` fitting · `api` + `web` service · `ros2` recorder · `docs` documentation · `examples` studies · `tests` 152 tests (`pytest`, 2026-10-18).
+`src/dhill/physics` models · `profiles` robot profiles · `weather` providers · `envelope.py` decisions · `planner.py` scheduling · `climatology.py` operating calendar · `route.py` route simulation · `calibrate.py` fitting · `api` + `web` service · `ros2` recorder · `docs` documentation · `examples` studies · `tests` 157 tests (`pytest`, 2026-10-18).
 
 ## Development
 
