@@ -298,7 +298,36 @@ def render(res: dict) -> str:
     return "\n".join(L) + "\n"
 
 
-READING = ""
+READING = """
+## Reading
+
+Written after the run. It interprets the tables above and changes none of them.
+
+- **H1 hit, with one exception that matters.** All five W1 runs with a risky hour for the envelope come from
+  one hidden robot (seed 18), across all five cases. Its DC-DC converter efficiency was drawn at about 0.58
+  against the profile's assumed 0.90 (computed by `hidden_robot(18, "W1")` in the script). That is the
+  parameter `docs/sensitivity.md` ranks first for the Jackal. The envelope's prior spread on it was not wide
+  enough for that draw.
+- **H4 hit: the envelope loses on productivity, as predicted.** The 40 degC air rule delivered about three
+  more productive hours a day than the envelope. The rule paid for them with risky hours in most W1 runs.
+  The envelope's value for the Jackal is safety with stated reasons, not throughput.
+- **H6 missed: the envelope held up better than predicted under the old conductances.** With shell,
+  battery and compute conductances at their values before the fix, the envelope had a risky hour in 29 % of
+  W2 runs, not the predicted 50 % or more. Its safety does depend on those conductances (risky runs rose
+  from 5 % in W1), but less sharply than expected. The interval reaches 49 %, so the miss is not decisive.
+- **H5 hit, with a wide interval.** Coverage is closer to the stated 95 % than for the medium UGV in v0.6,
+  and the seed level interval spans from overconfident to overcautious.
+- **H2, H3 and H7 hit.** The datasheet rating rule (45 degC air) was risky in every W1 run; ignoring
+  parameter uncertainty was risky in most; and the envelope stayed safer than the rating rule even in W2.
+
+## Limitations
+
+- The world is synthetic and shares the engine's structure and author; structural model error is absent.
+- W1 is the planner's own prior, which favours the planner. W2 changes three parameters only.
+- The scale of the H4 loss depends on the 1.5 h parked soak in sun before each mission, a choice of this
+  method, and on the battery limit, an assumption in the profile.
+- One check run on seed 999 (not an evaluation seed) preceded the full run. Nothing was changed after it.
+"""
 
 
 def main() -> int:
