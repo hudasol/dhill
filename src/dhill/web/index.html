@@ -65,7 +65,7 @@ async function init(){
 }
 $("f").addEventListener("submit",async ev=>{
   ev.preventDefault();$("err").textContent="";$("go").disabled=true;$("out").innerHTML="<p class='note'>Running Monte Carlo…</p>";
-  const b={profile:$("profile").value,site:$("site").value,scenario:$("scenario").value,source:$("source").value,duration_h:+$("dur").value,mode:$("mode").value,samples:48};
+  const b={profile:$("profile").value,site:$("site").value,scenario:$("scenario").value,source:$("source").value,duration_h:+$("dur").value,mode:$("mode").value,samples:64};
   try{
     const tl=await post("/v1/forecast",{...b,step_min:60});
     const first=tl.slots.find(s=>s.action!=="GO")||tl.slots[0];
@@ -85,7 +85,7 @@ function render(tl,d){
   <table><thead><tr><th>Component</th><th>Risk-quantile peak</th><th>Limit</th><th>Headroom after margin</th><th>P(exceed hard limit)</th></tr></thead><tbody>${comp}</tbody></table>
   <p class="note">LiDAR range ${d.perception.lidar_range_m} m at PM10 ${d.perception.pm10_window_max_ugm3} µg/m³ → max safe speed ${d.perception.max_safe_speed_ms} m/s.
   ${d.next_full_scale_start_utc?"Next full-scale window: "+esc(d.next_full_scale_start_utc)+".":""} ${d.shade_required_fraction!=null?"Full scale feasible with ~"+Math.round(d.shade_required_fraction*100)+"% of the mission in shade.":""}</p>
-  <p class="note"><b>${esc(d.evidence_text)}</b> · ${Math.round(d.assumption_fraction*100)}% of parameters are assumptions · ${d.mc_samples} Monte Carlo samples at the ${Math.round(d.risk_quantile*100)}% risk quantile.<br>${esc(d.caveat)}</p></div>`;
+  <p class="note"><b>${esc(d.evidence_text)}</b> · ${Math.round(d.assumption_fraction*100)}% of parameters are assumptions · ${d.mc_samples} Monte Carlo samples at the ${Math.round(d.risk_quantile*100)}% risk quantile.<br>${esc(d.caveat)}${(d.warnings||[]).map(w=>"<br><b>"+esc(w)+"</b>").join("")}</p></div>`;
 }
 init();
 </script>

@@ -61,7 +61,12 @@ class Scenario(BaseModel):
     days: int = Field(default=2, ge=1, le=5)
     mode: str = "drive"
     duration_h: float = Field(default=1.0, gt=0.1, le=8.0)
-    samples: int = Field(default=48, ge=8, le=256)
+    samples: int = Field(
+        default=64,
+        ge=8,
+        le=256,
+        description="Monte Carlo samples; below 64 the response carries a reliability warning",
+    )
 
 
 class DecideRequest(Scenario):
