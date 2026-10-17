@@ -1,6 +1,6 @@
 # Dhill (ظل)
 
-**Thermal and dust operating-envelope intelligence for autonomous ground systems in hot-arid environments.**
+**Thermal and dust operating envelope intelligence for autonomous ground systems in hot arid environments.**
 
 *Know when your robot should rest in the shade.*
 
@@ -10,7 +10,7 @@
 
 ## The problem
 
-Autonomous ground systems in the Gulf work in air near 50 °C, in direct sun, and in some of the heaviest airborne dust measured anywhere. Operators decide when to run with blanket rules ("nothing at midday") or the air-temperature rating on a datasheet. Neither accounts for solar heating of the chassis, the heat the robot makes during its own mission, dust on LiDAR windows, filters and heat sinks, or the robot's thermal history before it starts. Robots end up parked unnecessarily, or throttle, shut down and age their batteries early.
+Autonomous ground systems in the Gulf work in air near 50 °C, in direct sun, and in some of the heaviest airborne dust measured anywhere. Operators decide when to run with blanket rules ("nothing at midday") or the air temperature rating on a datasheet. Neither accounts for solar heating of the chassis, the heat the robot makes during its own mission, dust on LiDAR windows, filters and heat sinks, or the robot's thermal history before it starts. Robots end up parked unnecessarily, or throttle, shut down and age their batteries early.
 
 ## What Dhill does
 
@@ -22,9 +22,9 @@ For a robot profile, a mission, a place and a time, Dhill returns a decision wit
 | **DERATE** | Run at a reduced speed/power scale; Dhill finds the largest safe scale and names the binding constraint |
 | **PARK** | Not safe even at the minimum scale; Dhill reports the shade fraction that would help and the next feasible window |
 
-Non-GO decisions also report the **probability of exceeding a hard limit** and the **time to limit** at full scale. Every decision carries the profile's **evidence level** (L0 uncalibrated, L1 datasheet-parameterised, L2 field-calibrated, L3 independently validated) and the share of parameters that are assumptions.
+Non GO decisions also report the **probability of exceeding a hard limit** and the **time to limit** at full scale. Every decision carries the profile's **evidence level** (L0 uncalibrated, L1 datasheet parameterised, L2 field calibrated, L3 independently validated) and the share of parameters that are assumptions.
 
-Also included: a multi-day **timeline**, a **fleet scheduler** (mixed-integer programme with rest gaps, concurrency limits and a battery-ageing penalty), a **sensitivity analysis** that ranks which unknown parameter to measure first ([`docs/sensitivity.md`](docs/sensitivity.md)), a **policy comparison** against simple operator rules on a hidden robot ([`docs/policy-comparison.md`](docs/policy-comparison.md)), **calibration** from telemetry with confidence intervals and an identifiability flag, an offline **dashboard**, a **REST API**, and a **ROS 2 telemetry recorder**.
+Also included: a multiday **timeline**, a **fleet scheduler** (mixed integer programme with rest gaps, concurrency limits and a battery ageing penalty), a **sensitivity analysis** that ranks which unknown parameter to measure first ([`docs/sensitivity.md`](docs/sensitivity.md)), a **policy comparison** against simple operator rules on a hidden robot ([`docs/policy-comparison.md`](docs/policy-comparison.md)), **calibration** from telemetry with confidence intervals and an identifiability flag, an offline **dashboard**, a **REST API**, and a **ROS 2 telemetry recorder**.
 
 ## Quick start
 
@@ -55,7 +55,7 @@ ugv_medium_inspection @ sweihan  (synthetic, L0)  1 h missions
 
 Versus a fixed 08:00 to 17:00 full speed shift, the scheduler completes the same 12 work hours with no predicted limit breach, while the fixed shift would breach a limit in 20 of 24 blocks (`dhill plan --robots ugv_medium_inspection sidewalk_delivery_robot`). That count is **relative to Dhill's own L0 model**: it shows what the method does, and is exactly what a field trial must test.
 
-A second result is worth stating plainly (`examples/value_of_calibration.py`): a nominal model that ignores parameter uncertainty is unsafe in 8 slots against a hidden "true" robot that runs hotter than assumed, while the uncertainty-aware envelope is not. Calibration cut hold-out temperature error from 1.2 K to 0.4 K. Details and caveats in [`docs/results.md`](docs/results.md).
+A second result is worth stating plainly (`examples/value_of_calibration.py`): a nominal model that ignores parameter uncertainty is unsafe in 8 slots against a hidden "true" robot that runs hotter than assumed, while the uncertainty aware envelope is not. Calibration cut hold out temperature error from 1.2 K to 0.4 K. Details and caveats in [`docs/results.md`](docs/results.md).
 
 ## Recorded weather, routes and a preregistered test (v0.6 work)
 
@@ -65,9 +65,9 @@ A second result is worth stating plainly (`examples/value_of_calibration.py`): a
 - **Evidence checks** ([`docs/evidence-checks.md`](docs/evidence-checks.md)): restricting the calendar to days with recorded CAMS PM10, and running every day of one year instead of five sampled days per month, each changes the headline by at most 0.3 points. A seed level bootstrap widens the coverage interval of the preregistered H5 ([`docs/prereg-coverage-bootstrap-addendum.md`](docs/prereg-coverage-bootstrap-addendum.md)).
 - Open review findings and their status are listed in [`docs/known-issues.md`](docs/known-issues.md).
 
-![Dhill dashboard: hour-by-hour GO / DERATE / PARK for the illustrative UGV at Sweihan in a synthetic heatwave](docs/img/dashboard.png)
+![Dhill dashboard: hour by hour GO / DERATE / PARK for the illustrative UGV at Sweihan in a synthetic heatwave](docs/img/dashboard.png)
 
-*Dashboard, illustrative L0 robot, synthetic heatwave at Sweihan.* A real live-forecast run is in [`examples/`](examples/) (Abu Dhabi, 10 October 2026: GO overnight, PARK 07:00 to 11:00 UTC, GO again from 14:00 UTC).
+*Dashboard, illustrative L0 robot, synthetic heatwave at Sweihan.* A real live forecast run is in [`examples/`](examples/) (Abu Dhabi, 10 October 2026: GO overnight, PARK 07:00 to 11:00 UTC, GO again from 14:00 UTC).
 
 ## How it works
 
@@ -80,7 +80,7 @@ flowchart LR
     T[Telemetry CSV / ROS 2 recorder] --> C[Calibration] --> P
 ```
 
-A batched backward-Euler solver integrates every start time, scale, shade level and Monte Carlo sample at once; a 72 hour hourly timeline with 64 samples took 2.3 s on a Windows laptop on 2026-10-15 (requirement NFR-02: under 10 s; rerun with `python scripts/benchmark_timeline.py`). Parameter spreads follow their provenance (measured 2% to assumption 25%). See [`docs/architecture.md`](docs/architecture.md), [`docs/model-card.md`](docs/model-card.md) and [`docs/parameters.md`](docs/parameters.md).
+A batched backward Euler solver integrates every start time, scale, shade level and Monte Carlo sample at once; a 72 hour hourly timeline with 64 samples took 2.3 s on a Windows laptop on 2026-10-15 (requirement NFR-02: under 10 s; rerun with `python scripts/benchmark_timeline.py`). Parameter spreads follow their provenance (measured 2% to assumption 25%). See [`docs/architecture.md`](docs/architecture.md), [`docs/model-card.md`](docs/model-card.md) and [`docs/parameters.md`](docs/parameters.md).
 
 ## Why the UAE, why now
 
@@ -95,9 +95,9 @@ Abu Dhabi's Smart and Autonomous Systems Council has directed a move from pilots
 - **ROS 2 node** has not been run on a live ROS graph (ROS package servers were unreachable from the build environment); its logic is unit tested.
 - **No compliance claims** against MIL-STD-810H, IEC 60529, ISO 13482 or similar.
 - **Not the EDGE ATP 2026 ChallengeOn track**, which concerns connectivity.
-- **Novelty is only partly checked.** A shallow web pass (`docs/literature-log.md`) found no tool combining these elements, but the closest work (Moore et al. 2012 on temperature-aware field robots; `desert-av-reliability`, a UAE sensor-reliability model) overlaps in part. IEEE Xplore and Scopus have not been searched.
+- **Novelty is only partly checked.** A shallow web pass (`docs/literature-log.md`) found no tool combining these elements, but the closest work (Moore et al. 2012 on temperature aware field robots; `desert-av-reliability`, a UAE sensor reliability model) overlaps in part. IEEE Xplore and Scopus have not been searched.
 - **The Jackal profile rests on three unmeasured conductances.** They were raised to match the 45 degC rating and sit at the upper end of plausible (`docs/robot-sources.md`); the calendar's GO share moved from 6.0 % to 63.9 % with them (`docs/operating-calendar.md`).
-- **Next real step:** one instrumented robot run, using [`docs/field-test-kit.md`](docs/field-test-kit.md) and a pre-registered prediction.
+- **Next real step:** one instrumented robot run, using [`docs/field-test-kit.md`](docs/field-test-kit.md) and a preregistered prediction.
 
 ## Repository map
 

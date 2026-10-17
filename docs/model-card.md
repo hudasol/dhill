@@ -1,22 +1,22 @@
 # Model card
 
-**Model:** six-node lumped thermal network with battery, dust and perception sub-models and a Monte Carlo decision layer.
+**Model:** six node lumped thermal network with battery, dust and perception submodels and a Monte Carlo decision layer.
 **Version:** 0.5.0. **Maturity:** TRL 3 (analytical and synthetic proof of concept). **Evidence level of shipped profiles:** L0.
 
 ## Intended use
 Decide, for a stated robot, site, forecast and mission window, whether to run at full scale, derate, or park; and to schedule fleets around those windows. Decision support for engineers and planners.
 
 ## Not intended for
-Safety-critical autonomous shutdown without field validation, certification claims, human-safety decisions, or any robot whose parameters are not documented in a profile.
+Safety critical autonomous shutdown without field validation, certification claims, human safety decisions, or any robot whose parameters are not documented in a profile.
 
 ## Physics included
-Solar position and clear-sky irradiance (with forecast scaling), heading-averaged projected area, forced and natural convection, sky and ground radiation, battery open-circuit voltage, resistance with Arrhenius temperature dependence, Joule heat and coulomb counting, compute die rise, active cooling, filter clogging and absorptance drift from dust deposition, optical extinction and LiDAR range from PM10, stopping-distance speed limit.
+Solar position and clear sky irradiance (with forecast scaling), heading averaged projected area, forced and natural convection, sky and ground radiation, battery open circuit voltage, resistance with Arrhenius temperature dependence, Joule heat and coulomb counting, compute die rise, active cooling, filter clogging and absorptance drift from dust deposition, optical extinction and LiDAR range from PM10, stopping distance speed limit.
 
 ## Physics not included (known gaps)
-Spatial gradients inside components; internal air circulation detail; transient wheel-ground contact heat; humidity and condensation; battery ageing feedback on resistance; wind direction; terrain slope; wheel slip; electrostatic and abrasion damage from dust; GNSS and communications effects; thermal runaway. Dust deposition uses a PV-soiling-style fixed deposition velocity for upward-facing surfaces and is untested on robot geometry.
+Spatial gradients inside components; internal air circulation detail; transient wheel ground contact heat; humidity and condensation; battery ageing feedback on resistance; wind direction; terrain slope; wheel slip; electrostatic and abrasion damage from dust; GNSS and communications effects; thermal runaway. Dust deposition uses a PV soiling style fixed deposition velocity for upward facing surfaces and is untested on robot geometry.
 
 ## Uncertainty
-Parameters are sampled lognormally with spreads set by provenance (measured 2%, datasheet 5%, textbook 10%, assumption 25%, calibrated 5%, overridable). Forecast error: temperature bias sigma 1.5 K, irradiance 10%, wind 25%, PM10 50%. Latin-hypercube sampling stabilises quantile estimates. These spreads are engineering priors, not measured error statistics.
+Parameters are sampled lognormally with spreads set by provenance (measured 2%, datasheet 5%, textbook 10%, assumption 25%, calibrated 5%, overridable). Forecast error: temperature bias sigma 1.5 K, irradiance 10%, wind 25%, PM10 50%. Latin hypercube sampling stabilises quantile estimates. These spreads are engineering priors, not measured error statistics.
 
 ## Known limitations
 - Shipped profiles are illustrative and 80% or more assumption parameters; results show method behaviour only.
@@ -26,10 +26,10 @@ Parameters are sampled lognormally with spreads set by provenance (measured 2%, 
 - Decision outcomes can change with Monte Carlo seed when headroom is below about 1 K; the dashboard and API show headroom so marginal cases are visible.
 
 ## Validation status
-Unit tests against textbook values; energy-balance closure; monotonicity in power, shade and ambient; synthetic recovery of hidden parameters with hold-out error; no field validation yet. See `docs/validation-protocol.md`.
+Unit tests against textbook values; energy balance closure; monotonicity in power, shade and ambient; synthetic recovery of hidden parameters with hold out error; no field validation yet. See `docs/validation-protocol.md`.
 
 ## v0.5.0 additions
-Hard-limit exceedance probability and time-to-limit; battery-ageing term in the scheduler; one-at-a-time sensitivity analysis (`docs/sensitivity.md`); policy comparison on a hidden synthetic robot (`docs/policy-comparison.md`). Same evidence limits apply: all of it is L0/synthetic.
+Hard limit exceedance probability and time to limit; battery ageing term in the scheduler; one at a time sensitivity analysis (`docs/sensitivity.md`); policy comparison on a hidden synthetic robot (`docs/policy-comparison.md`). Same evidence limits apply: all of it is L0/synthetic.
 
 ## Additions after v0.5.0 (unreleased, branches feature/operating-calendar, feature/route-sim, feature/prereg-eval)
 Operating calendar on recorded weather (`docs/operating-calendar.md`), patrol route simulation on the same solver (`docs/route-simulation.md`), and a preregistered evaluation (`docs/prereg-results.md`). No change to the physics or the decision rule. New evidence about the model itself: the 95 % risk quantile covered the hidden truth in 99.6 % of (slot, draw) pairs in a synthetic world that shares the model structure, so the stated quantile is conservative there. The first L0 Jackal profile contradicted its datasheet ambient rating; branch `fix/jackal-rated-ambient` raised three assumed conductances to remove the contradiction, and the operating calendar's GO share moved from 6.0 % to 63.9 % as a result (`docs/operating-calendar.md`), which shows how strongly outputs depend on unmeasured parameters.

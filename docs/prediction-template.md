@@ -1,4 +1,4 @@
-# Pre-registered prediction (commit this file BEFORE the validation run)
+# Preregistered prediction (commit this file BEFORE the validation run)
 
 - Date / time of registration (UTC):
 - Git commit of Dhill used:
@@ -12,7 +12,7 @@
 |---|---|---|---|---|
 
 ## What would count as a failure (write this now)
-- A measured peak exceeds the predicted risk-quantile peak by more than ___ K in more than ___ % of slots.
+- A measured peak exceeds the predicted risk quantile peak by more than ___ K in more than ___ % of slots.
 - A GO slot reaches a hard limit.
 - Other:
 

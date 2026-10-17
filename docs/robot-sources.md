@@ -1,7 +1,7 @@
 # Robot sources
 
 Where the numbers in the `clearpath_jackal` profile come from, what is assumed, and what is still unknown.
-Retrieved 2026-10-15 from public manufacturer documents. Re-check before quoting.
+Retrieved 2026-10-15 from public manufacturer documents. Recheck before quoting.
 
 ## Clearpath Jackal (profile `clearpath_jackal`)
 Source: Clearpath Jackal datasheet, September 2020 (copy hosted by Generation Robots):
