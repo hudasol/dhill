@@ -27,7 +27,9 @@ PROFILES = ROOT / "src" / "dhill" / "profiles" / "builtin"
 
 
 def profile_hash(pid: str) -> str:
-    return hashlib.sha256((PROFILES / f"{pid}.yaml").read_bytes()).hexdigest()[:12]
+    """sha256 prefix of the profile file with line endings normalised, so it is the same on every OS."""
+    data = (PROFILES / f"{pid}.yaml").read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha256(data).hexdigest()[:12]
 
 
 def result_cell(h: dict, hid: str) -> str:
