@@ -14,8 +14,9 @@ import numpy as np
 
 from .envelope import EngineConfig, Envelope
 from .physics.constants import k_to_c
-from .physics.thermal import ThermalParams, lhs_normal
+from .physics.thermal import lhs_normal
 from .profiles.schema import Profile
+from .profiles.thermal_adapter import thermal_params
 from .weather.base import Weather
 
 Policy = dict[str, np.ndarray]  # name -> scale per slot
@@ -33,13 +34,13 @@ class Score:
 
 def slot_starts(env: Envelope, first_utc: str, last_utc: str, step_min: float = 60.0) -> np.ndarray:
     stride = int(round(step_min * 60.0 / env.cfg.dt_s))
-    return np.arange(env._idx(first_utc), env._idx(last_utc) + 1, stride)
+    return np.arange(env.index_of(first_utc), env.index_of(last_utc) + 1, stride)
 
 
 def ambient_threshold(
     env: Envelope, starts: np.ndarray, duration_h: float, limit_c: float
 ) -> np.ndarray:
-    n = env._steps(duration_h)
+    n = env.steps_for(duration_h)
     air = k_to_c(env.forcing.t_air_k)
     return np.array([1.0 if air[s : s + n + 1].max() <= limit_c else 0.0 for s in starts])
 
@@ -81,7 +82,7 @@ def score_policies(
     cfg = EngineConfig(n_mc=worlds, precondition_h=1.5)
     env = Envelope(truth, weather, cfg)
     rng = np.random.default_rng(seed)
-    p0 = ThermalParams.from_profile(truth, n=worlds)  # true parameters, no parameter uncertainty
+    p0 = thermal_params(truth, n=worlds)  # true parameters, no parameter uncertainty
     env.params = p0.replace_values(
         d_temp_k=sigma_t * lhs_normal(rng, worlds),
         irr_scale=np.exp(sigma_irr * lhs_normal(rng, worlds)),

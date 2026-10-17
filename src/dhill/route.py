@@ -36,6 +36,7 @@ from .physics.constants import k_to_c
 from .physics.thermal import State, ThermalParams, lhs_normal, simulate
 from .profiles.registry import COMPONENTS
 from .profiles.schema import Profile
+from .profiles.thermal_adapter import thermal_params
 from .weather.base import Weather
 
 _NODE = {"battery": 2, "lidar": 4, "motor": 5, "interior": 1}
@@ -240,13 +241,13 @@ class PlanningProblem:
     def __post_init__(self) -> None:
         self.cfg.parked_shade = self.graph.waypoints[self.depot].shade
         self.env = Envelope(self.profile, self.weather, self.cfg)
-        self.request_idx = self.env._idx(self.request_utc)
+        self.request_idx = self.env.index_of(self.request_utc)
         self.stops = (self.depot, *self.checkpoints, self.depot)
 
     def soak(self, env: Envelope | None = None) -> State:
         """State after the parked soak at the depot before the request time."""
         e = env or self.env
-        st, _ = e._soak_state(np.array([self.request_idx]))
+        st, _ = e.soak_state(np.array([self.request_idx]))
         return st
 
     def shortest_legs(self) -> tuple[tuple[Segment, ...], ...]:
@@ -394,7 +395,7 @@ def truth_env(
         truth, weather, EngineConfig(n_mc=worlds, dt_s=dt_s, parked_shade=parked_shade, seed=seed)
     )
     rng = np.random.default_rng(seed)
-    p0 = ThermalParams.from_profile(truth, n=worlds)
+    p0 = thermal_params(truth, n=worlds)
     env.params = p0.replace_values(
         d_temp_k=sigma_t * lhs_normal(rng, worlds),
         irr_scale=np.exp(sigma_irr * lhs_normal(rng, worlds)),
@@ -408,7 +409,7 @@ def score_plan(
 ) -> RouteScore:
     if plan is None:
         return RouteScore(policy, False, float("nan"), 0.0, 0.0)
-    st, _ = true_env._soak_state(np.array([pp.request_idx]))
+    st, _ = true_env.soak_state(np.array([pp.request_idx]))
     ex = execute(truth, true_env, true_env.params, plan, pp.graph, pp.request_idx, st)
     hard = np.array([truth.limits[c].limit_c if c in truth.limits else np.inf for c in ex.comps])
     viol = np.any(ex.peaks_c > hard[None, :], axis=1)
