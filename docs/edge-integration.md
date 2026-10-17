@@ -12,9 +12,9 @@ Units that operate or integrate unmanned ground and aerial platforms need a docu
 4. A host engineer to agree the V2 and V3 protocols in `validation-protocol.md`.
 
 ## Deployment
-Self-hosted container (non-root, read-only filesystem, no outbound calls required), REST/JSON and Python library, CSV telemetry, optional API key and audit log. SBOM and dependency audit generated in CI. See `threat-model.md`.
+Self hosted container (non root, read only filesystem, no outbound calls required), REST/JSON and Python library, CSV telemetry, optional API key and audit log. SBOM and dependency audit generated in CI. See `threat-model.md`.
 
 ## Not claimed
-- Compliance with MIL-STD-810H, IEC 60529, IEC 62133-2, ISO 13482 or ISO 3691-4. The method is informed by their environmental-test thinking and is not a substitute for testing to them.
+- Compliance with MIL-STD-810H, IEC 60529, IEC 62133-2, ISO 13482 or ISO 3691-4. The method is informed by their environmental test thinking and is not a substitute for testing to them.
 - Any result on a real EDGE platform.
 - Relevance to the EDGE ATP 2026 ChallengeOn track, which is about seamless connectivity across networks, not heat and dust. The route to EDGE is a technical conversation or pilot, not that challenge.

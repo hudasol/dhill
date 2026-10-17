@@ -53,7 +53,7 @@ calibration RMSE hold-out 0.39 K (prior 1.17 K)
 Reading the table:
 - A nominal model that ignores parameter uncertainty promises 20.9 productive hours and is unsafe in 8 slots compared with the hidden robot, which is actually hotter than the prior assumed.
 - Carrying uncertainty keeps every slot safe at the cost of 4.3 hours of caution (5.6 h for the calibrated profile).
-- Calibration cut hold-out temperature error from about 1.2 K to 0.4 K, but only five parameters were fitted; the rest keep their prior spread, so the calibrated envelope is still conservative. More fitted parameters and a real field campaign (validation protocol, level L3) are what close that gap. Calibration here made the robot's true heat visible, not more permissive.
+- Calibration cut hold out temperature error from about 1.2 K to 0.4 K, but only five parameters were fitted; the rest keep their prior spread, so the calibrated envelope is still conservative. More fitted parameters and a real field campaign (validation protocol, level L3) are what close that gap. Calibration here made the robot's true heat visible, not more permissive.
 - The calibration step is an inverse crime (the same model generates and fits the data). Recovery on real telemetry will be harder; see the model card.
 
 ## 4. Live forecast run

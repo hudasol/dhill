@@ -8,7 +8,7 @@ Start with `dhill serve` or `docker compose up`. Interactive documentation at `/
 | `GET /v1/version`, `/v1/profiles`, `/v1/sites`, `/v1/scenarios` | Listings |
 | `POST /v1/envelope` | Decision for one window (`at`, `duration_h`, `mode`) |
 | `POST /v1/forecast` | Decision timeline (`step_min`) |
-| `POST /v1/schedule` | Fleet plan versus fixed-shift baseline |
+| `POST /v1/schedule` | Fleet plan versus fixed shift baseline |
 
 Example:
 ```
