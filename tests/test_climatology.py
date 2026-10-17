@@ -224,3 +224,15 @@ def test_readme_calendar_numbers_match_the_csv():
     for key in ("share_go", "share_derate", "share_park", "share_air_above_rated"):
         assert f"{100 * after[key]:.1f} %" in readme, key
     assert f"GO was {100 * before['share_go']:.1f} % before" in readme
+
+
+def test_run_site_window_and_every_day(record):
+    prof = load_profile("clearpath_jackal")
+    cfg = EngineConfig(n_mc=8)
+    windowed = clim.run_site(prof, record, months=[7], cfg=cfg, first_day="2024-01-01")
+    assert {r.local_date[:4] for r in windowed} == {"2024"}
+    every = clim.run_site(prof, record, months=[7], cfg=cfg, every_day=True)
+    days, _ = clim.daily_max_by_local_day(record)
+    assert len(every) == days.size * 24
+    assert {r.day_label for r in every} == {"all"}
+    assert sum(r.weight for r in every if r.local_hour == 0) == pytest.approx(1.0)

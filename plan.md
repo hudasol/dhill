@@ -236,7 +236,7 @@ Dhill is built as a product, not a demo: versioned API, offline container, SBOM,
 
 ## 16. References
 
-- Khaleej Times, UAE 50 °C and record temperatures, Aug 2026: https://www.khaleejtimes.com/uae/weather/uae-records-highest-temperature-of-512c-amid-peak-summer-heat-2 and https://en.aletihad.ae/news/uae/4685402/javasxript:
+- Khaleej Times, UAE 50 °C and record temperatures, Aug 2026: https://www.khaleejtimes.com/uae/weather/uae-records-highest-temperature-of-512c-amid-peak-summer-heat-2 and https://en.aletihad.ae/news/uae/4685402/ncm--highest-temperature-recorded-across-uae-on-saturday-was
 - Khaleej Times, autonomous vehicles by 2027 (6 Oct 2026): https://www.khaleejtimes.com/uae/uae-to-have-10000-autonomous-taxis-delivery-vans-by-2027
 - Abu Dhabi SASC meeting (Feb 2026): https://www.mediaoffice.abudhabi/en/technology/hamdan-bin-mohamed-bin-zayed-chairs-smart-and-autonomous-systems-council-meeting-2026/
 - UAE AI Strategy 2031: https://u.ae/-/media/AI-publications/UAE-National-Strategy-for-Artificial-Intelligence-2031.pdf
