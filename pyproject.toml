@@ -29,6 +29,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.5"]
+plot = ["matplotlib>=3.8"]
 
 [project.scripts]
 dhill = "dhill.cli:main"

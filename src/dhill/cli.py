@@ -212,6 +212,50 @@ def cmd_sensitivity(args) -> int:
     return 0
 
 
+def cmd_calendar(args) -> int:
+    from . import climatology as clim
+
+    prof = load_profile(args.profile)
+    y0, _, y1 = args.years.partition("-")
+    years = range(int(y0), int(y1 or y0) + 1)
+    rows, above, gaps = [], {}, []
+    for sid in args.sites:
+        try:
+            rec = clim.load_site_record(sid, years, offline=args.offline)
+        except clim.WeatherUnavailable as exc:
+            gaps.append(f"{sid}: {exc}")
+            continue
+        gaps += rec.gaps
+        above[sid] = clim.hours_above(rec, args.rated_c)
+        rows += clim.run_site(prof, rec, cfg=EngineConfig(n_mc=args.samples))
+    if not rows:
+        print("error: no recorded weather available; nothing computed", file=sys.stderr)
+        for g in gaps:
+            print(f"  gap: {g}", file=sys.stderr)
+        return 2
+    if args.hours_csv:
+        clim.write_hour_csv(rows, args.hours_csv)
+    month = clim.summarise([r.__dict__ for r in rows], above, args.rated_c)
+    if args.out:
+        clim.write_month_csv(month, args.out)
+    head = clim.headline(month)
+    print(f"{prof.id} [{prof.evidence_level}]  {args.years}  1 h drive missions, every local hour")
+    print(" site            month   GO   DERATE  PARK   air>rated  not GO, air within rating")
+    for r in month:
+        print(
+            f" {r['site']:<15} {r['month']:>5} {r['share_go']:>5.0%} {r['share_derate']:>7.0%} "
+            f"{r['share_park']:>5.0%} {r['share_air_above_rated']:>9.1%} {r['share_not_go_air_within_rating']:>9.0%}"
+        )
+    print(
+        f"all sites, year: GO {head['share_go']:.1%}, DERATE {head['share_derate']:.1%}, "
+        f"PARK {head['share_park']:.1%}; air above {args.rated_c:g} degC in "
+        f"{head['share_air_above_rated']:.1%} of recorded hours"
+    )
+    for g in gaps:
+        print(f"gap: {g}")
+    return 0
+
+
 def cmd_list(args) -> int:
     if args.what == "profiles":
         for p in builtin_profile_ids():
@@ -280,6 +324,23 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--scale", type=float, default=1.0)
     s.add_argument("--top", type=int, default=10)
     s.set_defaults(fn=cmd_sensitivity)
+
+    s = sub.add_parser(
+        "calendar", help="share of hours GO / DERATE / PARK per site and month, recorded weather"
+    )
+    s.add_argument("--profile", default="clearpath_jackal", help="built-in id or YAML path")
+    s.add_argument(
+        "--sites",
+        nargs="*",
+        default=["abu_dhabi", "al_ain", "dubai", "sweihan", "liwa", "fujairah"],
+    )
+    s.add_argument("--years", default="2015-2025", help="inclusive range, e.g. 2015-2025")
+    s.add_argument("--rated-c", type=float, default=45.0, help="manufacturer rated ambient (degC)")
+    s.add_argument("--samples", type=int, default=64, help="Monte Carlo samples")
+    s.add_argument("--out", help="write the month table CSV")
+    s.add_argument("--hours-csv", help="write every hourly decision as CSV")
+    s.add_argument("--offline", action="store_true", help="use the disk cache only")
+    s.set_defaults(fn=cmd_calendar)
 
     s = sub.add_parser("list", help="list profiles, sites or scenarios")
     s.add_argument("what", choices=["profiles", "sites", "scenarios"])
