@@ -43,6 +43,24 @@ L0_CAVEAT = (
 )
 
 
+# Below this many Monte Carlo samples the risk quantile is an extreme order statistic (with 8 or 16
+# samples, the single worst sample), and decisions shift strongly: for the Jackal on the Abu Dhabi
+# January 2024 calendar days, GO share 0.0 % at 8 and 16 samples against 89.2 % at 64
+# (docs/known-issues.md item 19). All published results use 64.
+MIN_RELIABLE_SAMPLES = 64
+
+
+def sample_count_warning(n_mc: int) -> str | None:
+    """Warning text when ``n_mc`` is below ``MIN_RELIABLE_SAMPLES``, else None."""
+    if n_mc >= MIN_RELIABLE_SAMPLES:
+        return None
+    return (
+        f"Only {n_mc} Monte Carlo samples: below {MIN_RELIABLE_SAMPLES} the risk quantile rests on the "
+        "few most extreme samples and decisions can change markedly; use at least "
+        f"{MIN_RELIABLE_SAMPLES} for results."
+    )
+
+
 @dataclass
 class EngineConfig:
     n_mc: int = 64
@@ -77,6 +95,10 @@ class Envelope:
         self._build_perception_samples(rng)
 
     # ------------------------------------------------------------------ helpers
+    def _warnings(self) -> list[str]:
+        w = sample_count_warning(self.cfg.n_mc)
+        return [w] if w else []
+
     def _build_perception_samples(self, rng: np.random.Generator) -> None:
         pr = self.profile
         m = self.cfg.n_mc
@@ -425,6 +447,7 @@ class Envelope:
             step_min=step_min,
             evidence_level=self.profile.evidence_level,
             slots=slots,
+            warnings=self._warnings(),
         )
 
     def shade_required(self, start_idx: int, duration_h: float, mode: str) -> float | None:
@@ -573,6 +596,7 @@ class Envelope:
             assumption_fraction=round(pr.assumption_fraction(), 3),
             risk_quantile=self.q,
             mc_samples=self.cfg.n_mc,
+            warnings=self._warnings(),
             caveat=L0_CAVEAT
             if pr.evidence_level == "L0"
             else "Calibrated profile; see model card for validity limits.",

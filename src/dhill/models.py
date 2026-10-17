@@ -60,6 +60,9 @@ class Decision(BaseModel):
     risk_quantile: float
     mc_samples: int
     caveat: str
+    warnings: list[str] = Field(
+        default_factory=list, description="Conditions that make this decision less reliable"
+    )
 
 
 class Slot(BaseModel):
@@ -85,6 +88,9 @@ class Timeline(BaseModel):
     step_min: float
     evidence_level: str
     slots: list[Slot]
+    warnings: list[str] = Field(
+        default_factory=list, description="Conditions that make this timeline less reliable"
+    )
 
     @computed_field  # type: ignore[prop-decorator]
     @property
