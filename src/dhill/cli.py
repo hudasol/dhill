@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
-from .envelope import EngineConfig, Envelope
+from .envelope import EngineConfig, Envelope, sample_count_warning
 from .profiles.loader import builtin_profile_ids, load_profile
 from .sites import SITES, site_ids
 from .weather import (
@@ -53,7 +53,9 @@ def _common(p: argparse.ArgumentParser) -> None:
     p.add_argument("--days", type=int, default=2)
     p.add_argument("--mode", default="drive")
     p.add_argument("--duration-h", type=float, default=1.0)
-    p.add_argument("--samples", type=int, default=64, help="Monte Carlo samples")
+    p.add_argument(
+        "--samples", type=int, default=64, help="Monte Carlo samples (64 or more for results)"
+    )
     p.add_argument("--json", action="store_true")
 
 
@@ -336,7 +338,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     s.add_argument("--years", default="2015-2025", help="inclusive range, e.g. 2015-2025")
     s.add_argument("--rated-c", type=float, default=45.0, help="manufacturer rated ambient (degC)")
-    s.add_argument("--samples", type=int, default=64, help="Monte Carlo samples")
+    s.add_argument(
+        "--samples", type=int, default=64, help="Monte Carlo samples (64 or more for results)"
+    )
     s.add_argument("--out", help="write the month table CSV")
     s.add_argument("--hours-csv", help="write every hourly decision as CSV")
     s.add_argument("--offline", action="store_true", help="use the disk cache only")
@@ -352,6 +356,9 @@ def main(argv: list[str] | None = None) -> int:
     s.set_defaults(fn=cmd_serve)
 
     args = ap.parse_args(argv)
+    warning = sample_count_warning(args.samples) if hasattr(args, "samples") else None
+    if warning:
+        print(f"warning: {warning}", file=sys.stderr)
     try:
         return args.fn(args)
     except (KeyError, ValueError, FileNotFoundError) as exc:
