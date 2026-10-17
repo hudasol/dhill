@@ -1,8 +1,8 @@
-# Dhill (ظل) — Project Plan
+# Dhill (ظل): project plan
 
 | | |
 |---|---|
-| **Product** | Dhill — thermal and dust operating-envelope intelligence for autonomous ground systems in hot-arid environments |
+| **Product** | Dhill: thermal and dust operating-envelope intelligence for autonomous ground systems in hot-arid environments |
 | **Owner / author** | Huda Mueen |
 | **Plan version** | 1.0 (release tag `v0.0.1`) |
 | **Date** | 10 October 2026 |

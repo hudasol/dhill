@@ -4,6 +4,7 @@
 |---|---|---|
 | `value_of_calibration.py` | Synthetic study: ignoring uncertainty vs L0 vs calibrated | `python examples/value_of_calibration.py` |
 | `telemetry_demo.csv` | Synthetic telemetry from a hidden "true" robot (alpha 0.52, shell-interior conductance 14 W/K, shell heat capacity 24000 J/K) | `dhill demo-telemetry --out telemetry_demo.csv` |
+| `operating_calendar_clearpath_jackal.csv`, `operating_calendar_clearpath_jackal_hours.csv`, `operating_calendar_meta.json` | Operating calendar on recorded Open-Meteo weather 2015 to 2025, six sites, L0 Jackal profile (`docs/operating-calendar.md`) | `python scripts/gen_operating_calendar.py` |
 | `live_forecast_abu_dhabi_2026-10-10.txt` | Real run on live Open-Meteo data, illustrative L0 robot | `dhill timeline --site abu_dhabi --source live` |
 
 Calibrate the demo telemetry: `dhill calibrate --telemetry examples/telemetry_demo.csv --start 2026-08-05T00:00`

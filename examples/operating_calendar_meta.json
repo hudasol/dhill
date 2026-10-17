@@ -1,0 +1,35 @@
+{
+  "profile": "clearpath_jackal",
+  "profile_evidence_level": "L0",
+  "profile_assumption_fraction": 0.833,
+  "rated_ambient_c": 45.0,
+  "rated_ambient_source": "docs/robot-sources.md (Clearpath Jackal datasheet, Sept 2020)",
+  "years": [
+    2015,
+    2025
+  ],
+  "sites": [
+    "abu_dhabi",
+    "al_ain",
+    "dubai",
+    "sweihan",
+    "liwa",
+    "fujairah"
+  ],
+  "mission": "1 h, drive mode, full scale requested, start at every local hour (UTC+4)",
+  "engine": {
+    "n_mc": 64,
+    "seed": 7,
+    "dt_s": 600.0
+  },
+  "pm10_first_cams_hour_utc": {
+    "abu_dhabi": "2022-08-04T00:00:00",
+    "al_ain": "2022-08-04T00:00:00",
+    "dubai": "2022-08-04T00:00:00",
+    "sweihan": "2022-08-04T00:00:00",
+    "liwa": "2022-08-04T00:00:00",
+    "fujairah": "2022-08-04T00:00:00"
+  },
+  "gaps": [],
+  "weather_source": "Open-Meteo historical archive (reanalysis) and air quality API (CAMS)"
+}
