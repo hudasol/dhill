@@ -15,4 +15,4 @@ Example:
 curl -s localhost:8080/v1/envelope -H 'content-type: application/json' \
   -d '{"site":"sweihan","scenario":"heatwave","at":"2026-08-05T09:00","duration_h":1}'
 ```
-Limits: samples 8 to 256, days 1 to 5, duration 0.1 to 8 h, up to 8 robots. Inline profiles go in `profile_inline` (same structure as the YAML files).
+Limits: samples 8 to 256 (default 64; below 64 the response carries a `warnings` entry, because decisions become unreliable, see `docs/known-issues.md` item 19), days 1 to 5, duration 0.1 to 8 h, up to 8 robots. Inline profiles go in `profile_inline` (same structure as the YAML files).
