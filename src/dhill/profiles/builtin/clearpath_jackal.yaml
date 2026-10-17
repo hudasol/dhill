@@ -59,9 +59,12 @@ parameters:
     loss_fraction_in_motor: 0.6
     drive_efficiency: 0.7
   coupling:
-    ua_shell_interior_w_k: 4.4
-    ua_battery_interior_w_k: 1.2
-    ua_compute_interior_w_k: 2.0
+    # The three conductances below are assumptions chosen so that the profile is consistent with
+    # the manufacturer's 45 degC rated ambient: at 45 degC air, no sun, sustained heavy use, every
+    # component stays under its hard limit and the battery is the closest to it (see tests).
+    ua_shell_interior_w_k: 12.0
+    ua_battery_interior_w_k: 2.0
+    ua_compute_interior_w_k: 4.5
     ua_lidar_interior_w_k: 0.2
     ua_lidar_ambient_w_k: 0.5
     ua_motors_interior_w_k: 0.5

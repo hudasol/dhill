@@ -102,3 +102,47 @@ def test_jackal_matches_datasheet_energy_and_runtime():
     assert p.value("geometry.length_m") == pytest.approx(0.508)
     assert p.evidence_level == "L0"  # thermal parameters are still assumptions
     assert p.assumption_fraction() > 0.5
+
+
+def test_jackal_is_consistent_with_its_rated_ambient():
+    """At the manufacturer's rated 45 degC ambient, in shade, under sustained heavy use, the
+    robot must stay inside every hard limit, and the battery must be within 10 K of its own
+    (the profile must not be absurdly loose either). The conductances are chosen to satisfy this."""
+    import numpy as np
+
+    from dhill.envelope import EngineConfig, Envelope
+    from dhill.loads import mission_loads
+    from dhill.physics.constants import c_to_k, k_to_c
+    from dhill.physics.thermal import State, simulate
+    from dhill.weather.base import Weather
+
+    p = load_builtin("clearpath_jackal")
+    n = 10
+    t = np.arange("2026-08-05T20:00", "2026-08-06T06:00", dtype="datetime64[h]")
+    w = Weather(
+        times_utc=t,
+        t_air_c=np.full(n, 45.0),
+        dew_c=np.full(n, 15.0),
+        wind10_ms=np.full(n, 2.0),
+        pm10_ugm3=np.full(n, 50.0),
+        precip_mm_h=np.zeros(n),
+        lat=24.45,
+        lon=54.38,
+        altitude_m=10,
+        ghi_wm2=np.zeros(n),
+    )
+    env = Envelope(p, w, EngineConfig(n_mc=1, sigma_scale=0.0, dt_s=300.0))
+    st = State(np.full((1, 6), c_to_k(45.0)), np.array([0.95]), np.zeros(1))
+    res = simulate(
+        env.params, env.forcing, mission_loads(p, 1.0, "drive"), st, 0, 96, record_every=10**6
+    )
+    peak = {
+        "battery": k_to_c(res.peak_k[0, 2]),
+        "compute_die": k_to_c(res.peak_die_k[0]),
+        "lidar": k_to_c(res.peak_k[0, 4]),
+        "motor": k_to_c(res.peak_k[0, 5]),
+        "interior": k_to_c(res.peak_k[0, 1]),
+    }
+    for comp, val in peak.items():
+        assert val < p.limits[comp].limit_c, (comp, val)
+    assert p.limits["battery"].limit_c - peak["battery"] < 10.0
