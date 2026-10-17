@@ -55,3 +55,20 @@ Binding component: **battery**, nominal peak 51.9 C against an allowed 55 C; pri
 | 8 | `surface.alpha_clean` | textbook | 0.10 | 0.50 | 4% | 0.40 |
 
 The top three parameters carry 59% of the additive variance.
+
+## clearpath_jackal at 2026-08-05T05:00 UTC
+
+Binding component: **battery**, nominal peak 57.3 C against an allowed 55 C; prior spread about +/-4.3 K.
+
+| Rank | Parameter | Source | Prior sigma | Swing (K) | Share | Gain if measured (K) |
+|---|---|---|---|---|---|---|
+| 1 | `power.dcdc_efficiency` | assumption | 0.25 | 3.45 | 65% | 3.17 |
+| 2 | `motors.drive_efficiency` | assumption | 0.25 | 1.54 | 13% | 1.42 |
+| 3 | `environment.ground_rise_k_per_kw_m2` | assumption | 0.25 | 0.97 | 5% | 0.89 |
+| 4 | `surface.alpha_clean` | textbook | 0.10 | 0.83 | 4% | 0.67 |
+| 5 | `coupling.ua_shell_interior_w_k` | assumption | 0.25 | 0.74 | 3% | 0.68 |
+| 6 | `battery.heat_capacity_j_k` | assumption | 0.25 | 0.73 | 3% | 0.67 |
+| 7 | `interior.heat_capacity_j_k` | assumption | 0.25 | 0.61 | 2% | 0.56 |
+| 8 | `environment.wind_exponent` | assumption | 0.25 | 0.49 | 1% | 0.45 |
+
+The top three parameters carry 82% of the additive variance.

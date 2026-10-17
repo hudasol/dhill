@@ -62,7 +62,8 @@ A second result is worth stating plainly (`examples/value_of_calibration.py`): a
 - **Operating calendar** ([`docs/operating-calendar.md`](docs/operating-calendar.md)): eleven years (2015 to 2025) of recorded Open-Meteo weather at six UAE sites, run hour by hour through the envelope for the datasheet anchored but L0 Clearpath Jackal profile. The air exceeds the Jackal's rated 45 degC in 0.8 % of recorded hours; the envelope returns GO in 63.9 %, DERATE in 16.5 % and PARK in 19.6 % of hours, with the battery binding. These figures follow the profile fix of branch `fix/jackal-rated-ambient` (GO was 6.0 % before it), which raised three unmeasured conductances so the profile matches its rated ambient in shade. That the answer moves this much with three assumptions is the main finding.
 - **Route simulation** ([`docs/route-simulation.md`](docs/route-simulation.md)): a patrol graph with shaded segments, three planners, scored on SYNTHETIC hotter robots on recorded July 2024 days. The envelope changes the plan (reduced scale, shaded corridor, canopy wait, later start) and its accepted plans exceeded no hard limit, but it completes fewer Jackal requests than the shortest path and finishes later in heat. Python kinematic and thermal simulation, not Gazebo, not a physical test.
 - **Preregistered evaluation** ([`docs/preregistration-v0.6.md`](docs/preregistration-v0.6.md), [`docs/prereg-results.md`](docs/prereg-results.md), [`docs/prereg-results-addendum-fixed-profile.md`](docs/prereg-results-addendum-fixed-profile.md)): predictions committed before the run; 2 of 6 hit, unchanged after the Jackal fix because the evaluation uses only the medium UGV. The envelope had no risky hour in any of 80 synthetic runs, but the 40 degC rule was slightly more productive and the 95 % risk quantile proved more conservative than its label.
-- Open review findings are listed in [`docs/known-issues.md`](docs/known-issues.md).
+- **Evidence checks** ([`docs/evidence-checks.md`](docs/evidence-checks.md)): restricting the calendar to days with recorded CAMS PM10, and running every day of one year instead of five sampled days per month, each changes the headline by at most 0.3 points. A seed level bootstrap widens the coverage interval of the preregistered H5 ([`docs/prereg-coverage-bootstrap-addendum.md`](docs/prereg-coverage-bootstrap-addendum.md)).
+- Open review findings and their status are listed in [`docs/known-issues.md`](docs/known-issues.md).
 
 ![Dhill dashboard: hour-by-hour GO / DERATE / PARK for the illustrative UGV at Sweihan in a synthetic heatwave](docs/img/dashboard.png)
 
@@ -79,7 +80,7 @@ flowchart LR
     T[Telemetry CSV / ROS 2 recorder] --> C[Calibration] --> P
 ```
 
-A batched backward-Euler solver integrates every start time, scale, shade level and Monte Carlo sample at once; a 72 hour hourly timeline with 64 samples took 2.3 s on a Windows laptop on 2026-10-15 (requirement NFR-02: under 10 s). Parameter spreads follow their provenance (measured 2% to assumption 25%). See [`docs/architecture.md`](docs/architecture.md), [`docs/model-card.md`](docs/model-card.md) and [`docs/parameters.md`](docs/parameters.md).
+A batched backward-Euler solver integrates every start time, scale, shade level and Monte Carlo sample at once; a 72 hour hourly timeline with 64 samples took 2.3 s on a Windows laptop on 2026-10-15 (requirement NFR-02: under 10 s; rerun with `python scripts/benchmark_timeline.py`). Parameter spreads follow their provenance (measured 2% to assumption 25%). See [`docs/architecture.md`](docs/architecture.md), [`docs/model-card.md`](docs/model-card.md) and [`docs/parameters.md`](docs/parameters.md).
 
 ## Why the UAE, why now
 
@@ -100,7 +101,7 @@ Abu Dhabi's Smart and Autonomous Systems Council has directed a move from pilots
 
 ## Repository map
 
-`src/dhill/physics` models · `profiles` robot profiles · `weather` providers · `envelope.py` decisions · `planner.py` scheduling · `climatology.py` operating calendar · `route.py` route simulation · `calibrate.py` fitting · `api` + `web` service · `ros2` recorder · `docs` documentation · `examples` studies · `tests` 134 tests (`pytest --collect-only`, 2026-10-15).
+`src/dhill/physics` models · `profiles` robot profiles · `weather` providers · `envelope.py` decisions · `planner.py` scheduling · `climatology.py` operating calendar · `route.py` route simulation · `calibrate.py` fitting · `api` + `web` service · `ros2` recorder · `docs` documentation · `examples` studies · `tests` 149 tests (`pytest`, 2026-10-16).
 
 ## Development
 
