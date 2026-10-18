@@ -29,6 +29,9 @@ Costs are not quoted here on purpose; get supplier quotes.
 2. Day 1-2 (**calibration campaign**): run mixed drive/idle/park cycles across a full day including midday. Save as
    CSV (see `examples/telemetry_demo.csv`). Run `dhill calibrate`.
 3. Day 3 (**independent validation campaign**): a different day, different route. Do not use it to fit anything.
+   Check it with `dhill validate --profile <calibrated.json> --telemetry <day3.csv> --weather-csv <station.csv>
+   --report <report.md>`; it applies the V2 criteria of `docs/validation-protocol.md` and exits 3 on FAIL. A
+   SYNTHETIC dry run of days 1 to 3 is in `examples/field_day_demo_output.md`.
 4. Before Day 3, fill in `docs/prediction-template.md` and commit it **before** the run. Compare predicted vs
    measured peaks afterwards and report misses, not just hits.
 5. Only a Day-3-style independent campaign can move a profile to L3. Fitting and testing on the same data stays L2.
