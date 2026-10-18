@@ -24,6 +24,10 @@ def _flatten_parameters(sections: dict[str, Any]) -> dict[str, dict[str, Any]]:
     for section, body in sections.items():
         if not isinstance(body, dict):
             raise ValueError(f"parameter section '{section}' must be a mapping")
+        if "." in section and "value" in body:
+            # already flat, as written by Profile.model_dump (for example `dhill calibrate --out`)
+            flat[section] = dict(body)
+            continue
         default_source = body.get("_source", "assumption")
         default_note = body.get("_note")
         default_rel = body.get("_rel_sigma")
