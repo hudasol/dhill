@@ -167,6 +167,30 @@ def cmd_calibrate(args) -> int:
     return 0
 
 
+def cmd_validate(args) -> int:
+    from .calibrate import load_telemetry_csv
+    from .validate import render_markdown, validate
+
+    prof = load_profile(args.profile)
+    tel = load_telemetry_csv(args.telemetry)
+    rep = validate(prof, get_weather(args), tel, n_mc=args.samples, note=args.note or "")
+    if args.report:
+        Path(args.report).write_text(render_markdown(rep, args.telemetry), encoding="utf-8")
+    if args.json:
+        print(rep.model_dump_json(indent=2))
+    else:
+        print(f"{rep.profile_id} [{rep.evidence_level}]  {rep.start_utc} to {rep.end_utc}")
+        print(" node            RMSE K   peak margin K   within 95 %   result")
+        for n in rep.nodes:
+            res = "pass" if n.passed else "FAIL"
+            print(
+                f" {n.node:<15} {n.rmse_k:>6.2f}   {n.peak_margin_k:>+12.1f}   "
+                f"{'yes' if n.within_q95 else 'no':>11}   {res}"
+            )
+        print(f"overall: {'PASS' if rep.passed else 'FAIL'}")
+    return 0 if rep.passed else 3
+
+
 def cmd_demo_telemetry(args) -> int:
     from .calibrate import save_telemetry_csv, synthetic_telemetry
 
@@ -311,6 +335,17 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--telemetry", required=True)
     s.add_argument("--out", help="write calibrated profile JSON")
     s.set_defaults(fn=cmd_calibrate)
+
+    s = sub.add_parser(
+        "validate", help="check a profile against held out telemetry (exit 3 on FAIL)"
+    )
+    _common(s)
+    s.add_argument(
+        "--telemetry", required=True, help="held out telemetry CSV, not used to calibrate"
+    )
+    s.add_argument("--report", help="write a markdown report")
+    s.add_argument("--note", help="line printed at the top of the report, e.g. a SYNTHETIC label")
+    s.set_defaults(fn=cmd_validate)
 
     s = sub.add_parser(
         "demo-telemetry", help="write synthetic telemetry from a hidden 'true' robot"
