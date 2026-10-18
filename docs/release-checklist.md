@@ -1,7 +1,18 @@
 # Release checklist for v0.6.0
 
-For the owner, on her own machine. Tags were not pushed from the unattended sessions. Run the steps in order;
-each command is meant to be copied as is (Git Bash or a Unix shell; on Windows PowerShell use `py` for `python`).
+For the owner, on her own machine. Run the steps in order; each command is meant to be copied as is (Git Bash
+or a Unix shell; on Windows PowerShell use `py` for `python`).
+
+## Status on 18 October 2026
+
+| Step | Status |
+|---|---|
+| 1 Merge what is ready | Done: #9 to #15 merged; #2 to #7 closed as superseded by #9; no pull request open |
+| 2 Clean clone check | Done: install, CLI commands and tests passed from a fresh clone |
+| 3 Version and changelog | Done: version 0.6.0, `CHANGELOG.md` entry |
+| 4 Tags | Done: v0.6.0 pushed; v0.0.1 to v0.5.0 were already on GitHub |
+| 5 Licence decision | Open: owner decision (ADR 0002) |
+| 6 Literature exports | Open: needs institutional access |
 
 ## 1. Merge what is ready
 
@@ -39,7 +50,7 @@ git push origin main
 
 ## 4. Tag
 
-The earlier tags in `scripts/tag-releases.sh` were never pushed. Push them and the new one:
+The earlier tags in `scripts/tag-releases.sh` (v0.0.1 to v0.5.0) are already on GitHub; rerunning the script is harmless. The new one:
 
 ```bash
 bash scripts/tag-releases.sh
