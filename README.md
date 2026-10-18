@@ -35,6 +35,7 @@ dhill decide  --site sweihan --scenario heatwave --at 2026-08-05T09:00
 dhill timeline --site sweihan --scenario heatwave --step-min 120
 dhill sensitivity --profile ugv_medium_inspection --site sweihan --scenario heatwave --at 2026-08-05T09:00
 dhill plan --robots ugv_medium_inspection sidewalk_delivery_robot
+dhill validate --telemetry examples/telemetry_demo.csv --start 2026-08-05T00:00   # field day check (exit 3 on FAIL)
 dhill serve            # dashboard at http://127.0.0.1:8080
 # live forecast and PM10 (Open-Meteo, falls back to synthetic with a warning)
 dhill timeline --site abu_dhabi --source live
@@ -64,6 +65,7 @@ A second result is worth stating plainly (`examples/value_of_calibration.py`): a
 - **Preregistered evaluation** ([`docs/preregistration-v0.6.md`](docs/preregistration-v0.6.md), [`docs/prereg-results.md`](docs/prereg-results.md), [`docs/prereg-results-addendum-fixed-profile.md`](docs/prereg-results-addendum-fixed-profile.md)): predictions committed before the run; 2 of 6 hit, unchanged after the Jackal fix because the evaluation uses only the medium UGV. The envelope had no risky hour in any of 80 synthetic runs, but the 40 degC rule was slightly more productive and the 95 % risk quantile proved more conservative than its label.
 - **Preregistered evaluation of the Jackal, v0.7** ([`docs/preregistration-v0.7.md`](docs/preregistration-v0.7.md), [`docs/prereg-results-v07.md`](docs/prereg-results-v07.md)): 6 of 7 predictions hit, including two that predicted the envelope would lose. It loses about 3.3 productive hours a day to a 40 degC air rule; its only risky runs in the planner's own prior come from one SYNTHETIC hidden robot with a low DC-DC efficiency; with the conductances as they were before the fix it was risky in 29 % of runs.
 - **Evidence checks** ([`docs/evidence-checks.md`](docs/evidence-checks.md)): restricting the calendar to days with recorded CAMS PM10, and running every day of one year instead of five sampled days per month, each changes the headline by at most 0.3 points. A seed level bootstrap widens the coverage interval of the preregistered H5 ([`docs/prereg-coverage-bootstrap-addendum.md`](docs/prereg-coverage-bootstrap-addendum.md)).
+- **Next: field data.** v1.0.0 is reserved for the first release backed by a real robot logged with Al Ain University; the steps, the `dhill validate` field day check and a SYNTHETIC dry run are in [`docs/roadmap-to-v1.md`](docs/roadmap-to-v1.md).
 - Open review findings and their status are listed in [`docs/known-issues.md`](docs/known-issues.md).
 
 ![Dhill dashboard: hour by hour GO / DERATE / PARK for the illustrative UGV at Sweihan in a synthetic heatwave](docs/img/dashboard.png)
@@ -102,7 +104,7 @@ Abu Dhabi's Smart and Autonomous Systems Council has directed a move from pilots
 
 ## Repository map
 
-`src/dhill/physics` models · `profiles` robot profiles · `weather` providers · `envelope.py` decisions · `planner.py` scheduling · `climatology.py` operating calendar · `route.py` route simulation · `calibrate.py` fitting · `api` + `web` service · `ros2` recorder · `docs` documentation · `examples` studies · `tests` 157 tests (`pytest`, 2026-10-18).
+`src/dhill/physics` models · `profiles` robot profiles · `weather` providers · `envelope.py` decisions · `planner.py` scheduling · `climatology.py` operating calendar · `route.py` route simulation · `calibrate.py` fitting · `api` + `web` service · `ros2` recorder · `docs` documentation · `examples` studies · `tests` 165 tests (`pytest`, 2026-10-18).
 
 ## Development
 
