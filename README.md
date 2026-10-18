@@ -4,7 +4,7 @@
 
 *Know when your robot should rest in the shade.*
 
-> **Status: v0.5.0, working proof of concept (TRL 3).** The engine, API, dashboard, planner and calibration run and are tested. Bundled robot profiles are **illustrative (evidence level L0)**; nothing here has been validated against field data. See [Honest limits](#honest-limits).
+> **Status: v0.6.0, working proof of concept (TRL 3).** The engine, API, dashboard, planner and calibration run and are tested. Bundled robot profiles are **illustrative (evidence level L0)**; nothing here has been validated against field data. See [Honest limits](#honest-limits).
 
 ---
 
