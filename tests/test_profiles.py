@@ -146,3 +146,18 @@ def test_jackal_is_consistent_with_its_rated_ambient():
     for comp, val in peak.items():
         assert val < p.limits[comp].limit_c, (comp, val)
     assert p.limits["battery"].limit_c - peak["battery"] < 10.0
+
+
+def test_calibrated_profile_dump_loads_back(tmp_path):
+    """A profile saved by `dhill calibrate --out` (flat dotted keys) must load with load_profile."""
+    import json
+
+    from dhill.profiles.loader import load_profile
+
+    p = load_builtin("clearpath_jackal").with_overrides({"surface.alpha_clean": 0.5})
+    path = tmp_path / "cal.json"
+    path.write_text(json.dumps(p.model_dump(mode="json")), encoding="utf-8")
+    q = load_profile(str(path))
+    assert q.evidence_level == p.evidence_level
+    assert q.parameters == p.parameters
+    assert q.value("surface.alpha_clean") == 0.5
