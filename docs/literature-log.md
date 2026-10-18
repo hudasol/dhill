@@ -24,6 +24,19 @@ protocol in `literature-search-protocol.md` on the real databases before any nov
 | Phillips et al., "When the Dust Settles: The Four Behaviors of LiDAR in the Presence of Fine Airborne Particulates", J. Field Robotics 2017 | Empirical LiDAR behaviour in dust. | Source for the perception range effect; Dhill uses a simplified range model, not their data. |
 | arXiv 2603.01631, "Learning Thermal-Aware Locomotion Policies for an Electrically-Actuated Quadruped Robot" | Learned locomotion that respects motor temperature. | Onboard control of one component; Dhill is forecast based, fleet level. |
 
+## Verified references (18 October 2026)
+
+DOIs were checked against the publisher or index page, and against the owner's local PDF copies where one
+exists. The PDFs are kept in `sourced data/`, which git ignores; they are not redistributed.
+
+| Work | DOI | Local copy |
+|---|---|---|
+| Phillips, T. G., Guenther, N. and McAree, P. R. (2017), "When the Dust Settles: The Four Behaviors of LiDAR in the Presence of Fine Airborne Particulates", *Journal of Field Robotics* 34(5), 985 to 1009 | [10.1002/rob.21701](https://doi.org/10.1002/rob.21701) | Matches: title, authors and the DOI appear in the PDF (25 pages). |
+| Miller, N., Goulet, N. and Ayalew, B. (2024), "Energy-aware Mission Planning for Unmanned Ground Vehicle Fleets", SAE Technical Paper 2024-01-4071, GVSETS 2024, Novi, Michigan | [10.4271/2024-01-4071](https://doi.org/10.4271/2024-01-4071) | Matches: title, authors and venue on the first page (9 pages, Clemson University). The PDF itself prints no DOI; the DOI is from the SAE Mobilus listing. The PDF's embedded metadata carries an unrelated template title. |
+| Qian, L., Wan, Y., Wang, S. and Luo, X. (2026), "Learning Thermal-Aware Locomotion Policies for an Electrically-Actuated Quadruped Robot", arXiv:2603.01631 | [10.48550/arXiv.2603.01631](https://doi.org/10.48550/arXiv.2603.01631) (arXiv DOI) | Matches: title and authors (6 pages, Huazhong University of Science and Technology). |
+| Moore et al. (2012), "Thermal Modeling for Temperature Aware Operations in Field Robots" | Not found | **Wrong paper.** The file with this name contains "Failure Mode Analysis of Mechanical Seals" by J. Singh, S. Angra and V. K. Mittal, *Journal of Engineering and Technology* 2(2), 2012 (DOI 10.4103/0976-8580.99302). The words "Moore", "thermal model" and "field robot" do not occur in it. The Moore paper's venue, authors and DOI remain unverified (`docs/known-issues.md` item 10). |
+| desert-av-reliability (GitHub code repository, companion code for an IEEE IV 2027 paper) | None (software repository) | No local copy. The repository is hosted at https://github.com/HemanthMChakravarthy/desert-av-reliability. The owner identifies the author's profile as https://github.com/b-hemanth (Hemanth Bharatha Chakravarthy); that account does not host the repository, and the link between the two accounts was not verified from GitHub. |
+
 ## Conclusion so far
 No tool combining forecast driven, multicomponent thermal limits, uncertainty aware GO/DERATE/PARK decisions,
 dust limited perception and fleet scheduling was found in this shallow pass. Do not claim novelty until the
