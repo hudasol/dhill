@@ -15,3 +15,6 @@ build/
 .cache/
 .DS_Store
 sbom*.json
+
+# Owner's local copies of cited papers; never committed
+sourced data/
