@@ -47,3 +47,7 @@ local time (UTC+4).
 - 01:55 Final report written (docs/overnight-report-3.md); 152 tests on main; pull request opened for it.
 - 02:25 Known issue 19 closed on main (927975d to 7de48ef): warning below 64 Monte Carlo samples in engine, CLI and API; API and dashboard default raised from 48 to 64; 157 tests.
 - 10:34 Release v0.6.0: version bump (b3db3a2), changelog, model card, README status and release checklist updated; annotated tag v0.6.0 pushed on e1b0198 (v0.0.1 to v0.5.0 were already on GitHub). A GitHub release page was not created. Left to the owner: licence decision (ADR 0002) and literature exports (institutional access).
+
+## Fourth session, 18 October 2026
+
+- 11:30 Preparation for v1.0: roadmap (docs/roadmap-to-v1.md), dhill validate with tests and a SYNTHETIC field day dry run, the AAU validation day preregistration draft and a covering email draft (not sent). Found and fixed a bug: profiles saved by dhill calibrate --out could not be loaded (known issue 20). 165 tests.
