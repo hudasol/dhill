@@ -59,7 +59,11 @@ def test_weather_must_cover_the_record():
 def test_report_states_verdict_note_and_rule():
     rep = validate(BASE, W, tel(HOT), n_mc=8, note="SYNTHETIC telemetry")
     md = render_markdown(rep, "x.csv")
-    assert "(FAIL)" in md and "SYNTHETIC telemetry" in md and "must not have been used for calibration" in md
+    assert (
+        "(FAIL)" in md
+        and "SYNTHETIC telemetry" in md
+        and "must not have been used for calibration" in md
+    )
 
 
 def test_cli_exit_codes_and_report(tmp_path, capsys):
