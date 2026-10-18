@@ -1,7 +1,7 @@
 # Model card
 
 **Model:** six node lumped thermal network with battery, dust and perception submodels and a Monte Carlo decision layer.
-**Version:** 0.5.0. **Maturity:** TRL 3 (analytical and synthetic proof of concept). **Evidence level of shipped profiles:** L0.
+**Version:** 0.6.0. **Maturity:** TRL 3 (analytical and synthetic proof of concept). **Evidence level of shipped profiles:** L0.
 
 ## Intended use
 Decide, for a stated robot, site, forecast and mission window, whether to run at full scale, derate, or park; and to schedule fleets around those windows. Decision support for engineers and planners.
@@ -31,5 +31,10 @@ Unit tests against textbook values; energy balance closure; monotonicity in powe
 ## v0.5.0 additions
 Hard limit exceedance probability and time to limit; battery ageing term in the scheduler; one at a time sensitivity analysis (`docs/sensitivity.md`); policy comparison on a hidden synthetic robot (`docs/policy-comparison.md`). Same evidence limits apply: all of it is L0/synthetic.
 
-## Additions after v0.5.0 (unreleased, branches feature/operating-calendar, feature/route-sim, feature/prereg-eval)
-Operating calendar on recorded weather (`docs/operating-calendar.md`), patrol route simulation on the same solver (`docs/route-simulation.md`), and a preregistered evaluation (`docs/prereg-results.md`). No change to the physics or the decision rule. New evidence about the model itself: the 95 % risk quantile covered the hidden truth in 99.6 % of (slot, draw) pairs in a synthetic world that shares the model structure, so the stated quantile is conservative there. The first L0 Jackal profile contradicted its datasheet ambient rating; branch `fix/jackal-rated-ambient` raised three assumed conductances to remove the contradiction, and the operating calendar's GO share moved from 6.0 % to 63.9 % as a result (`docs/operating-calendar.md`), which shows how strongly outputs depend on unmeasured parameters.
+## v0.6.0 additions
+Operating calendar on recorded weather (`docs/operating-calendar.md`), patrol route simulation on the same solver (`docs/route-simulation.md`), and a preregistered evaluation (`docs/prereg-results.md`). No change to the physics or the decision rule. New evidence about the model itself: the 95 % risk quantile covered the hidden truth in 99.6 % of (slot, draw) pairs in a synthetic world that shares the model structure, so the stated quantile is conservative there (a seed level bootstrap gives 0.9938 to 0.9982, `docs/prereg-coverage-bootstrap-addendum.md`). The first L0 Jackal profile contradicted its datasheet ambient rating; branch `fix/jackal-rated-ambient` raised three assumed conductances to remove the contradiction, and the operating calendar's GO share moved from 6.0 % to 63.9 % as a result (`docs/operating-calendar.md`), which shows how strongly outputs depend on unmeasured parameters.
+
+The v0.7 preregistered evaluation of the Jackal (`docs/prereg-results-v07.md`, synthetic hidden robots) hit 6 of 7
+predictions: coverage 0.9334, closer to the stated 95 %; the envelope's only risky runs in the planner's own prior
+came from one hidden robot with a low DC-DC efficiency. Decisions computed with fewer than 64 Monte Carlo samples
+now carry a warning, because the risk quantile becomes an extreme order statistic (`docs/known-issues.md` item 19).
