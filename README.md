@@ -112,4 +112,4 @@ Abu Dhabi's Smart and Autonomous Systems Council has directed a move from pilots
 
 ## Licence
 
-No licence selected yet (all rights reserved by default); see [`docs/adr/0002-licensing.md`](docs/adr/0002-licensing.md).
+Apache License 2.0, copyright 2026 Huda Mueen: see [`LICENSE`](LICENSE), [`NOTICE`](NOTICE) and the decision record [`docs/adr/0002-licensing.md`](docs/adr/0002-licensing.md).

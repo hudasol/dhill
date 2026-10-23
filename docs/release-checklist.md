@@ -11,7 +11,7 @@ or a Unix shell; on Windows PowerShell use `py` for `python`).
 | 2 Clean clone check | Done: install, CLI commands and tests passed from a fresh clone |
 | 3 Version and changelog | Done: version 0.6.0, `CHANGELOG.md` entry |
 | 4 Tags | Done: v0.6.0 pushed; v0.0.1 to v0.5.0 were already on GitHub |
-| 5 Licence decision | Open: owner decision (ADR 0002) |
+| 5 Licence decision | Done: Apache-2.0 (ADR 0002 accepted, 23 October 2026) |
 | 6 Literature exports | Open: needs institutional access |
 
 ## 1. Merge what is ready
@@ -61,16 +61,8 @@ git ls-remote --tags origin
 
 ## 5. Licence decision (ADR 0002)
 
-`docs/adr/0002-licensing.md` lists the options; no licence file exists, so all rights are reserved.
-
-| Option | Effect | Consider when |
-|---|---|---|
-| Apache-2.0 | Permissive, with an explicit patent grant | Industry partners (for example a defence or energy company) may build on it |
-| MIT | Permissive, shortest text, no patent grant | Simplicity matters more than patent terms |
-| Keep all rights reserved (no licence) | Public to read, nobody may reuse | Terms with a university or employer are not yet agreed |
-
-Agree terms with Al Ain University or any employer involved before choosing. To apply a choice: add `LICENSE`
-with the standard text, set `license` in `pyproject.toml`, and change the ADR status to accepted.
+Decided on 23 October 2026: Apache License 2.0 (`LICENSE`, `NOTICE`, `license = "Apache-2.0"` in
+`pyproject.toml`); the reasoning is in `docs/adr/0002-licensing.md`.
 
 ## 6. Literature exports (from `docs/literature-search-protocol.md`)
 

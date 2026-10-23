@@ -9,7 +9,7 @@ Draft for the owner to edit and send herself. Replace the bracketed parts. Attac
 
 Dear [name],
 
-I am Huda Mueen. I have built Dhill, software (public on GitHub) that decides, for an outdoor ground robot, a site and
+I am Huda Mueen. I have built Dhill, open source software (Apache License 2.0) that decides, for an outdoor ground robot, a site and
 an hour, whether the robot should run at full speed, run slower, or rest in the shade, and names the component
 that limits it. It runs on eleven years of recorded weather for six UAE sites, and its predictions have been
 tested in two preregistered evaluations on simulated robots.
