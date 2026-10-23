@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dhill"
-version = "0.6.0"
+version = "0.7.0"
 description = "Thermal and dust operating-envelope intelligence for autonomous ground systems in hot-arid environments"
 readme = "README.md"
 requires-python = ">=3.11"
