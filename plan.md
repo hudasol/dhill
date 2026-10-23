@@ -229,7 +229,7 @@ Dhill is built as a product, not a demo: versioned API, offline container, SBOM,
 
 ## 15. Open decisions for the owner
 
-1. **Licence.** No licence is applied yet (all rights reserved). Options are Apache-2.0 (adoption-friendly, patent grant), a source-available licence, or proprietary. See `docs/adr/0002-licensing.md`.
+1. **Licence.** Decided on 23 October 2026: Apache-2.0 (`LICENSE`). See `docs/adr/0002-licensing.md`.
 2. **Repository visibility.** The repository is currently public. Everything in it is publishable research and code; decide whether to keep it public.
 3. **Affiliation for papers and entries** (University of Stirling vs Al Ain University) once the transfer is settled.
 4. **Pilot platform** to instrument first.
