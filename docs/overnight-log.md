@@ -51,3 +51,12 @@ local time (UTC+4).
 ## Fourth session, 18 October 2026
 
 - 11:30 Preparation for v1.0: roadmap (docs/roadmap-to-v1.md), dhill validate with tests and a SYNTHETIC field day dry run, the AAU validation day preregistration draft and a covering email draft (not sent). Found and fixed a bug: profiles saved by dhill calibrate --out could not be loaded (known issue 20). 165 tests.
+
+## Fifth session, 23 October 2026
+
+- 08:50 Start: pulled main, installed, ruff clean, 165 tests pass.
+- 08:58 Licence: Apache 2.0 (LICENSE verbatim, NOTICE with copyright Huda Mueen 2026), pyproject set, ADR 0002 accepted with reasoning; "no licence" wording removed from README, the AAU email draft (now "open source software"; "evaluations on simulated robots" kept), the release checklist and the plan (abdcea1).
+- 09:01 Logging session quickstart for the supervisor added and linked from README and the field test kit; commands checked against the CLI help (9fed2f1).
+- 09:03 Release checklist rewritten for v0.7.0 with PowerShell 5.1 commands; version bumped to 0.7.0; CHANGELOG v0.7.0 row and a what and why summary of v0.5 to v0.7 (609af2b, 864c2f8). Decision: the version bump is committed now so the owner only tags; the tag itself is left to the owner.
+- 09:08 Jackal sensitivity (8f0c4f9, 01b8262): the drive efficiency moves the Al Ain calendar GO share most (69.1 points, DC-DC efficiency 68.0, ground heating 1.6); the DC-DC efficiency moves the 95 % quantile die peak most (7.87 K). Decision: the "stated range" is one prior sigma (0.25, log space) either side, clipped to bounds, the rule of dhill.sensitivity; the GO share uses Al Ain only (one site) to keep the run near 11 minutes. At either low efficiency no hour is GO at full scale; a January check showed a battery limit other than temperature caps the scale at 0.79. Profile L0, no robot data. The doc was rerendered from the CSV after adding the die headline; the CSV was unchanged (cmp).
+- 09:10 CI green on main for every push of this session. pip-audit: the CI job passed; locally the venv's pip 24.2, certifi and pillow are flagged, which are local environment versions (CI installs current releases), so no repository change. No known issue is resolved by this work, so none was closed. 167 tests.
