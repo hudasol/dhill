@@ -1,0 +1,10 @@
+parameter,setting,value,share_go,die_q95_peak_c
+power.dcdc_efficiency,low,0.7009,0.0,114.26
+power.dcdc_efficiency,nominal,0.9,0.629,107.84
+power.dcdc_efficiency,high,0.99,0.6803,106.39
+motors.drive_efficiency,low,0.5452,0.0,110.31
+motors.drive_efficiency,nominal,0.7,0.629,107.84
+motors.drive_efficiency,high,0.8988,0.6908,106.47
+environment.ground_rise_k_per_kw_m2,low,19.47,0.6365,105.97
+environment.ground_rise_k_per_kw_m2,nominal,25.0,0.629,107.84
+environment.ground_rise_k_per_kw_m2,high,32.1006,0.6206,110.14

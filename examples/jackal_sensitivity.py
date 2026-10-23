@@ -1,0 +1,179 @@
+"""Sensitivity of the Jackal envelope to the three parameters a supervisor would check first.
+
+The parameters and their ranges come from `docs/proposals/aau-robotics-proposal.md` (section 4) and
+`docs/sensitivity.md`: each is an assumption with prior sigma 0.25, so the range is one prior sigma
+either side in log space, `value * exp(+/- 0.25)`, clipped to the parameter's physical bounds (the
+same rule as `dhill.sensitivity.tornado`).
+
+For each value the script reports:
+- the calendar GO share at Al Ain: representative days of every month of the cached 2015 to 2025
+  record (`dhill.climatology.run_site`), a 1 h drive mission at full scale starting at every local
+  hour, months weighted by their number of days; and
+- the 95 % quantile peak compute die temperature for a 1 h drive mission at full scale starting at
+  13:00 local time on the hottest July day of the record.
+
+The profile is L0 (datasheets and assumptions); the weather is reanalysis, not a site measurement.
+No robot data is used. Needs the climatology cache (`python scripts/gen_operating_calendar.py`).
+Run: python examples/jackal_sensitivity.py
+Output: docs/jackal-sensitivity.md and examples/jackal_sensitivity.csv
+"""
+
+from __future__ import annotations
+
+import csv
+from pathlib import Path
+
+import numpy as np
+
+from dhill import climatology as clim
+from dhill.envelope import EngineConfig, Envelope
+from dhill.profiles.loader import load_builtin
+from dhill.profiles.registry import PARAMS
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT_MD = ROOT / "docs" / "jackal-sensitivity.md"
+OUT_CSV = ROOT / "examples" / "jackal_sensitivity.csv"
+PROFILE = "clearpath_jackal"
+SITE = "al_ain"
+KEYS = [
+    "power.dcdc_efficiency",
+    "motors.drive_efficiency",
+    "environment.ground_rise_k_per_kw_m2",
+]
+CFG = EngineConfig(n_mc=64, seed=7)
+FIELDS = ["parameter", "setting", "value", "share_go", "die_q95_peak_c"]
+
+
+def value_range(profile, key: str) -> list[tuple[str, float]]:
+    spec, d = profile.parameters[key], PARAMS[key]
+    v0, sig = spec.value, spec.sigma
+    lo = float(np.clip(v0 * np.exp(-sig), d.lo, d.hi))
+    hi = float(np.clip(v0 * np.exp(sig), d.lo, d.hi))
+    return [("low", lo), ("nominal", v0), ("high", hi)]
+
+
+def override(profile, key: str, value: float):
+    """Replace one value and keep its provenance, so its Monte Carlo spread is unchanged."""
+    return profile.with_overrides({key: value}, source=profile.parameters[key].source)
+
+
+def evaluate(profile, rec, hot_weather, hot_day) -> tuple[float, float]:
+    rows = [r.__dict__ for r in clim.run_site(profile, rec, cfg=CFG)]
+    months = clim.summarise(rows, {}, rated_c=45.0)
+    share_go = clim.headline(months)["share_go"]
+    env = Envelope(profile, hot_weather, CFG, site=SITE)
+    t0 = np.datetime64(hot_day, "s") + np.timedelta64(13 - clim.LOCAL_OFFSET_H, "h")
+    r = env.scan(np.array([env.index_of(t0)]), np.ones((1, 1)), 1.0, "drive")
+    die = float(r["risk_peak_c"][0, 0, list(r["comps"]).index("compute_die")])
+    return share_go, die
+
+
+def main() -> list[dict]:
+    base = load_builtin(PROFILE)
+    rec = clim.load_site_record(SITE, clim.DEFAULT_YEARS, offline=True)
+    days, tmax = clim.daily_max_by_local_day(rec)
+    july = clim.month_of(days) == 7
+    hot_day = days[july][int(np.argmax(tmax[july]))]
+    hot_weather, _ = clim.day_weather(rec, hot_day, clim.pm10_hourly_median(rec))
+    nominal = evaluate(base, rec, hot_weather, hot_day)
+    rows = []
+    for key in KEYS:
+        for setting, v in value_range(base, key):
+            go, die = (
+                nominal
+                if setting == "nominal"
+                else evaluate(override(base, key, v), rec, hot_weather, hot_day)
+            )
+            rows.append(
+                {
+                    "parameter": key,
+                    "setting": setting,
+                    "value": round(v, 4),
+                    "share_go": round(go, 4),
+                    "die_q95_peak_c": round(die, 2),
+                }
+            )
+    with open(OUT_CSV, "w", newline="", encoding="utf-8") as fh:
+        wr = csv.DictWriter(fh, fieldnames=FIELDS)
+        wr.writeheader()
+        wr.writerows(rows)
+    OUT_MD.write_text(render(rows, str(hot_day)), encoding="utf-8")
+    return rows
+
+
+def spans(rows: list[dict]) -> dict[str, tuple[float, float]]:
+    """Per parameter: range of the GO share (percentage points) and of the die peak (K)."""
+    out = {}
+    for key in dict.fromkeys(r["parameter"] for r in rows):
+        sel = [r for r in rows if r["parameter"] == key]
+        go = [r["share_go"] for r in sel]
+        die = [r["die_q95_peak_c"] for r in sel]
+        out[key] = (round(100 * (max(go) - min(go)), 1), round(max(die) - min(die), 2))
+    return out
+
+
+def render(rows: list[dict], hot_day: str) -> str:
+    sp = spans(rows)
+    top = max(sp, key=lambda k: sp[k][0])
+    top_die = max(sp, key=lambda k: sp[k][1])
+    lines = [
+        "# Jackal sensitivity: the three parameters to check first",
+        "",
+        "Generated by `examples/jackal_sensitivity.py` (data: `examples/jackal_sensitivity.csv`). "
+        "Profile `clearpath_jackal`, evidence level **L0**: every value below is model output from "
+        "datasheets and assumptions, not a measurement. Weather: Open-Meteo reanalysis and CAMS PM10 "
+        "for Al Ain, 2015 to 2025 (cached). No robot data is used.",
+        "",
+        "Each parameter is moved one prior sigma (0.25, log space) either side of its nominal value, "
+        "clipped to its physical bounds, with the other parameters at nominal. GO share: calendar at "
+        "Al Ain, representative days of every month, 1 h drive mission at full scale from every local "
+        f"hour, 64 samples. Die peak: 95 % quantile peak compute die temperature for a 1 h drive "
+        f"mission at full scale from 13:00 local on {hot_day}, the hottest July day of the record.",
+        "",
+        "| Parameter | Setting | Value | Calendar GO share | Die peak, 95 % quantile (C) |",
+        "|---|---|---|---|---|",
+    ]
+    for r in rows:
+        lines.append(
+            f"| `{r['parameter']}` | {r['setting']} | {r['value']} | "
+            f"{100 * r['share_go']:.1f} % | {r['die_q95_peak_c']:.2f} |"
+        )
+    lines += [
+        "",
+        "| Parameter | GO share range (percentage points) | Die peak range (K) |",
+        "|---|---|---|",
+    ]
+    for k, (g, d) in sp.items():
+        lines.append(f"| `{k}` | {g:.1f} | {d:.2f} |")
+    lines += [
+        "",
+        f"**Headline:** across these ranges, `{top}` moves the calendar GO share the most, by "
+        f"{sp[top][0]:.1f} percentage points, and `{top_die}` moves the die peak the most, by "
+        f"{sp[top_die][1]:.2f} K. This is a property of the L0 model; only the measurements in "
+        "`docs/field-test-kit.md` can say which range is right.",
+        "",
+        "Reading: the two efficiencies move the GO share by similar amounts, and the ground heating "
+        "coefficient barely moves it. At the low value of either efficiency no hour is GO at full scale. "
+        "A check of January with the low DC-DC efficiency found every hour DERATE or PARK with the "
+        "battery binding and a best scale of at most 0.79, while the thermal headroom at full scale was "
+        "positive in some of those hours; the zero therefore comes from a battery limit other than "
+        "temperature, not from heat alone.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def rerender() -> None:
+    """Rewrite the document from the saved CSV without rerunning the model."""
+    with open(OUT_CSV, newline="", encoding="utf-8") as fh:
+        rows = list(csv.DictReader(fh))
+    for r in rows:
+        for k in ("value", "share_go", "die_q95_peak_c"):
+            r[k] = float(r[k])
+    hot = OUT_MD.read_text(encoding="utf-8").split("13:00 local on ")[1].split(",")[0]
+    OUT_MD.write_text(render(rows, hot), encoding="utf-8")
+
+
+if __name__ == "__main__":
+    for row in main():
+        print(row)
