@@ -100,7 +100,7 @@ Abu Dhabi's Smart and Autonomous Systems Council has directed a move from pilots
 - **Not the EDGE ATP 2026 ChallengeOn track**, which concerns connectivity.
 - **Novelty is only partly checked.** A shallow web pass (`docs/literature-log.md`) found no tool combining these elements, but the closest work (Moore et al. 2012 on temperature aware field robots; `desert-av-reliability`, a UAE sensor reliability model) overlaps in part. IEEE Xplore and Scopus have not been searched.
 - **The Jackal profile rests on three unmeasured conductances.** They were raised to match the 45 degC rating and sit at the upper end of plausible (`docs/robot-sources.md`); the calendar's GO share moved from 6.0 % to 63.9 % with them (`docs/operating-calendar.md`).
-- **Next real step:** one instrumented robot run, using [`docs/field-test-kit.md`](docs/field-test-kit.md) and a preregistered prediction.
+- **Next real step:** one instrumented robot run, using [`docs/field-test-kit.md`](docs/field-test-kit.md) and a preregistered prediction. A one page summary for the supervisor is [`docs/logging-session-quickstart.md`](docs/logging-session-quickstart.md).
 
 ## Repository map
 

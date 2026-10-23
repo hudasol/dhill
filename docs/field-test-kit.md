@@ -2,6 +2,7 @@
 
 Goal: move one robot from L0 (illustrative) to L2/L3 evidence so Dhill's decisions can be tested against reality.
 Read `docs/validation-protocol.md` for the full design; this is the short version.
+The supervisor's one page summary, with the exact commands, is `docs/logging-session-quickstart.md`.
 
 ## What to measure first (ranked by what moves the answer)
 `docs/sensitivity.md` shows which unknowns drive the uncertainty for the medium UGV profile. In order:
