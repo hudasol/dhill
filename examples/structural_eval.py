@@ -153,8 +153,8 @@ def boot_ci(num: np.ndarray, den: np.ndarray, reps: int = 1000, seed: int = 11):
     return [float(np.quantile(r, 0.025)), float(np.quantile(r, 0.975))]
 
 
-def evaluate(n: int, seed: int, offsets: dict) -> dict:
-    scen = list(SCENARIOS)
+def evaluate(n: int, seed: int, offsets: dict, scen: list[str] | None = None) -> dict:
+    scen = scen or list(SCENARIOS)
     res = run_tasks(n, seed, scen, offsets["classes"])
     out: dict = {"seed": seed, "robots_per_class": n, "scenarios": {}, "errors": {}}
     for sn in scen:
@@ -201,7 +201,7 @@ def evaluate(n: int, seed: int, offsets: dict) -> dict:
                 )
                 rows[pol]["missed_h"] = max(oracle - rows[pol]["productive_h"], 0.0)
             out["scenarios"][sn][cls] = rows
-    for cls in CLASSES:
+    for cls in CLASSES if "S1" in scen else ():
         sel = [r for r in res if cls == r["cls"]]
         e = np.concatenate([np.array(r["scen"]["S1"]["err4"]) for r in sel], axis=1)
         rows = {}
@@ -235,12 +235,18 @@ def main() -> None:
         p.add_argument("--seed", type=int, required=True)
         p.add_argument("--out", required=True)
     b.add_argument("--offsets", required=True)
+    b.add_argument(
+        "--scenarios",
+        nargs="*",
+        choices=sorted(SCENARIOS),
+        help="default: all five (a run split only)",
+    )
     args = ap.parse_args()
     if args.cmd == "fit-conformal":
         out = fit_conformal(args.robots_per_class, args.seed)
     else:
         offsets = json.loads(Path(args.offsets).read_text(encoding="utf-8"))
-        out = evaluate(args.robots_per_class, args.seed, offsets)
+        out = evaluate(args.robots_per_class, args.seed, offsets, args.scenarios)
     Path(args.out).write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(f"wrote {args.out}")
 

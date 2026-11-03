@@ -257,3 +257,14 @@ the E3 section above.
    2024 records (Abu Dhabi and Al Ain), five days each, 240 hourly cases, instead of three records. The
    Sobol base size stays at 512 and Morris stays at 16 trajectories. Section 3, E4 is otherwise
    unchanged, and its reduced calendar is described as such wherever a number from it is quoted.
+
+### Addendum 3, 3 November 2026, written after the conformal fit and before the evaluation run
+
+The conformal fit (E2, seed 2000) finished and its offsets are committed in
+`examples/conformal_offsets_v08.json`. The evaluation of E1 is run in two invocations to bound wall time:
+the command of section 5 with the added argument `--scenarios S1` (output
+`examples/structural_results_v08_S1.json`), then with `--scenarios S2 S3 S4 S5` (output
+`examples/structural_results_v08_S2to5.json`). The argument only selects which scenarios are run; every
+other setting and every seed is as in section 5. The E4 command was run with `--workers 1`, which does not
+change the result.
+
