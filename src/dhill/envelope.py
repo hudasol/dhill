@@ -73,6 +73,10 @@ class EngineConfig:
     refine_points: int = 5
     pm10_sigma: float = 0.5
     sigma_scale: float = 1.0
+    # Optional conformal offsets in kelvin, one per component in the order of COMPONENTS, added to
+    # the risk quantile peak before it is compared with the allowed limit. None means no offset
+    # (the published behaviour). See dhill.conformal.
+    quantile_offset_k: tuple[float, ...] | None = None
 
 
 class Envelope:
@@ -92,6 +96,10 @@ class Envelope:
         )
         self.q = profile.operations.risk_quantile
         self.limits = {c: profile.limits[c] for c in COMPONENTS if c in profile.limits}
+        off = self.cfg.quantile_offset_k
+        if off is not None and len(off) != len(COMPONENTS):
+            raise ValueError(f"quantile_offset_k needs {len(COMPONENTS)} values, one per component")
+        self._offset = np.zeros(len(COMPONENTS)) if off is None else np.asarray(off, dtype=float)
         self._build_perception_samples(rng)
 
     # ------------------------------------------------------------------ helpers
@@ -248,7 +256,7 @@ class Envelope:
                 for c in comps
             ]
         )
-        headroom = allow[None, None, :] - risk_peak
+        headroom = allow[None, None, :] - (risk_peak + self._offset[None, None, :])
         hard = np.array([self.limits[c].limit_c if c in self.limits else np.inf for c in comps])
         p_exceed = np.mean(peaks_c > hard[None, None, None, :], axis=2)
         age_h = res.age_equiv_s.reshape(s_n, k_n, m).mean(axis=2) / 3600.0
@@ -259,6 +267,7 @@ class Envelope:
             "risk_peak_c": risk_peak,
             "risk_min_soc": risk_soc,
             "peaks_c": peaks_c,
+            "min_soc_samples": soc,
             "p_exceed": p_exceed,
             "age_equiv_h": age_h,
             "comps": comps,
@@ -295,6 +304,7 @@ class Envelope:
                 continue
             series = res.t_die_k if c == "compute_die" else res.t_k[:, :, _NODE[c]]
             q = k_to_c(np.quantile(series, self.q, axis=0, method="higher"))
+            q = q + self._offset[comps.index(c)]
             allow = self.limits[c].limit_c - self.limits[c].margin_k
             hit = np.where(q >= allow)[0]
             if hit.size:

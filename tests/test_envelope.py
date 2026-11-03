@@ -159,3 +159,36 @@ def test_time_to_limit_shrinks_when_hotter():
     t_hot, _ = hot.time_to_limit(hot._idx("2026-08-05T05:00"), 2.0, "drive")
     assert t_hot is not None
     assert t_cool is None or t_hot <= t_cool
+
+
+def test_zero_offset_reproduces_published_behaviour():
+    prof = load_builtin("ugv_medium_inspection")
+    wx = synthetic_weather("abu_dhabi", "summer_clear", days=2)
+    base = Envelope(prof, wx, EngineConfig(n_mc=32))
+    zero = Envelope(prof, wx, EngineConfig(n_mc=32, quantile_offset_k=(0.0,) * 5))
+    a = base.decide("2026-08-05T04:00", 1.0)
+    b = zero.decide("2026-08-05T04:00", 1.0)
+    assert (a.action, a.scale) == (b.action, b.scale)
+
+
+def test_positive_offset_never_widens_the_envelope():
+    prof = load_builtin("ugv_medium_inspection")
+    wx = synthetic_weather("abu_dhabi", "summer_clear", days=2)
+    base = Envelope(prof, wx, EngineConfig(n_mc=32))
+    tight = Envelope(prof, wx, EngineConfig(n_mc=32, quantile_offset_k=(8.0,) * 5))
+    for hour in ("2026-08-05T02:00", "2026-08-05T05:00", "2026-08-05T07:00"):
+        assert tight.decide(hour, 1.0).scale <= base.decide(hour, 1.0).scale
+
+
+def test_offset_length_is_checked():
+    prof = load_builtin("ugv_medium_inspection")
+    wx = synthetic_weather("abu_dhabi", "summer_clear", days=2)
+    with pytest.raises(ValueError):
+        Envelope(prof, wx, EngineConfig(n_mc=16, quantile_offset_k=(1.0, 2.0)))
+
+
+def test_scan_exposes_per_sample_minimum_soc(env):
+    out = env.scan([0, 6], np.array([1.0, 0.5]), 1.0, "drive")
+    soc = out["min_soc_samples"]
+    assert soc.shape == (2, 2, env.cfg.n_mc)
+    assert np.all((soc >= 0.0) & (soc <= 1.0))
