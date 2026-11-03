@@ -1,0 +1,1270 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Dhill",
+    "description": "Heat and dust operating-envelope intelligence for outdoor robots",
+    "version": "0.8.0"
+  },
+  "paths": {
+    "/healthz": {
+      "get": {
+        "summary": "Healthz",
+        "operationId": "healthz_healthz_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Healthz Healthz Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/version": {
+      "get": {
+        "summary": "Version",
+        "operationId": "version_v1_version_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Version V1 Version Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/profiles": {
+      "get": {
+        "summary": "Profiles",
+        "operationId": "profiles_v1_profiles_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Profiles V1 Profiles Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/sites": {
+      "get": {
+        "summary": "Sites",
+        "operationId": "sites_v1_sites_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Sites V1 Sites Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/scenarios": {
+      "get": {
+        "summary": "Scenarios",
+        "operationId": "scenarios_v1_scenarios_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Scenarios V1 Scenarios Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/envelope": {
+      "post": {
+        "summary": "Envelope",
+        "operationId": "envelope_v1_envelope_post",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecideRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Decision"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/forecast": {
+      "post": {
+        "summary": "Forecast",
+        "operationId": "forecast_v1_forecast_post",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimelineRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Timeline"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/schedule": {
+      "post": {
+        "summary": "Schedule",
+        "operationId": "schedule_v1_schedule_post",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comparison"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Dashboard",
+        "operationId": "dashboard__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Block": {
+        "properties": {
+          "robot": {
+            "type": "string",
+            "title": "Robot"
+          },
+          "start_utc": {
+            "type": "string",
+            "title": "Start Utc"
+          },
+          "scale": {
+            "type": "number",
+            "title": "Scale"
+          },
+          "work_hours": {
+            "type": "number",
+            "title": "Work Hours"
+          },
+          "age_equiv_h": {
+            "type": "number",
+            "title": "Age Equiv H",
+            "default": 0.0
+          }
+        },
+        "type": "object",
+        "required": [
+          "robot",
+          "start_utc",
+          "scale",
+          "work_hours"
+        ],
+        "title": "Block"
+      },
+      "Comparison": {
+        "properties": {
+          "dhill": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "naive": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "naive_at_risk_blocks": {
+            "type": "integer",
+            "title": "Naive At Risk Blocks"
+          },
+          "naive_total_blocks": {
+            "type": "integer",
+            "title": "Naive Total Blocks"
+          },
+          "dhill_at_risk_blocks": {
+            "type": "integer",
+            "title": "Dhill At Risk Blocks",
+            "default": 0
+          },
+          "ageing_blind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Plan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "dhill",
+          "naive",
+          "naive_at_risk_blocks",
+          "naive_total_blocks"
+        ],
+        "title": "Comparison"
+      },
+      "ComponentMargin": {
+        "properties": {
+          "component": {
+            "type": "string",
+            "title": "Component"
+          },
+          "limit_c": {
+            "type": "number",
+            "title": "Limit C"
+          },
+          "margin_k": {
+            "type": "number",
+            "title": "Margin K",
+            "description": "Safety margin that must remain below the hard limit"
+          },
+          "risk_peak_c": {
+            "type": "number",
+            "title": "Risk Peak C",
+            "description": "Risk-quantile peak temperature over the mission"
+          },
+          "headroom_k": {
+            "type": "number",
+            "title": "Headroom K",
+            "description": "limit - margin - risk peak; negative means violated"
+          },
+          "p_exceed_limit": {
+            "type": "number",
+            "title": "P Exceed Limit",
+            "description": "Share of Monte Carlo samples whose peak exceeds the hard limit",
+            "default": 0.0
+          }
+        },
+        "type": "object",
+        "required": [
+          "component",
+          "limit_c",
+          "margin_k",
+          "risk_peak_c",
+          "headroom_k"
+        ],
+        "title": "ComponentMargin"
+      },
+      "DecideRequest": {
+        "properties": {
+          "profile": {
+            "type": "string",
+            "title": "Profile",
+            "default": "ugv_medium_inspection"
+          },
+          "profile_inline": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile Inline",
+            "description": "Inline profile (YAML structure) instead of a built-in id"
+          },
+          "site": {
+            "type": "string",
+            "title": "Site",
+            "default": "abu_dhabi"
+          },
+          "source": {
+            "type": "string",
+            "pattern": "^(synthetic|live)$",
+            "title": "Source",
+            "default": "synthetic"
+          },
+          "scenario": {
+            "type": "string",
+            "title": "Scenario",
+            "default": "summer_clear"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2})?)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start",
+            "description": "UTC start of synthetic weather"
+          },
+          "days": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Days",
+            "default": 2
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "default": "drive"
+          },
+          "duration_h": {
+            "type": "number",
+            "maximum": 8.0,
+            "exclusiveMinimum": 0.1,
+            "title": "Duration H",
+            "default": 1.0
+          },
+          "samples": {
+            "type": "integer",
+            "maximum": 256.0,
+            "minimum": 8.0,
+            "title": "Samples",
+            "description": "Monte Carlo samples; below 64 the response carries a reliability warning",
+            "default": 64
+          },
+          "at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2})?)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "At"
+          }
+        },
+        "type": "object",
+        "title": "DecideRequest"
+      },
+      "Decision": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "GO",
+              "DERATE",
+              "PARK"
+            ],
+            "title": "Action"
+          },
+          "start_utc": {
+            "type": "string",
+            "title": "Start Utc"
+          },
+          "duration_h": {
+            "type": "number",
+            "title": "Duration H"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode"
+          },
+          "scale": {
+            "type": "number",
+            "title": "Scale",
+            "description": "Operating scale 0..1: speed, drive power and compute duty"
+          },
+          "speed_ms": {
+            "type": "number",
+            "title": "Speed Ms"
+          },
+          "throughput_fraction": {
+            "type": "number",
+            "title": "Throughput Fraction"
+          },
+          "limiting_component": {
+            "type": "string",
+            "title": "Limiting Component"
+          },
+          "components": {
+            "items": {
+              "$ref": "#/components/schemas/ComponentMargin"
+            },
+            "type": "array",
+            "title": "Components"
+          },
+          "risk_min_soc": {
+            "type": "number",
+            "title": "Risk Min Soc"
+          },
+          "soc_reserve": {
+            "type": "number",
+            "title": "Soc Reserve"
+          },
+          "perception": {
+            "$ref": "#/components/schemas/Perception"
+          },
+          "perception_limited": {
+            "type": "boolean",
+            "title": "Perception Limited",
+            "default": false
+          },
+          "shade_required_fraction": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shade Required Fraction",
+            "description": "Share of the mission in shade needed for full-scale operation, if not GO"
+          },
+          "time_to_limit_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time To Limit Min",
+            "description": "Minutes until the risk-quantile temperature reaches an allowed limit at full scale"
+          },
+          "time_to_limit_component": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time To Limit Component"
+          },
+          "max_p_exceed_limit": {
+            "type": "number",
+            "title": "Max P Exceed Limit",
+            "default": 0.0
+          },
+          "next_full_scale_start_utc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Full Scale Start Utc"
+          },
+          "next_operable_start_utc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Operable Start Utc"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reasons"
+          },
+          "evidence_level": {
+            "type": "string",
+            "title": "Evidence Level"
+          },
+          "evidence_text": {
+            "type": "string",
+            "title": "Evidence Text"
+          },
+          "assumption_fraction": {
+            "type": "number",
+            "title": "Assumption Fraction"
+          },
+          "risk_quantile": {
+            "type": "number",
+            "title": "Risk Quantile"
+          },
+          "mc_samples": {
+            "type": "integer",
+            "title": "Mc Samples"
+          },
+          "caveat": {
+            "type": "string",
+            "title": "Caveat"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings",
+            "description": "Conditions that make this decision less reliable"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action",
+          "start_utc",
+          "duration_h",
+          "mode",
+          "scale",
+          "speed_ms",
+          "throughput_fraction",
+          "limiting_component",
+          "components",
+          "risk_min_soc",
+          "soc_reserve",
+          "perception",
+          "evidence_level",
+          "evidence_text",
+          "assumption_fraction",
+          "risk_quantile",
+          "mc_samples",
+          "caveat"
+        ],
+        "title": "Decision"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Perception": {
+        "properties": {
+          "pm10_window_max_ugm3": {
+            "type": "number",
+            "title": "Pm10 Window Max Ugm3"
+          },
+          "lidar_range_m": {
+            "type": "number",
+            "title": "Lidar Range M"
+          },
+          "max_safe_speed_ms": {
+            "type": "number",
+            "title": "Max Safe Speed Ms"
+          },
+          "speed_fraction_cap": {
+            "type": "number",
+            "title": "Speed Fraction Cap"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pm10_window_max_ugm3",
+          "lidar_range_m",
+          "max_safe_speed_ms",
+          "speed_fraction_cap"
+        ],
+        "title": "Perception"
+      },
+      "Plan": {
+        "properties": {
+          "blocks": {
+            "items": {
+              "$ref": "#/components/schemas/Block"
+            },
+            "type": "array",
+            "title": "Blocks"
+          },
+          "completed_work_h": {
+            "type": "number",
+            "title": "Completed Work H"
+          },
+          "demand_work_h": {
+            "type": "number",
+            "title": "Demand Work H"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "age_equiv_h": {
+            "type": "number",
+            "title": "Age Equiv H",
+            "default": 0.0
+          }
+        },
+        "type": "object",
+        "required": [
+          "blocks",
+          "completed_work_h",
+          "demand_work_h",
+          "status"
+        ],
+        "title": "Plan"
+      },
+      "PlanRequest": {
+        "properties": {
+          "profile": {
+            "type": "string",
+            "title": "Profile",
+            "default": "ugv_medium_inspection"
+          },
+          "profile_inline": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile Inline",
+            "description": "Inline profile (YAML structure) instead of a built-in id"
+          },
+          "site": {
+            "type": "string",
+            "title": "Site",
+            "default": "abu_dhabi"
+          },
+          "source": {
+            "type": "string",
+            "pattern": "^(synthetic|live)$",
+            "title": "Source",
+            "default": "synthetic"
+          },
+          "scenario": {
+            "type": "string",
+            "title": "Scenario",
+            "default": "summer_clear"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2})?)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start",
+            "description": "UTC start of synthetic weather"
+          },
+          "days": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Days",
+            "default": 2
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "default": "drive"
+          },
+          "duration_h": {
+            "type": "number",
+            "maximum": 8.0,
+            "exclusiveMinimum": 0.1,
+            "title": "Duration H",
+            "default": 1.0
+          },
+          "samples": {
+            "type": "integer",
+            "maximum": 256.0,
+            "minimum": 8.0,
+            "title": "Samples",
+            "description": "Monte Carlo samples; below 64 the response carries a reliability warning",
+            "default": 64
+          },
+          "robots": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 8,
+            "title": "Robots"
+          },
+          "step_min": {
+            "type": "number",
+            "maximum": 120.0,
+            "minimum": 15.0,
+            "title": "Step Min",
+            "default": 30.0
+          },
+          "rest_h": {
+            "type": "number",
+            "maximum": 4.0,
+            "minimum": 0.0,
+            "title": "Rest H",
+            "default": 0.5
+          },
+          "max_concurrent": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 8.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Concurrent"
+          },
+          "demand_h": {
+            "type": "number",
+            "maximum": 200.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Demand H",
+            "default": 12.0
+          },
+          "utc_offset_h": {
+            "type": "number",
+            "title": "Utc Offset H",
+            "default": 4.0
+          }
+        },
+        "type": "object",
+        "title": "PlanRequest"
+      },
+      "Slot": {
+        "properties": {
+          "start_utc": {
+            "type": "string",
+            "title": "Start Utc"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "GO",
+              "DERATE",
+              "PARK"
+            ],
+            "title": "Action"
+          },
+          "scale": {
+            "type": "number",
+            "title": "Scale"
+          },
+          "limiting_component": {
+            "type": "string",
+            "title": "Limiting Component"
+          },
+          "headroom_k": {
+            "type": "number",
+            "title": "Headroom K"
+          },
+          "risk_min_soc": {
+            "type": "number",
+            "title": "Risk Min Soc"
+          },
+          "age_equiv_h": {
+            "type": "number",
+            "title": "Age Equiv H",
+            "description": "Mean battery ageing of the mission, in hours at 25 degC equivalent",
+            "default": 0.0
+          },
+          "perception_limited": {
+            "type": "boolean",
+            "title": "Perception Limited",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "start_utc",
+          "action",
+          "scale",
+          "limiting_component",
+          "headroom_k",
+          "risk_min_soc"
+        ],
+        "title": "Slot"
+      },
+      "Timeline": {
+        "properties": {
+          "profile_id": {
+            "type": "string",
+            "title": "Profile Id"
+          },
+          "site": {
+            "type": "string",
+            "title": "Site"
+          },
+          "weather_source": {
+            "type": "string",
+            "title": "Weather Source"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode"
+          },
+          "duration_h": {
+            "type": "number",
+            "title": "Duration H"
+          },
+          "step_min": {
+            "type": "number",
+            "title": "Step Min"
+          },
+          "evidence_level": {
+            "type": "string",
+            "title": "Evidence Level"
+          },
+          "slots": {
+            "items": {
+              "$ref": "#/components/schemas/Slot"
+            },
+            "type": "array",
+            "title": "Slots"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings",
+            "description": "Conditions that make this timeline less reliable"
+          },
+          "productive_hours": {
+            "type": "number",
+            "title": "Productive Hours",
+            "readOnly": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "profile_id",
+          "site",
+          "weather_source",
+          "mode",
+          "duration_h",
+          "step_min",
+          "evidence_level",
+          "slots",
+          "productive_hours"
+        ],
+        "title": "Timeline"
+      },
+      "TimelineRequest": {
+        "properties": {
+          "profile": {
+            "type": "string",
+            "title": "Profile",
+            "default": "ugv_medium_inspection"
+          },
+          "profile_inline": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile Inline",
+            "description": "Inline profile (YAML structure) instead of a built-in id"
+          },
+          "site": {
+            "type": "string",
+            "title": "Site",
+            "default": "abu_dhabi"
+          },
+          "source": {
+            "type": "string",
+            "pattern": "^(synthetic|live)$",
+            "title": "Source",
+            "default": "synthetic"
+          },
+          "scenario": {
+            "type": "string",
+            "title": "Scenario",
+            "default": "summer_clear"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2})?)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start",
+            "description": "UTC start of synthetic weather"
+          },
+          "days": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Days",
+            "default": 2
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "default": "drive"
+          },
+          "duration_h": {
+            "type": "number",
+            "maximum": 8.0,
+            "exclusiveMinimum": 0.1,
+            "title": "Duration H",
+            "default": 1.0
+          },
+          "samples": {
+            "type": "integer",
+            "maximum": 256.0,
+            "minimum": 8.0,
+            "title": "Samples",
+            "description": "Monte Carlo samples; below 64 the response carries a reliability warning",
+            "default": 64
+          },
+          "step_min": {
+            "type": "number",
+            "maximum": 240.0,
+            "minimum": 15.0,
+            "title": "Step Min",
+            "default": 60.0
+          }
+        },
+        "type": "object",
+        "title": "TimelineRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

@@ -10,13 +10,16 @@ from __future__ import annotations
 
 import hmac
 import json
+import logging
 import os
+import threading
 import time
+from collections import defaultdict, deque
 from importlib import resources
 from typing import Any
 
-from fastapi import Depends, FastAPI, Header, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, Field
 
 from .. import __version__
@@ -36,6 +39,41 @@ app = FastAPI(
 )
 
 
+log = logging.getLogger("dhill.api")
+MAX_BODY_BYTES = int(os.environ.get("DHILL_MAX_BODY_BYTES", 256 * 1024))
+RATE_PER_MIN = int(os.environ.get("DHILL_RATE_LIMIT_PER_MIN", 120))
+MAX_ACTIVE = int(os.environ.get("DHILL_MAX_CONCURRENT", 4))
+TIME_PATTERN = r"^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2})?)?$"
+_hits: dict[str, deque[float]] = defaultdict(deque)
+_hits_lock = threading.Lock()
+_active = threading.BoundedSemaphore(MAX_ACTIVE)
+CSP = (
+    "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; "
+    "connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; "
+    "frame-ancestors 'none'"
+)
+
+
+def _client_id(request: Request) -> str:
+    key = request.headers.get("x-api-key")
+    return "key:" + key[:8] if key else "ip:" + (request.client.host if request.client else "?")
+
+
+def rate_limited(client: str, now: float | None = None) -> bool:
+    """Sliding one minute window per client. ``DHILL_RATE_LIMIT_PER_MIN`` of 0 switches it off."""
+    if RATE_PER_MIN <= 0:
+        return False
+    now = time.monotonic() if now is None else now
+    with _hits_lock:
+        q = _hits[client]
+        while q and now - q[0] > 60.0:
+            q.popleft()
+        if len(q) >= RATE_PER_MIN:
+            return True
+        q.append(now)
+        return False
+
+
 def require_key(x_api_key: str | None = Header(default=None)) -> None:
     expected = os.environ.get("DHILL_API_KEY")
     if expected and not (x_api_key and hmac.compare_digest(x_api_key, expected)):
@@ -43,10 +81,49 @@ def require_key(x_api_key: str | None = Header(default=None)) -> None:
 
 
 def audit(event: str, payload: dict[str, Any]) -> None:
+    """Append one JSON line to ``DHILL_AUDIT_LOG``; a failing log never fails the request."""
     path = os.environ.get("DHILL_AUDIT_LOG")
     if path:
-        with open(path, "a", encoding="utf-8") as fh:
-            fh.write(json.dumps({"t": time.time(), "event": event, **payload}) + "\n")
+        try:
+            with open(path, "a", encoding="utf-8") as fh:
+                fh.write(json.dumps({"t": time.time(), "event": event, **payload}) + "\n")
+        except OSError as exc:
+            log.warning("audit log not written: %s", exc)
+
+
+@app.middleware("http")
+async def guard(request: Request, call_next):
+    """Body size cap, rate limit, concurrency cap for compute routes and security headers."""
+    is_v1 = request.url.path.startswith("/v1")
+    if is_v1:
+        declared = request.headers.get("content-length")
+        if declared and declared.isdigit() and int(declared) > MAX_BODY_BYTES:
+            return JSONResponse({"detail": "request body too large"}, status_code=413)
+        if rate_limited(_client_id(request)):
+            return JSONResponse(
+                {"detail": "rate limit exceeded"}, status_code=429, headers={"Retry-After": "60"}
+            )
+    heavy = request.method == "POST" and is_v1
+    if heavy and not _active.acquire(blocking=False):
+        return JSONResponse(
+            {"detail": "server busy, retry shortly"}, status_code=503, headers={"Retry-After": "5"}
+        )
+    try:
+        response = await call_next(request)
+    except Exception:  # never return a stack trace
+        log.exception("unhandled error on %s", request.url.path)
+        response = JSONResponse({"detail": "internal error"}, status_code=500)
+    finally:
+        if heavy:
+            _active.release()
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    response.headers["X-Frame-Options"] = "DENY"
+    if request.url.path == "/":
+        response.headers["Content-Security-Policy"] = CSP
+    if is_v1:
+        response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 class Scenario(BaseModel):
@@ -57,7 +134,9 @@ class Scenario(BaseModel):
     site: str = "abu_dhabi"
     source: str = Field(default="synthetic", pattern="^(synthetic|live)$")
     scenario: str = "summer_clear"
-    start: str | None = Field(default=None, description="UTC start of synthetic weather")
+    start: str | None = Field(
+        default=None, pattern=TIME_PATTERN, description="UTC start of synthetic weather"
+    )
     days: int = Field(default=2, ge=1, le=5)
     mode: str = "drive"
     duration_h: float = Field(default=1.0, gt=0.1, le=8.0)
@@ -70,7 +149,7 @@ class Scenario(BaseModel):
 
 
 class DecideRequest(Scenario):
-    at: str | None = None
+    at: str | None = Field(default=None, pattern=TIME_PATTERN)
 
 
 class TimelineRequest(Scenario):
