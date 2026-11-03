@@ -1,0 +1,21 @@
+/* Dhill theme: sakura and pearl. Every text pair is checked by scripts/check_contrast.py (WCAG 2.1 AA). */
+:root {
+  color-scheme: light;
+  --pearl: #fff8fa;
+  --sakura-50: #fdeef3;
+  --sakura-100: #f8dbe6;
+  --sakura-300: #e8a9c1;
+  --ink: #3a2430;
+  --mute: #6b4a58;
+  --line: #e3bccd;
+  --edge: #8a5b70;
+  --rose: #9c2a55;
+  --on-rose: #ffffff;
+  --go: #1b6a48;
+  --go-fill: #2d8a63;
+  --derate: #7a4f00;
+  --derate-fill: #a86f00;
+  --park: #a1243f;
+  --park-fill: #a1243f;
+  --focus: #6a1b3d;
+}

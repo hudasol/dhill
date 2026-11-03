@@ -3,25 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dhill — operating envelope</title>
+<title>Dhill, operating envelope</title>
 <style>
-:root{--bg:#0e1116;--panel:#161b22;--ink:#e6edf3;--mute:#8b949e;--line:#2a313c;--go:#3fb68b;--der:#e3b341;--park:#f0715d;--acc:#7aa2f7}
-@media (prefers-color-scheme:light){:root{--bg:#f6f4ef;--panel:#fffdf8;--ink:#1c2128;--mute:#5b6570;--line:#d9d4c8;--go:#1f8a63;--der:#9a6b00;--park:#c2412d;--acc:#2f5bd8}}
+/*THEME*/
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{margin:0;background:var(--pearl);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 main{max-width:1040px;margin:0 auto;padding:24px 16px 56px}
 h1{font-size:22px;margin:0;letter-spacing:.2px} h1 span{color:var(--mute);font-weight:400}
 .sub{color:var(--mute);margin:4px 0 20px}
-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;background:var(--sakura-50);border:1px solid var(--line);border-radius:10px;padding:14px}
 label{display:flex;flex-direction:column;font-size:12px;color:var(--mute);gap:4px}
-select,input,button{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 8px}
-button{background:var(--acc);color:#fff;border:0;cursor:pointer;align-self:end;font-weight:600} button:disabled{opacity:.5}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:16px}
+select,input,button{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--edge);border-radius:6px;padding:7px 8px}
+button{background:var(--rose);color:var(--on-rose);border:0;cursor:pointer;align-self:end;font-weight:600} button:disabled{opacity:.5}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:16px}
 .badge{display:inline-block;font-weight:700;padding:2px 10px;border-radius:5px;border:2px solid currentColor}
-.GO{color:var(--go)} .DERATE{color:var(--der)} .PARK{color:var(--park)}
+.GO{color:var(--go)} .DERATE{color:var(--derate)} .PARK{color:var(--park)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.glyph{display:inline-block;width:1.1em;text-align:center}
 .row{display:flex;align-items:center;gap:10px;margin:3px 0;font-variant-numeric:tabular-nums}
-.t{width:64px;white-space:nowrap;color:var(--mute);font-size:13px} .bar{flex:1;height:16px;background:var(--bg);border:1px solid var(--line);border-radius:4px;overflow:hidden}
-.bar i{display:block;height:100%} .bar i.GO{background:var(--go)} .bar i.DERATE{background:repeating-linear-gradient(45deg,var(--der),var(--der) 6px,transparent 6px,transparent 9px)} .bar i.PARK{background:transparent}
+.t{width:64px;white-space:nowrap;color:var(--mute);font-size:13px} .bar{flex:1;height:16px;background:var(--pearl);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%} .bar i.GO{background:var(--go-fill)} .bar i.DERATE{background:repeating-linear-gradient(45deg,var(--derate-fill),var(--derate-fill) 6px,transparent 6px,transparent 9px)} .bar i.PARK{background:transparent;border-left:3px solid var(--park-fill)}
 .lab{width:150px;font-size:13px} table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px}
 td,th{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line)} th{color:var(--mute);font-weight:500;font-size:12px}
 .neg{color:var(--park);font-weight:600}.note{color:var(--mute);font-size:13px;margin-top:10px} #err{color:var(--park);margin-top:12px}
@@ -49,6 +50,7 @@ const key=new URLSearchParams(location.search).get("key");
 const H=key?{"X-API-Key":key,"Content-Type":"application/json"}:{"Content-Type":"application/json"};
 const get=async p=>{const r=await fetch(p,{headers:H});if(!r.ok)throw new Error(p+" "+r.status);return r.json()};
 const post=async(p,b)=>{const r=await fetch(p,{method:"POST",headers:H,body:JSON.stringify(b)});if(!r.ok){let m=r.status;try{m=(await r.json()).detail}catch(e){}throw new Error(p+": "+m)}return r.json()};
+const GLYPH={GO:"\u25CF",DERATE:"\u25B2",PARK:"\u25A0"};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 async function init(){
   try{
@@ -75,15 +77,15 @@ $("f").addEventListener("submit",async ev=>{
   $("go").disabled=false;
 });
 function render(tl,d){
-  const rows=tl.slots.map(s=>`<div class="row"><span class="t">${esc(s.start_utc.slice(8,10)+" "+s.start_utc.slice(11,13))}h</span><span class="lab ${s.action}"><b>${s.action}</b> ${s.scale.toFixed(2)}</span><span class="bar"><i class="${s.action}" style="width:${Math.round(s.scale*100)}%"></i></span><span class="lab">${esc(s.limiting_component.replace(/_/g," "))}</span></div>`).join("");
+  const rows=tl.slots.map(s=>`<div class="row"><span class="t">${esc(s.start_utc.slice(8,10)+" "+s.start_utc.slice(11,13))}h</span><span class="lab ${s.action}"><span class="glyph" aria-hidden="true">${GLYPH[s.action]}</span><b>${s.action}</b> ${s.scale.toFixed(2)}</span><span class="bar"><i class="${s.action}" style="width:${Math.round(s.scale*100)}%"></i></span><span class="lab">${esc(s.limiting_component.replace(/_/g," "))}</span></div>`).join("");
   const comp=d.components.map(c=>`<tr><td>${esc(c.component.replace(/_/g," "))}</td><td>${c.risk_peak_c.toFixed(1)} °C</td><td>${c.limit_c.toFixed(0)} °C</td><td class="${c.headroom_k<0?"neg":""}">${c.headroom_k>0?"+":""}${c.headroom_k.toFixed(1)} K</td><td>${(c.p_exceed_limit*100).toFixed(1)}%</td></tr>`).join("");
   $("out").innerHTML=`
   <div class="card"><h2 style="margin:0 0 8px;font-size:16px">Hour-by-hour decision <span style="color:var(--mute);font-weight:400">· ${esc(tl.profile_id)} · ${esc(tl.site)} · ${esc(tl.weather_source)} · ${tl.duration_h} h missions (UTC)</span></h2>${rows}
-  <p class="note">${tl.productive_hours.toFixed(1)} productive hours (scale-weighted). Filled bar = GO, hatched = DERATE, empty = PARK.</p></div>
-  <div class="card"><h2 style="margin:0 0 8px;font-size:16px">First restricted window: ${esc(d.start_utc)} <span class="badge ${d.action}">${d.action}</span> scale ${d.scale.toFixed(2)}</h2>
+  <p class="note">${tl.productive_hours.toFixed(1)} productive hours (scale-weighted). Filled bar and circle = GO, hatched bar and triangle = DERATE, empty bar and square = PARK.</p></div>
+  <div class="card"><h2 style="margin:0 0 8px;font-size:16px">First restricted window: ${esc(d.start_utc)} <span class="badge ${d.action}"><span class="glyph" aria-hidden="true">${GLYPH[d.action]}</span>${d.action}</span> scale ${d.scale.toFixed(2)}</h2>
   <ul>${d.reasons.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>
   <table><thead><tr><th>Component</th><th>Risk-quantile peak</th><th>Limit</th><th>Headroom after margin</th><th>P(exceed hard limit)</th></tr></thead><tbody>${comp}</tbody></table>
-  <p class="note">LiDAR range ${d.perception.lidar_range_m} m at PM10 ${d.perception.pm10_window_max_ugm3} µg/m³ → max safe speed ${d.perception.max_safe_speed_ms} m/s.
+  <p class="note">LiDAR range ${d.perception.lidar_range_m} m at PM10 ${d.perception.pm10_window_max_ugm3} µg/m³ so the maximum safe speed is ${d.perception.max_safe_speed_ms} m/s.
   ${d.next_full_scale_start_utc?"Next full-scale window: "+esc(d.next_full_scale_start_utc)+".":""} ${d.shade_required_fraction!=null?"Full scale feasible with ~"+Math.round(d.shade_required_fraction*100)+"% of the mission in shade.":""}</p>
   <p class="note"><b>${esc(d.evidence_text)}</b> · ${Math.round(d.assumption_fraction*100)}% of parameters are assumptions · ${d.mc_samples} Monte Carlo samples at the ${Math.round(d.risk_quantile*100)}% risk quantile.<br>${esc(d.caveat)}${(d.warnings||[]).map(w=>"<br><b>"+esc(w)+"</b>").join("")}</p></div>`;
 }

@@ -215,4 +215,7 @@ def schedule(req: PlanRequest) -> Comparison:
 
 @app.get("/", response_class=HTMLResponse)
 def dashboard() -> str:
-    return resources.files("dhill.web").joinpath("index.html").read_text(encoding="utf-8")
+    web = resources.files("dhill.web")
+    page = web.joinpath("index.html").read_text(encoding="utf-8")
+    theme = web.joinpath("theme.css").read_text(encoding="utf-8")
+    return page.replace("/*THEME*/", theme)
