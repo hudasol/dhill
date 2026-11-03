@@ -223,6 +223,7 @@ class EngineSlots:
     cap: np.ndarray  # perception cap, common to every policy
     scale: dict[str, np.ndarray]  # P1 to P5
     risk_peak: np.ndarray  # (S, 5) risk quantile peak at the P4 scale, no offset
+    risk_peak5: np.ndarray  # (S, 5) risk quantile peak at the P5 scale, no offset
     allowed: np.ndarray
     reserve: float
 
@@ -251,15 +252,16 @@ def engine_slots(
         scales["P5"], _ = env5.best_scale(starts, mission_h, "drive")
     else:
         scales["P5"] = s4.copy()
-    scan = env.scan(
-        starts, np.maximum(s4, profile.operations.min_scale)[:, None], mission_h, "drive"
-    )
+    floor = profile.operations.min_scale
+    scan = env.scan(starts, np.maximum(s4, floor)[:, None], mission_h, "drive")
+    scan5 = env.scan(starts, np.maximum(scales["P5"], floor)[:, None], mission_h, "drive")
     return EngineSlots(
         starts=starts,
         slot_s=starts * cfg.dt_s,
         cap=cap,
         scale=scales,
         risk_peak=scan["risk_peak_c"][:, 0, :],
+        risk_peak5=scan5["risk_peak_c"][:, 0, :],
         allowed=allowed_limits(profile),
         reserve=profile.operations.soc_reserve,
     )
@@ -274,7 +276,9 @@ class ClassDay:
     breach: dict[str, np.ndarray]  # (S, P) bool, only meaningful where the scale is above zero
     hard: dict[str, np.ndarray]  # (S, P) bool, hard limit exceeded
     peak_p4: np.ndarray  # (S, P, 5) plant peaks at the P4 scale
-    risk_peak: np.ndarray  # (S, 5)
+    peak_p5: np.ndarray  # (S, P, 5) plant peaks at the P5 scale
+    risk_peak: np.ndarray  # (S, 5) engine risk peak at the P4 scale
+    risk_peak5: np.ndarray  # (S, 5) engine risk peak at the P5 scale (offset not included)
 
 
 def _outcome(profile: Profile, peak: np.ndarray, soc: np.ndarray):
@@ -304,7 +308,7 @@ def run_class_day(
             cache[key] = plant_peaks(plants, w, es.slot_s, sc, scenario, seed, return_soc=True)
         return cache[key]
 
-    peak4 = None
+    peak4 = peak5 = None
     for pol in ("P1", "P2", "P3", "P4", "P5"):
         sc = es.scale[pol]
         peak, soc = run(sc)
@@ -312,6 +316,8 @@ def run_class_day(
         scales[pol] = sc
         if pol == "P4":
             peak4 = peak
+        if pol == "P5":
+            peak5 = peak
     # oracle: largest grid scale (clipped by the perception cap) without a breach, per robot
     best = np.zeros((es.slot_s.size, plants.n))
     for g in SCALE_GRID[1:]:
@@ -322,8 +328,8 @@ def run_class_day(
     scales["P6"] = best
     breach["P6"] = np.zeros_like(breach["P4"])
     hard["P6"] = np.zeros_like(hard["P4"])
-    assert peak4 is not None
-    return ClassDay(scales, breach, hard, peak4, es.risk_peak)
+    assert peak4 is not None and peak5 is not None
+    return ClassDay(scales, breach, hard, peak4, peak5, es.risk_peak, es.risk_peak5)
 
 
 def conformal_level(n: int, alpha: float = 0.05) -> float:
