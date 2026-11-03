@@ -12,3 +12,15 @@ ros2 run dhill_recorder recorder telemetry.csv
 ```
 Topics are listed in the module docstring. Map your robot's topics with `ros2 topic remap`
 or a small relay node.
+
+## Nav2 adapter
+
+`dhill_nav2_adapter` turns a Dhill decision into a Nav2 speed limit (DERATE) or a park request (PARK) and
+fails safe to a park request if the Dhill service cannot be reached for longer than a configured time. The
+mapping logic is `dhill.ros2_bridge.nav2_adapter` and is unit tested without ROS. The node has **not** been
+run against a live Nav2 stack in this repository; test it in simulation first. See `docs/nav2-adapter.md`.
+
+```
+colcon build --packages-select dhill_nav2_adapter
+ros2 launch dhill_nav2_adapter adapter.launch.py
+```

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>dhill_nav2_adapter</name>
+  <version>0.8.0</version>
+  <description>Publishes Nav2 speed limits and park requests from Dhill decisions</description>
+  <maintainer email="hudamueen2407@gmail.com">Huda Mueen</maintainer>
+  <license>Apache-2.0</license>
+  <depend>rclpy</depend>
+  <depend>nav2_msgs</depend>
+  <depend>std_msgs</depend>
+  <export><build_type>ament_python</build_type></export>
+</package>
