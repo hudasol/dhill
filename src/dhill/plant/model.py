@@ -1,4 +1,4 @@
-"""Independent plant simulator: a thirteen node thermal model of a small wheeled robot.
+"""Independent plant simulator: a sixteen node thermal model of a small wheeled robot.
 
 Purpose: provide a "true" robot whose structure differs from the six node engine in
 ``dhill.physics``, so that the engine can be tested against structural model error. The plant
@@ -44,9 +44,29 @@ NODE_NAMES = (
     "die",
     "lidar",
     "motor",
+    "bottom",
+    "wheel",
+    "payload",
 )
-TOP, FRONT, RIGHT, BACK, LEFT, AIR, CHASSIS, BSURF, BCORE, HSINK, DIE, LIDAR, MOTOR = range(13)
-N = 13
+(
+    TOP,
+    FRONT,
+    RIGHT,
+    BACK,
+    LEFT,
+    AIR,
+    CHASSIS,
+    BSURF,
+    BCORE,
+    HSINK,
+    DIE,
+    LIDAR,
+    MOTOR,
+    BOTTOM,
+    WHEEL,
+    PAYLOAD,
+) = range(16)
+N = 16
 
 
 # ---------------------------------------------------------------------------- solar geometry
@@ -155,6 +175,19 @@ class PlantParams:
     v_dep1: np.ndarray
     m_half: np.ndarray
     m_clog: np.ndarray
+    c_bottom: np.ndarray
+    c_wheel: np.ndarray
+    c_payload: np.ndarray
+    g_bottom_ground: np.ndarray
+    g_bottom_chassis: np.ndarray
+    g_wheel_chassis: np.ndarray
+    g_wheel_ground: np.ndarray
+    a_wheel_ext: np.ndarray
+    g_payload_air: np.ndarray
+    g_payload_chassis: np.ndarray
+    q_vent: np.ndarray
+    p_mech_full: np.ndarray
+    p_payload_full: np.ndarray
 
     @property
     def n(self) -> int:
@@ -194,7 +227,7 @@ _NOMINAL = {
     "g_panel_chassis": (1.8, 0.40, 0.6, 4.0),
     "h_int0": (1.7, 0.20, 1.1, 2.4),
     "a_chassis_air": (0.55, 0.20, 0.3, 0.9),
-    "g_chassis_ground": (4.5, 0.35, 1.8, 9.0),
+    "g_chassis_ground": (1.5, 0.35, 0.6, 3.2),
     "a_batt": (0.08, 0.20, 0.05, 0.12),
     "g_bs_chassis": (1.4, 0.45, 0.4, 3.5),
     "g_core_surf": (4.0, 0.40, 1.5, 9.0),
@@ -229,26 +262,165 @@ _NOMINAL = {
     "v_dep1": (0.0006, 0.5, 0.0001, 0.0018),
     "m_half": (3.0, 0.4, 1.0, 8.0),
     "m_clog": (3.0, 0.5, 1.0, 9.0),
+    "c_bottom": (700.0, 0.25, 300.0, 1500.0),
+    "c_wheel": (2400.0, 0.25, 1000.0, 4800.0),
+    "c_payload": (1200.0, 0.30, 400.0, 2600.0),
+    "g_bottom_ground": (3.0, 0.40, 1.0, 7.0),
+    "g_bottom_chassis": (3.0, 0.40, 1.0, 7.0),
+    "g_wheel_chassis": (3.0, 0.40, 1.0, 7.0),
+    "g_wheel_ground": (3.0, 0.40, 1.0, 7.0),
+    "a_wheel_ext": (0.15, 0.30, 0.06, 0.30),
+    "g_payload_air": (0.6, 0.40, 0.2, 1.5),
+    "g_payload_chassis": (0.9, 0.40, 0.3, 2.2),
+    "q_vent": (0.0, 0.5, 0.0, 0.02),
+    "p_mech_full": (50.0, 0.10, 30.0, 80.0),
+    "p_payload_full": (0.0, 0.0, 0.0, 60.0),
+}
+
+# keys whose nominal value scales with robot mass, with pack size, or with outer area
+_MASS_KEYS = {
+    "c_top",
+    "c_side",
+    "c_air",
+    "c_chassis",
+    "c_motor",
+    "c_bottom",
+    "c_wheel",
+    "c_payload",
+}
+_PACK_KEYS = {"c_bsurf", "c_bcore", "a_batt"}
+_AREA_KEYS = {
+    "g_panel_chassis",
+    "a_chassis_air",
+    "g_chassis_ground",
+    "g_bs_chassis",
+    "g_hs_chassis",
+    "g_motor_chassis",
+    "g_bottom_ground",
+    "g_bottom_chassis",
+    "g_wheel_chassis",
+    "g_wheel_ground",
+    "a_wheel_ext",
+    "g_payload_air",
+    "g_payload_chassis",
+    "a_motor_ext",
+    "q_inf0",
+    "q_inf1",
 }
 
 
-def draw_plants(n: int, seed: int, spread: float = 1.0) -> PlantParams:
-    """Draw ``n`` plausible robots around the nominal design. ``spread`` scales every sigma."""
+@dataclass(frozen=True)
+class ClassSpec:
+    """A robot class: body size, pack layout, scaling of the nominal design, absolute overrides."""
+
+    name: str
+    length: float
+    width: float
+    height: float
+    cells_s: int
+    cells_p: int
+    mass: float = 1.0
+    area: float = 1.0
+    overrides: dict | None = None
+
+
+CLASSES: dict[str, ClassSpec] = {
+    "small_ugv": ClassSpec("small_ugv", 0.508, 0.430, 0.250, 7, 2),
+    "delivery": ClassSpec(
+        "delivery",
+        0.75,
+        0.55,
+        0.60,
+        10,
+        4,
+        mass=2.0,
+        area=2.2,
+        overrides={
+            "alpha_paint": 0.38,
+            "eps": 0.92,
+            "p_comp_idle": 12.1,
+            "p_comp_max": 22.0,
+            "p_lidar_on": 8.0,
+            "p_elec": 11.0,
+            "p_mech_full": 70.0,
+            "q_vent": 0.006,
+            "cell_ah": 5.0,
+            "lidar_area": 0.012,
+        },
+    ),
+    "pv_cleaner": ClassSpec(
+        "pv_cleaner",
+        0.90,
+        0.50,
+        0.18,
+        7,
+        4,
+        mass=2.0,
+        area=1.6,
+        overrides={
+            "alpha_paint": 0.40,
+            "eps": 0.80,
+            "ground_gain": 31.0,
+            "p_comp_idle": 4.2,
+            "p_comp_max": 6.0,
+            "p_lidar_on": 1.0,
+            "p_elec": 4.0,
+            "p_mech_full": 30.0,
+            "c_hsink": 120.0,
+            "c_die": 6.0,
+            "c_lidar": 60.0,
+            "lidar_area": 0.004,
+            "a_lidar_ext": 0.008,
+            "cell_ah": 5.0,
+            "g_bottom_ground": 11.0,
+        },
+    ),
+}
+
+
+def _factor(spec: ClassSpec, name: str) -> float:
+    if name in _MASS_KEYS:
+        return spec.mass
+    if name in _PACK_KEYS:
+        ratio = spec.cells_s * spec.cells_p / 14.0
+        return ratio ** (2.0 / 3.0) if name == "a_batt" else ratio
+    if name in _AREA_KEYS:
+        return spec.area
+    return 1.0
+
+
+def draw_plants(n: int, seed: int, spread: float = 1.0, cls: str = "small_ugv") -> PlantParams:
+    """Draw ``n`` plausible robots of class ``cls`` around its nominal design.
+
+    ``spread`` scales every relative sigma. Clip ranges scale with the nominal value.
+    """
+    spec = CLASSES[cls]
+    over = spec.overrides or {}
     rng = np.random.default_rng(seed)
     out = {}
     for name, (v, sig, lo, hi) in _NOMINAL.items():
-        out[name] = np.clip(v * np.exp(spread * sig * rng.standard_normal(n)), lo, hi)
+        f = _factor(spec, name)
+        if name in over:
+            v2 = over[name]
+            if v != 0.0:
+                lo, hi = lo * v2 / v, hi * v2 / v
+            else:
+                lo, hi = 0.0, max(hi, 3.0 * v2)
+        else:
+            v2, lo, hi = v * f, lo * f, hi * f
+        z = rng.standard_normal(n)
+        out[name] = np.clip(v2 * np.exp(spread * sig * z), lo, hi)
     one = np.ones(n)
-    out["length"] = 0.508 * one
-    out["width"] = 0.430 * one
-    out["height"] = 0.250 * one
-    out["cells_s"] = 7.0 * one
-    out["cells_p"] = 2.0 * one
+    out["length"] = spec.length * one
+    out["width"] = spec.width * one
+    out["height"] = spec.height * one
+    out["cells_s"] = float(spec.cells_s) * one
+    out["cells_p"] = float(spec.cells_p) * one
     return PlantParams(**out)
 
 
-def nominal_plant(n: int = 1) -> PlantParams:
-    return draw_plants(n, 0, spread=0.0)
+def nominal_plant(n: int = 1, cls: str = "small_ugv") -> PlantParams:
+    return draw_plants(n, 0, spread=0.0, cls=cls)
 
 
 # ---------------------------------------------------------------------------- forcing and drive
@@ -406,6 +578,9 @@ def simulate_plant(
     caps[:, DIE] = p.c_die
     caps[:, LIDAR] = p.c_lidar
     caps[:, MOTOR] = p.c_motor
+    caps[:, BOTTOM] = p.c_bottom
+    caps[:, WHEEL] = p.c_wheel
+    caps[:, PAYLOAD] = p.c_payload
 
     cap_pack_ah = p.cell_ah * p.cells_p
     ns_over_np = p.cells_s / p.cells_p
@@ -484,6 +659,26 @@ def simulate_plant(
         g_cg = p.g_chassis_ground * (1.0 + 0.15 * speed)
         a[:, CHASSIS, CHASSIS] += g_cg
         rhs[:, CHASSIS] += g_cg * t_g
+        # underside plate: ground contact and radiation, interior air, chassis
+        g_bg = p.g_bottom_ground * (1.0 + 0.15 * speed)
+        a[:, BOTTOM, BOTTOM] += g_bg
+        rhs[:, BOTTOM] += g_bg * t_g
+        h_bb = np.maximum(p.h_int0 * np.abs(tk[:, BOTTOM] - tk[:, AIR]) ** 0.25, 1.5)
+        _add(a, BOTTOM, AIR, h_bb * area_top)
+        _add(a, BOTTOM, CHASSIS, p.g_bottom_chassis)
+        # wheel and tyre assembly: ground contact, moving air, chassis
+        g_wg = p.g_wheel_ground * (1.0 + 0.25 * speed)
+        a[:, WHEEL, WHEEL] += g_wg
+        rhs[:, WHEEL] += g_wg * t_g
+        h_w = _h_mixed(tk[:, WHEEL] - t_air, v_rel, 1.25)
+        g_w = h_w * p.a_wheel_ext
+        a[:, WHEEL, WHEEL] += g_w
+        rhs[:, WHEEL] += g_w * t_air
+        _add(a, WHEEL, CHASSIS, p.g_wheel_chassis)
+        # payload bay mass: interior air and chassis
+        h_pa = np.maximum(p.h_int0 * np.abs(tk[:, PAYLOAD] - tk[:, AIR]) ** 0.25, 1.5)
+        _add(a, PAYLOAD, AIR, h_pa * 0.5 * area_top)
+        _add(a, PAYLOAD, CHASSIS, p.g_payload_chassis)
         h_ba = np.maximum(p.h_int0 * np.abs(tk[:, BSURF] - tk[:, AIR]) ** 0.25, 1.5)
         _add(a, BSURF, AIR, h_ba * p.a_batt)
         _add(a, BSURF, CHASSIS, p.g_bs_chassis)
@@ -503,7 +698,7 @@ def simulate_plant(
         a[:, MOTOR, MOTOR] += g_m
         rhs[:, MOTOR] += g_m * t_air
         # infiltration of outside air through seals
-        g_inf = RHO_CP_AIR * (p.q_inf0 + p.q_inf1 * v_w)
+        g_inf = RHO_CP_AIR * (p.q_inf0 + p.q_inf1 * v_w + p.q_vent * clog)
         a[:, AIR, AIR] += g_inf
         rhs[:, AIR] += g_inf * t_air
 
@@ -537,13 +732,9 @@ def simulate_plant(
         rhs[:, DIE] += drv.p_comp[:, k]
         rhs[:, LIDAR] += drv.p_lidar[:, k]
         rhs[:, MOTOR] += p.motor_frac * drive_loss
-        rhs[:, AIR] += (
-            drv.p_elec[:, k]
-            + (1.0 - p.motor_frac) * drive_loss
-            + p.payload_heat_frac * drv.p_payload[:, k]
-            + dcdc_loss
-        )
-        rhs[:, CHASSIS] += p.wheel_heat_frac * p_mech
+        rhs[:, AIR] += drv.p_elec[:, k] + (1.0 - p.motor_frac) * drive_loss + dcdc_loss
+        rhs[:, PAYLOAD] += p.payload_heat_frac * drv.p_payload[:, k]
+        rhs[:, WHEEL] += p.wheel_heat_frac * p_mech
         rhs[:, BCORE] += q_core
 
         t_new = np.linalg.solve(a, rhs[..., None])[..., 0]

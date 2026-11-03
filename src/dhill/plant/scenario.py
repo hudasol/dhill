@@ -194,13 +194,15 @@ def build_mission(
     dt: float,
     rng: np.random.Generator,
     v_nom: float = 1.0,
-    p_mech_full: float = 50.0,
-    p_payload_full: float = 10.0,
+    p_mech_full: float | None = None,
+    p_payload_full: float | None = None,
     stop_share: float = 0.08,
     sand_share: float = 0.10,
 ) -> PlantDrive:
     """Parked for ``spin_steps`` then a patrol at ``scale`` (B,) for the rest; stops, turns and sand patches."""
     b = p.n
+    pm_full = p.p_mech_full[:, None] if p_mech_full is None else p_mech_full
+    pp_full = p.p_payload_full[:, None] if p_payload_full is None else p_payload_full
     scale = np.asarray(scale, dtype=float)
     # scale is (B,) for a constant patrol or (B, steps) for a schedule
     s = np.broadcast_to(scale if scale.ndim == 2 else scale[:, None], (b, steps)).copy()
@@ -214,16 +216,16 @@ def build_mission(
     load_noise = _ar1(rng, (b, steps), dt, 60.0)
     util_noise = _ar1(rng, (b, steps), dt, 120.0)
     p_mech = np.where(
-        moving, p_mech_full * s * (1.0 + 0.2 * load_noise) * np.where(sand, 1.5, 1.0), 0.0
+        moving, pm_full * s * (1.0 + 0.2 * load_noise) * np.where(sand, 1.5, 1.0), 0.0
     )
-    p_mech = np.clip(p_mech, 0.0, 2.0 * p_mech_full)
+    p_mech = np.clip(p_mech, 0.0, 2.0 * pm_full)
     util = np.clip(s * (1.0 + 0.2 * util_noise), 0.0, 1.0)
     active = (s > 0.0) & (np.arange(steps)[None, :] >= spin_steps)
     p_comp = p.p_comp_idle[:, None] + (p.p_comp_max - p.p_comp_idle)[:, None] * np.where(
         active, util, 0.0
     )
     p_lidar = np.where(moving, p.p_lidar_on[:, None], 0.0)
-    p_payload = np.where(moving, p_payload_full * s, 0.0)
+    p_payload = np.where(moving, pp_full * s, 0.0)
     p_elec = np.repeat(p.p_elec[:, None], steps, axis=1)
     speed = np.where(moving, v_nom * s * (1.0 + 0.1 * load_noise), 0.0)
 

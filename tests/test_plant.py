@@ -194,3 +194,32 @@ def test_sensor_model_lags_adds_bias_and_gaps():
         "p_drive_mech_w",
         "p_payload_w",
     }
+
+
+def test_plant_has_sixteen_nodes_and_three_classes():
+    from dhill.plant.model import CLASSES, N, NODE_NAMES
+
+    assert N == 16 and len(NODE_NAMES) == 16
+    assert set(CLASSES) == {"small_ugv", "delivery", "pv_cleaner"}
+
+
+def test_each_class_has_its_own_geometry_and_loads_and_meets_the_rating():
+    from dhill.plant.model import CLASSES, draw_plants
+
+    sizes = set()
+    for name in CLASSES:
+        p = draw_plants(40, 3, 1.0, name)
+        sizes.add((float(p.length[0]), float(p.width[0]), float(p.height[0])))
+        assert 0.3 < acceptance_rate(seed=2, n=60, cls=name) <= 1.0
+        kept = draw_rated_plants(4, 9, cls=name)
+        assert kept.n == 4 and rated_mask(kept).all()
+    assert len(sizes) == 3
+
+
+def test_underside_wheel_and_payload_nodes_exchange_heat_with_the_ground():
+    from dhill.plant.model import BOTTOM, WHEEL
+
+    p, f, d, tr = _run(hours=2.0, ghi=900.0, shade="none", t_air=40.0)
+    t = tr.temps_c()[0]
+    assert t[-1, BOTTOM] > 40.0 and t[-1, WHEEL] > 40.0
+    assert tr.residual_w is not None and tr.residual_w < 1e-6

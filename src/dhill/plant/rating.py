@@ -74,13 +74,15 @@ def rated_mask(p: PlantParams) -> np.ndarray:
     return ok
 
 
-def draw_rated_plants(n: int, seed: int, spread: float = 1.0) -> PlantParams:
+def draw_rated_plants(
+    n: int, seed: int, spread: float = 1.0, cls: str = "small_ugv"
+) -> PlantParams:
     """``n`` robots that pass the rating check, drawn with ``seed`` (deterministic)."""
     got: list[PlantParams] = []
     have = 0
     attempt = 0
     while have < n:
-        batch = draw_plants(max(4 * (n - have), 16), seed * 1000 + attempt, spread)
+        batch = draw_plants(max(4 * (n - have), 16), seed * 1000 + attempt, spread, cls)
         keep = rated_mask(batch)
         if keep.any():
             got.append(batch.take(np.where(keep)[0]))
@@ -96,5 +98,7 @@ def draw_rated_plants(n: int, seed: int, spread: float = 1.0) -> PlantParams:
     return PlantParams(**merged)
 
 
-def acceptance_rate(seed: int = 0, n: int = 400, spread: float = 1.0) -> float:
-    return float(rated_mask(draw_plants(n, seed, spread)).mean())
+def acceptance_rate(
+    seed: int = 0, n: int = 400, spread: float = 1.0, cls: str = "small_ugv"
+) -> float:
+    return float(rated_mask(draw_plants(n, seed, spread, cls)).mean())
