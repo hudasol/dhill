@@ -1,20 +1,24 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "dhill"
-version = "0.7.0"
+version = "0.8.0"
 description = "Thermal and dust operating-envelope intelligence for autonomous ground systems in hot-arid environments"
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
 authors = [{ name = "Huda Mueen" }]
 keywords = ["robotics", "thermal", "battery", "dust", "hot-climate", "mission-planning", "UAE"]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
   "Intended Audience :: Science/Research",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Scientific/Engineering",
 ]
 dependencies = [
@@ -27,9 +31,16 @@ dependencies = [
   "uvicorn>=0.29",
 ]
 
+[project.urls]
+Homepage = "https://github.com/hudasol/dhill"
+Repository = "https://github.com/hudasol/dhill"
+Changelog = "https://github.com/hudasol/dhill/blob/main/CHANGELOG.md"
+
 [project.optional-dependencies]
-dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.5"]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.5", "build>=1.0", "twine>=5.0"]
 plot = ["matplotlib>=3.8"]
+analysis = ["SALib>=1.4", "pvlib>=0.10"]
+docs = ["mkdocs>=1.5", "mkdocs-material>=9.5"]
 
 [project.scripts]
 dhill = "dhill.cli:main"
