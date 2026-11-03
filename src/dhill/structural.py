@@ -183,7 +183,7 @@ def plant_peaks(
     """Peak component temperatures (degC) of every plant for every slot: shape (S, P, len(COMPONENTS)).
 
     ``slot_s`` are mission start times in seconds after the first record time. ``scales`` has one value per
-    slot. A scale of zero means the robot stays parked, so the result is the parked peak over the same hour
+    slot, or one per slot and robot (S, P). A scale of zero means the robot stays parked, so the result is the parked peak over the same hour
     (reported, not an operation). With ``return_soc`` the minimum state of charge (S, P) is also returned.
     """
     s_n, p_n = slot_s.size, plants.n
@@ -200,7 +200,9 @@ def plant_peaks(
     micro = Micro(enabled=scenario.micro, event=event)
     forc = build_forcing(pw, start, steps, dt, rng, micro)
     p_b = plants.tile(s_n)
-    drv = build_mission(p_b, np.repeat(scales, p_n), spin_steps, steps, dt, rng)
+    scales = np.asarray(scales, dtype=float)
+    flat = np.repeat(scales, p_n) if scales.ndim == 1 else scales.reshape(-1)
+    drv = build_mission(p_b, flat, spin_steps, steps, dt, rng)
     drv.shade_beam = build_shade(forc, rng, scenario.shade)
     st = PlantState.at_ambient(
         forc.t_air_c[:, 0], dust=scenario.dust0_g_m2, foul=scenario.foul0_g_m2
@@ -330,6 +332,36 @@ def run_class_day(
     hard["P6"] = np.zeros_like(hard["P4"])
     assert peak4 is not None and peak5 is not None
     return ClassDay(scales, breach, hard, peak4, peak5, es.risk_peak, es.risk_peak5)
+
+
+def p4_scales(
+    profile: Profile, w: Weather, first_utc: str, last_utc: str, seed: int, mission_h: float = 1.0
+):
+    """Engine policy P4 only: ``(slot_s, cap, scale)`` for the hourly slots, uncalibrated or calibrated."""
+    env = Envelope(profile, w, EngineConfig(n_mc=64, seed=seed))
+    starts = slot_starts(env, first_utc, last_utc)
+    cap, _, _ = env.perception_cap(starts, mission_h)
+    scale, _ = env.best_scale(starts, mission_h, "drive")
+    return starts * env.cfg.dt_s, cap, scale
+
+
+def oracle_scales(
+    profile: Profile,
+    plants: PlantParams,
+    w: Weather,
+    slot_s: np.ndarray,
+    cap: np.ndarray,
+    scenario: Scenario,
+    seed: int,
+) -> np.ndarray:
+    """Largest grid scale (clipped by the perception cap) without a breach, per slot and robot."""
+    best = np.zeros((slot_s.size, plants.n))
+    for g in SCALE_GRID[1:]:
+        sc = np.minimum(g, cap)
+        peak, soc = plant_peaks(plants, w, slot_s, sc, scenario, seed, return_soc=True)
+        b, _ = _outcome(profile, peak, soc)
+        best = np.where(~b, np.maximum(best, sc[:, None]), best)
+    return best
 
 
 def conformal_level(n: int, alpha: float = 0.05) -> float:
