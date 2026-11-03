@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
@@ -85,22 +86,35 @@ def _eval_row(args: tuple) -> float:
     return go_share(to_values(prof, keys, np.asarray(u)))
 
 
-def evaluate_all(keys: list[str], pts: np.ndarray, workers: int, label: str) -> np.ndarray:
+def evaluate_all(
+    keys: list[str], pts: np.ndarray, workers: int, label: str, seed: int = 0
+) -> np.ndarray:
+    """Evaluate every row. With DHILL_EVAL_CACHE set, partial results are stored so a restart resumes."""
     jobs = [(keys, row) for row in pts]
+    root = os.environ.get("DHILL_EVAL_CACHE")
+    path = Path(root) / f"{label}_{seed}_{len(jobs)}.npy" if root else None
+    done: list[float] = []
+    if path is not None and path.exists():
+        done = list(np.load(path))
+    todo = jobs[len(done) :]
     if workers <= 1:
-        out = []
-        for i, j in enumerate(jobs):
-            out.append(_eval_row(j))
-            if (i + 1) % 100 == 0:
-                print(f"{label} {i + 1}/{len(jobs)}", file=sys.stderr, flush=True)
-        return np.array(out)
-    with ProcessPoolExecutor(max_workers=workers) as ex:
-        res = []
-        for i, v in enumerate(ex.map(_eval_row, jobs, chunksize=8)):
-            res.append(v)
-            if (i + 1) % 100 == 0:
-                print(f"{label} {i + 1}/{len(jobs)}", file=sys.stderr, flush=True)
-    return np.array(res)
+        for i, j in enumerate(todo):
+            done.append(_eval_row(j))
+            if (len(done)) % 50 == 0:
+                print(f"{label} {len(done)}/{len(jobs)}", file=sys.stderr, flush=True)
+                if path is not None:
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    np.save(path, np.array(done))
+    else:
+        with ProcessPoolExecutor(max_workers=workers) as ex:
+            for v in ex.map(_eval_row, todo, chunksize=8):
+                done.append(v)
+                if len(done) % 100 == 0:
+                    print(f"{label} {len(done)}/{len(jobs)}", file=sys.stderr, flush=True)
+    if path is not None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        np.save(path, np.array(done))
+    return np.array(done)
 
 
 def main() -> None:
@@ -121,7 +135,7 @@ def main() -> None:
     # Morris screening over all varied parameters
     pr = {"num_vars": d, "names": keys, "bounds": [[0.0, 1.0]] * d}
     xm = morris_sample.sample(pr, N=args.morris_r, num_levels=4, seed=args.seed)
-    ym = evaluate_all(keys, xm, args.workers, "morris")
+    ym = evaluate_all(keys, xm, args.workers, "morris", args.seed)
     mo = morris_analyze.analyze(pr, xm, ym, num_levels=4, seed=args.seed)
     order = np.argsort(-np.asarray(mo["mu_star"]))
     top = [keys[i] for i in order[: args.top]]
@@ -129,7 +143,7 @@ def main() -> None:
     # Sobol analysis on the top parameters, the others held at their nominal values
     ps = {"num_vars": len(top), "names": top, "bounds": [[0.0, 1.0]] * len(top)}
     xs = sobol_sample.sample(ps, args.sobol_n, calc_second_order=False, seed=args.seed)
-    ys = evaluate_all(top, xs, args.workers, "sobol")
+    ys = evaluate_all(top, xs, args.workers, "sobol", args.seed)
     so = sobol_analyze.analyze(
         ps, ys, calc_second_order=False, num_resamples=200, conf_level=0.95, seed=args.seed
     )

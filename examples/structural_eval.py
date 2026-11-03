@@ -13,7 +13,9 @@ three six day July reanalysis windows from `tests/data/climatology`. No real rob
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
 import sys
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
@@ -68,7 +70,30 @@ def _plants(cls: str, n: int, seed: int):
     return _PLANTS[key]
 
 
+def _cache_path(args: tuple) -> Path | None:
+    root = os.environ.get("DHILL_EVAL_CACHE")
+    if not root:
+        return None
+    cls, day_idx, _site, _year, _day, _first, n, seed, scen_names, offsets = args
+    tag = hashlib.sha1(repr((offsets, scen_names)).encode()).hexdigest()[:10]
+    return Path(root) / f"{cls}_{day_idx}_{n}_{seed}_{tag}.json"
+
+
 def task(args: tuple) -> dict:
+    """One class and day. With DHILL_EVAL_CACHE set, finished tasks are stored so a restart resumes."""
+    path = _cache_path(args)
+    if path is not None and path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
+    out = _task(args)
+    if path is not None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_suffix(".tmp")
+        tmp.write_text(json.dumps(out), encoding="utf-8")
+        tmp.replace(path)
+    return out
+
+
+def _task(args: tuple) -> dict:
     cls, day_idx, site, year, day, first, n, seed, scen_names, offsets = args
     profile = load_builtin(CLASS_PROFILE[cls])
     w = window_weather(_record(site, year), day)
