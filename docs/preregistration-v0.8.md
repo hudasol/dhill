@@ -247,3 +247,13 @@ the E3 section above.
 4. Robot level independence. The evaluation, conformal calibration and E3 robots are disjoint draws
    (seeds 1000, 2000 and 3000 plus the class index). The plant weather noise seed is the engine seed 7
    plus the day index.
+
+### Addendum 2, 3 November 2026, written before any result was inspected
+
+1. The Abu Dhabi 2021 fixture has no air quality record. In E1, E2 and E3 its PM10 is filled with the
+   harness default of 60 micrograms per cubic metre for every hour, identical for the engine and the
+   plant. This affects dust loading and perception on those six days only.
+2. The calendar code needs PM10 and does not run the first day of a record. E4 therefore uses the two
+   2024 records (Abu Dhabi and Al Ain), five days each, 240 hourly cases, instead of three records. The
+   Sobol base size stays at 512 and Morris stays at 16 trajectories. Section 3, E4 is otherwise
+   unchanged, and its reduced calendar is described as such wherever a number from it is quoted.
