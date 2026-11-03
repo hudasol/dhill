@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dhill demo, synthetic and L0</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--pearl);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:960px;margin:0 auto;padding:24px 16px 56px}
+h1{font-size:22px;margin:0} h1 span{color:var(--mute);font-weight:400}
+.banner{background:var(--sakura-100);border:2px solid var(--rose);border-radius:8px;padding:10px 14px;margin:14px 0;font-weight:600}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;background:var(--sakura-50);border:1px solid var(--line);border-radius:10px;padding:14px}
+label{display:flex;flex-direction:column;font-size:12px;color:var(--mute);gap:4px}
+select{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--edge);border-radius:6px;padding:7px 8px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:16px}
+.row{display:flex;align-items:center;gap:10px;margin:3px 0;font-variant-numeric:tabular-nums}
+.t{width:150px;flex:none;white-space:nowrap;color:var(--mute);font-size:13px}
+.lab{width:150px;flex:none;font-size:13px}
+.GO{color:var(--go)} .DERATE{color:var(--derate)} .PARK{color:var(--park)}
+.glyph{display:inline-block;width:1.1em;text-align:center}
+.bar{flex:1;height:16px;background:var(--pearl);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%}
+.bar i.GO{background:var(--go-fill)}
+.bar i.DERATE{background:repeating-linear-gradient(45deg,var(--derate-fill),var(--derate-fill) 6px,transparent 6px,transparent 9px)}
+.bar i.PARK{background:transparent;border-left:3px solid var(--park-fill)}
+.note{color:var(--mute);font-size:13px;margin-top:10px}
+#err{color:var(--park);margin-top:12px}
+@media (max-width:640px){.t{width:112px;font-size:12px}.lab{width:104px;font-size:12px}.row{flex-wrap:wrap}.bar{min-width:100%;order:3}}
+</style>
+</head>
+<body>
+<main>
+<h1>Dhill <span>ظل · browser demo</span></h1>
+<div class="banner" role="note">SYNTHETIC weather and illustrative L0 robot profiles. These are not forecasts and not real robots. The decisions are precomputed by the Dhill engine.</div>
+<form id="f">
+<label>Robot profile<select id="profile"></select></label>
+<label>Site<select id="site"></select></label>
+<label>Weather scenario<select id="scenario"></select></label>
+</form>
+<div id="err" role="alert"></div>
+<div id="out" class="card" aria-live="polite"></div>
+<p class="note">Filled bar and circle mean GO, hatched bar and triangle mean DERATE, empty bar and square mean PARK. Missions last one hour at the start time shown. Local time is UTC plus 4 hours. Decisions come from a 64 sample Monte Carlo at the 95 percent risk quantile.</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const GLYPH={GO:"●",DERATE:"▲",PARK:"■"};
+let DATA=null;
+function opt(sel,items){sel.textContent="";for(const [v,t] of items){const o=document.createElement("option");o.value=v;o.textContent=t;sel.appendChild(o)}}
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+function pad(n){return String(n).padStart(2,"0")}
+function render(){
+  const key=[$("profile").value,$("site").value,$("scenario").value].join("|");
+  const rows=DATA.timelines[key]||[];
+  const out=$("out");out.textContent="";
+  const p=DATA.profiles[$("profile").value];
+  out.appendChild(el("h2",null,p.name+" ["+p.evidence_level+"], "+Math.round(p.assumption_fraction*100)+" percent of parameters are assumptions"));
+  out.lastChild.style.cssText="margin:0 0 8px;font-size:16px";
+  let prod=0;
+  for(const s of rows){
+    prod+=s.s;
+    const h=+s.t.slice(11,13), lh=(h+4)%24;
+    const row=el("div","row");
+    row.appendChild(el("span","t",pad(h)+":00 UTC / "+pad(lh)+":00"));
+    const lab=el("span","lab "+s.a);
+    lab.appendChild(el("span","glyph",GLYPH[s.a]));lab.lastChild.setAttribute("aria-hidden","true");
+    lab.appendChild(el("b",null,s.a));lab.appendChild(document.createTextNode(" "+s.s.toFixed(2)));
+    row.appendChild(lab);
+    const bar=el("span","bar");const i=el("i",s.a);i.style.width=Math.round(s.s*100)+"%";bar.appendChild(i);row.appendChild(bar);
+    row.appendChild(el("span","lab",s.c.replace(/_/g," ")));
+    out.appendChild(row);
+  }
+  out.appendChild(el("p","note",prod.toFixed(1)+" productive hours (scale weighted) on this synthetic day. The label on the right names the component that limits the decision."));
+}
+async function init(){
+  try{
+    const r=await fetch("data.json");if(!r.ok)throw new Error("data.json "+r.status);
+    DATA=await r.json();
+    opt($("profile"),Object.entries(DATA.profiles).map(([k,v])=>[k,v.name+" ["+v.evidence_level+"]"]));
+    opt($("site"),DATA.sites.map(s=>[s,s.replace(/_/g," ")]));
+    opt($("scenario"),DATA.scenarios.map(s=>[s,s.replace(/_/g," ")]));
+    $("scenario").value="heatwave";
+    for(const id of ["profile","site","scenario"])$(id).addEventListener("change",render);
+    render();
+  }catch(e){$("err").textContent="The demo data could not be loaded: "+e.message+". Serve this folder over http, for example with python -m http.server."}
+}
+init();
+</script>
+</body>
+</html>

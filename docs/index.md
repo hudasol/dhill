@@ -24,6 +24,7 @@ evidence level of the robot profile behind it.
 | See what was tested and what was found | [Results](results.md), [v0.8 predictions and results](prereg-results-v08.md) |
 | Run Dhill on your own robot | [Pilot kit](pilot-kit.md), [Parameters](parameters.md) |
 | Connect Dhill to a robot stack | [Edge integration](edge-integration.md), [REST API](api.md) |
+| Try the decisions in a browser | [Demo with synthetic data](demo/index.html) |
 | Plan a logging session | [Logging session quickstart](logging-session-quickstart.md), [Field test kit](field-test-kit.md) |
 
 ## Install
