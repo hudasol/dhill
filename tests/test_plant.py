@@ -197,7 +197,7 @@ def test_sensor_model_lags_adds_bias_and_gaps():
 
 
 def test_plant_has_sixteen_nodes_and_three_classes():
-    from dhill.plant.model import CLASSES, N, NODE_NAMES
+    from dhill.plant.model import CLASSES, NODE_NAMES, N
 
     assert N == 16 and len(NODE_NAMES) == 16
     assert set(CLASSES) == {"small_ugv", "delivery", "pv_cleaner"}
