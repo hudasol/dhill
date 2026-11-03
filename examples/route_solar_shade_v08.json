@@ -1,0 +1,158 @@
+{
+ "profile": "clearpath_jackal",
+ "evidence_level": "L0",
+ "days": 18,
+ "ratios": [
+  0.0,
+  0.2,
+  0.5,
+  1.0,
+  2.0
+ ],
+ "windows_local_hours": {
+  "morning": [
+   6,
+   10
+  ],
+  "midday": [
+   10,
+   15
+  ],
+  "afternoon": [
+   15,
+   19
+  ]
+ },
+ "rows": [
+  {
+   "config": "none",
+   "mean_midday_shade": 0.0,
+   "go_hours_per_day_morning": 1.3333333333333333,
+   "gain_morning": 0.0,
+   "max_day_gain_morning": 0.0,
+   "go_hours_per_day_midday": 0.0,
+   "gain_midday": 0.0,
+   "max_day_gain_midday": 0.0,
+   "go_hours_per_day_afternoon": 0.0,
+   "gain_afternoon": 0.0,
+   "max_day_gain_afternoon": 0.0
+  },
+  {
+   "config": "fixed_0.6",
+   "mean_midday_shade": 0.6,
+   "go_hours_per_day_morning": 1.7777777777777777,
+   "gain_morning": 0.4444444444444444,
+   "max_day_gain_morning": 1.0,
+   "go_hours_per_day_midday": 0.0,
+   "gain_midday": 0.0,
+   "max_day_gain_midday": 0.0,
+   "go_hours_per_day_afternoon": 0.0,
+   "gain_afternoon": 0.0,
+   "max_day_gain_afternoon": 0.0
+  },
+  {
+   "config": "north_south_0.2",
+   "mean_midday_shade": 0.0,
+   "go_hours_per_day_morning": 1.3333333333333333,
+   "gain_morning": 0.0,
+   "max_day_gain_morning": 0.0,
+   "go_hours_per_day_midday": 0.0,
+   "gain_midday": 0.0,
+   "max_day_gain_midday": 0.0,
+   "go_hours_per_day_afternoon": 0.0,
+   "gain_afternoon": 0.0,
+   "max_day_gain_afternoon": 0.0
+  },
+  {
+   "config": "north_south_0.5",
+   "mean_midday_shade": 0.0,
+   "go_hours_per_day_morning": 1.3888888888888888,
+   "gain_morning": 0.05555555555555555,
+   "max_day_gain_morning": 1.0,
+   "go_hours_per_day_midday": 0.0,
+   "gain_midday": 0.0,
+   "max_day_gain_midday": 0.0,
+   "go_hours_per_day_afternoon": 0.0,
+   "gain_afternoon": 0.0,
+   "max_day_gain_afternoon": 0.0
+  },
+  {
+   "config": "north_south_1",
+   "mean_midday_shade": 0.14493406861773808,
+   "go_hours_per_day_morning": 1.3888888888888888,
+   "gain_morning": 0.05555555555555555,
+   "max_day_gain_morning": 1.0,
+   "go_hours_per_day_midday": 0.0,
+   "gain_midday": 0.0,
+   "max_day_gain_midday": 0.0,
+   "go_hours_per_day_afternoon": 0.0,
+   "gain_afternoon": 0.0,
+   "max_day_gain_afternoon": 0.0
+  },
+  {
+   "config": "north_south_2",
+   "mean_midday_shade": 0.3962744353338082,
+   "go_hours_per_day_morning": 1.3888888888888888,
+   "gain_morning": 0.05555555555555555,
+   "max_day_gain_morning": 1.0,
+   "go_hours_per_day_midday": 0.0,
+   "gain_midday": 0.0,
+   "max_day_gain_midday": 0.0,
+   "go_hours_per_day_afternoon": 0.0,
+   "gain_afternoon": 0.0,
+   "max_day_gain_afternoon": 0.0
+  },
+  {
+   "config": "east_west_0.2",
+   "mean_midday_shade": 0.0,
+   "go_hours_per_day_morning": 1.3333333333333333,
+   "gain_morning": 0.0,
+   "max_day_gain_morning": 0.0,
+   "go_hours_per_day_midday": 0.0,
+   "gain_midday": 0.0,
+   "max_day_gain_midday": 0.0,
+   "go_hours_per_day_afternoon": 0.0,
+   "gain_afternoon": 0.0,
+   "max_day_gain_afternoon": 0.0
+  },
+  {
+   "config": "east_west_0.5",
+   "mean_midday_shade": 0.0,
+   "go_hours_per_day_morning": 1.3333333333333333,
+   "gain_morning": 0.0,
+   "max_day_gain_morning": 0.0,
+   "go_hours_per_day_midday": 0.0,
+   "gain_midday": 0.0,
+   "max_day_gain_midday": 0.0,
+   "go_hours_per_day_afternoon": 0.0,
+   "gain_afternoon": 0.0,
+   "max_day_gain_afternoon": 0.0
+  },
+  {
+   "config": "east_west_1",
+   "mean_midday_shade": 0.0,
+   "go_hours_per_day_morning": 1.3888888888888888,
+   "gain_morning": 0.05555555555555555,
+   "max_day_gain_morning": 1.0,
+   "go_hours_per_day_midday": 0.0,
+   "gain_midday": 0.0,
+   "max_day_gain_midday": 0.0,
+   "go_hours_per_day_afternoon": 0.0,
+   "gain_afternoon": 0.0,
+   "max_day_gain_afternoon": 0.0
+  },
+  {
+   "config": "east_west_2",
+   "mean_midday_shade": 0.0,
+   "go_hours_per_day_morning": 1.3888888888888888,
+   "gain_morning": 0.05555555555555555,
+   "max_day_gain_morning": 1.0,
+   "go_hours_per_day_midday": 0.0,
+   "gain_midday": 0.0,
+   "max_day_gain_midday": 0.0,
+   "go_hours_per_day_afternoon": 0.0,
+   "gain_afternoon": 0.0,
+   "max_day_gain_afternoon": 0.0
+  }
+ ]
+}
