@@ -233,4 +233,17 @@ the E3 section above.
 
 ## Addenda
 
-None yet.
+### Addendum 1, 3 November 2026, written before any section 5 run
+
+1. Headline breach rate. The breach rate quoted in the predictions of E1 to E3 is the number of
+   breaching cases divided by the number of operated cases (scale above zero). The rate per case of
+   all cases, including parked ones, is reported beside it.
+2. First day of each record. A case needs three hours of plant spin up before the start hour, and the
+   first day of each fixture record has no weather before 00:00 UTC. On those three days the first
+   start hour is 07:00 local instead of 06:00, so the case count is 231 start hours per robot rather
+   than 234.
+3. P1 and P2 run at the perception cap, which every policy and the oracle share, rather than at a
+   scale of exactly 1.0. P3 is the engine with `sigma_scale` set to zero.
+4. Robot level independence. The evaluation, conformal calibration and E3 robots are disjoint draws
+   (seeds 1000, 2000 and 3000 plus the class index). The plant weather noise seed is the engine seed 7
+   plus the day index.
