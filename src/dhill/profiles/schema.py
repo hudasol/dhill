@@ -103,6 +103,10 @@ class Profile(BaseModel):
                 raise ValueError(f"missing mode: {need}")
         if self.evidence_level in ("L2", "L3") and not self.calibrated_from:
             raise ValueError("evidence level L2/L3 requires calibrated_from")
+        if self.evidence_level == "L1" and not any(
+            p.source == "measured" for p in self.parameters.values()
+        ):
+            raise ValueError("evidence level L1 requires at least one measured parameter")
         return self
 
     def value(self, key: str) -> float:

@@ -1,0 +1,15 @@
+# Illustrative fleet. The robots are built in L0 profiles, not real products.
+schema_version: 1
+name: Campus inspection pilot (illustrative)
+site: al_ain
+robots:
+  - id: inspector
+    profile: ugv_medium_inspection
+    count: 2
+  - id: courier
+    profile: sidewalk_delivery_robot
+planner:
+  block_h: 1.0
+  rest_h: 0.5
+  demand_work_h: 12.0
+  utc_offset_h: 4.0

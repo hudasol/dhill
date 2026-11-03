@@ -1,0 +1,125 @@
+{
+  "$defs": {
+    "FleetPlanner": {
+      "properties": {
+        "block_h": {
+          "default": 1.0,
+          "exclusiveMinimum": 0,
+          "maximum": 8,
+          "title": "Block H",
+          "type": "number"
+        },
+        "rest_h": {
+          "default": 0.5,
+          "maximum": 12,
+          "minimum": 0,
+          "title": "Rest H",
+          "type": "number"
+        },
+        "max_concurrent": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Concurrent"
+        },
+        "demand_work_h": {
+          "default": 12.0,
+          "exclusiveMinimum": 0,
+          "maximum": 1000,
+          "title": "Demand Work H",
+          "type": "number"
+        },
+        "utc_offset_h": {
+          "default": 4.0,
+          "maximum": 14,
+          "minimum": -12,
+          "title": "Utc Offset H",
+          "type": "number"
+        },
+        "step_min": {
+          "default": 30.0,
+          "maximum": 240,
+          "minimum": 5,
+          "title": "Step Min",
+          "type": "number"
+        }
+      },
+      "title": "FleetPlanner",
+      "type": "object"
+    },
+    "FleetRobot": {
+      "properties": {
+        "id": {
+          "description": "Name of the robot, or the prefix of its numbered copies",
+          "title": "Id",
+          "type": "string"
+        },
+        "profile": {
+          "description": "Built in profile id or path to a profile YAML file",
+          "title": "Profile",
+          "type": "string"
+        },
+        "count": {
+          "default": 1,
+          "description": "Number of identical robots",
+          "maximum": 500,
+          "minimum": 1,
+          "title": "Count",
+          "type": "integer"
+        },
+        "mode": {
+          "default": "drive",
+          "description": "Mission mode used for planning",
+          "title": "Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "profile"
+      ],
+      "title": "FleetRobot",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "site": {
+      "title": "Site",
+      "type": "string"
+    },
+    "robots": {
+      "items": {
+        "$ref": "#/$defs/FleetRobot"
+      },
+      "minItems": 1,
+      "title": "Robots",
+      "type": "array"
+    },
+    "planner": {
+      "$ref": "#/$defs/FleetPlanner"
+    }
+  },
+  "required": [
+    "name",
+    "site",
+    "robots"
+  ],
+  "title": "FleetSpec",
+  "type": "object"
+}

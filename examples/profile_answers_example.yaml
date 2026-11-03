@@ -1,0 +1,13 @@
+# Answers for `dhill profile new --answers`. Everything not listed keeps the template's assumption.
+base: sidewalk_delivery_robot
+id: demo_courier
+name: Demonstration courier (illustrative)
+description: A made up robot used to show the profile wizard.
+parameters:
+  battery.cells_series: {value: 13, source: datasheet}
+  battery.cells_parallel: {value: 4, source: datasheet}
+  compute.nominal_power_w: {value: 18, source: assumption}
+limits:
+  compute_die: {limit_c: 95, source: datasheet}
+modes:
+  drive: {mech_w: 80}

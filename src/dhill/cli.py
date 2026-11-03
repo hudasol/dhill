@@ -112,19 +112,39 @@ def cmd_timeline(args) -> int:
 def cmd_plan(args) -> int:
     from .planner import PlannerSpec, compare
 
-    ids = args.robots or [args.profile]
-    w = get_weather(args)
-    tls = {}
-    for rid in ids:
-        env = Envelope(load_profile(rid), w, EngineConfig(n_mc=args.samples), site=args.site)
-        tls[rid] = env.timeline(args.duration_h, args.mode, args.step_min)
-    spec = PlannerSpec(
-        block_h=args.duration_h,
-        rest_h=args.rest_h,
-        max_concurrent=args.max_concurrent,
-        demand_work_h=args.demand_h,
-    )
-    cmp = compare(tls, spec, local_offset_h=args.utc_offset_h)
+    if args.fleet:
+        from .fleet import load_fleet
+
+        fleet = load_fleet(args.fleet)
+        args.site = fleet.site
+        profs = fleet.profiles()
+        w = get_weather(args)
+        tls = {}
+        for rid, robot in fleet.expand():
+            env = Envelope(profs[robot.profile], w, EngineConfig(n_mc=args.samples), site=args.site)
+            tls[rid] = env.timeline(fleet.planner.block_h, robot.mode, fleet.planner.step_min)
+        spec = PlannerSpec(
+            block_h=fleet.planner.block_h,
+            rest_h=fleet.planner.rest_h,
+            max_concurrent=fleet.planner.max_concurrent,
+            demand_work_h=fleet.planner.demand_work_h,
+        )
+        args.demand_h = fleet.planner.demand_work_h
+        cmp = compare(tls, spec, local_offset_h=fleet.planner.utc_offset_h)
+    else:
+        ids = args.robots or [args.profile]
+        w = get_weather(args)
+        tls = {}
+        for rid in ids:
+            env = Envelope(load_profile(rid), w, EngineConfig(n_mc=args.samples), site=args.site)
+            tls[rid] = env.timeline(args.duration_h, args.mode, args.step_min)
+        spec = PlannerSpec(
+            block_h=args.duration_h,
+            rest_h=args.rest_h,
+            max_concurrent=args.max_concurrent,
+            demand_work_h=args.demand_h,
+        )
+        cmp = compare(tls, spec, local_offset_h=args.utc_offset_h)
     if args.json:
         print(cmp.model_dump_json(indent=2))
         return 0
@@ -295,6 +315,48 @@ def cmd_list(args) -> int:
     return 0
 
 
+def cmd_profile(args) -> int:
+    import yaml
+
+    from .profiles.loader import load_profile_file
+    from .profiles.wizard import build_profile_dict, run_wizard, write_profile
+
+    if args.action == "check":
+        prof = load_profile_file(args.file)
+        print(f"{prof.id}: valid, {prof.evidence_text()}")
+        print(f"{prof.assumption_fraction() * 100:.0f}% of parameters are assumptions")
+        return 0
+    if args.answers:
+        answers = yaml.safe_load(Path(args.answers).read_text(encoding="utf-8"))
+        base = load_profile(args.base or answers.get("base", "ugv_medium_inspection"))
+        data = build_profile_dict(base, answers)
+    else:
+        data = run_wizard(input, print, args.base)
+    prof = write_profile(data, args.out)
+    print(f"wrote {args.out}: {prof.evidence_text()}")
+    return 0
+
+
+def cmd_fleet(args) -> int:
+    from .fleet import fleet_json_schema, load_fleet
+
+    if args.action == "schema":
+        text = json.dumps(fleet_json_schema(), indent=2) + "\n"
+        if args.out:
+            Path(args.out).write_text(text, encoding="utf-8")
+            print(f"wrote {args.out}")
+        else:
+            print(text, end="")
+        return 0
+    fleet = load_fleet(args.file)
+    profs = fleet.profiles()
+    robots = fleet.expand()
+    print(f"{fleet.name}: {len(robots)} robots at {fleet.site}, valid")
+    for rid, r in robots:
+        print(f"  {rid:<24} {r.profile} [{profs[r.profile].evidence_level}] mode {r.mode}")
+    return 0
+
+
 def cmd_serve(args) -> int:
     import uvicorn
 
@@ -323,6 +385,7 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser("plan", help="schedule a fleet and compare against a fixed shift")
     _common(s)
     s.add_argument("--robots", nargs="*", help="profile ids or paths (default: --profile)")
+    s.add_argument("--fleet", help="fleet YAML file; it sets the site, robots and planner options")
     s.add_argument("--step-min", type=float, default=30.0)
     s.add_argument("--rest-h", type=float, default=0.5)
     s.add_argument("--max-concurrent", type=int)
@@ -384,6 +447,24 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser("list", help="list profiles, sites or scenarios")
     s.add_argument("what", choices=["profiles", "sites", "scenarios"])
     s.set_defaults(fn=cmd_list)
+
+    s = sub.add_parser("profile", help="create or check a robot profile")
+    ps = s.add_subparsers(dest="action", required=True)
+    n = ps.add_parser("new", help="guided creation of a profile from a template (always L0)")
+    n.add_argument("--base", help="template profile id or path")
+    n.add_argument("--answers", help="YAML file of answers instead of questions")
+    n.add_argument("--out", required=True, help="where to write the profile YAML")
+    c = ps.add_parser("check", help="validate a profile file")
+    c.add_argument("file")
+    s.set_defaults(fn=cmd_profile)
+
+    s = sub.add_parser("fleet", help="validate a fleet file or print its JSON schema")
+    fs = s.add_subparsers(dest="action", required=True)
+    v = fs.add_parser("check", help="validate a fleet YAML file")
+    v.add_argument("file")
+    sc = fs.add_parser("schema", help="print the JSON schema of the fleet file")
+    sc.add_argument("--out")
+    s.set_defaults(fn=cmd_fleet)
 
     s = sub.add_parser("serve", help="run the REST API and dashboard")
     s.add_argument("--host", default="127.0.0.1")
