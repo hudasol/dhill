@@ -1,0 +1,66 @@
+site_name: Dhill
+site_description: Heat and dust operating envelope intelligence for autonomous ground systems in hot arid environments
+site_author: Huda Mueen
+site_url: https://hudasol.github.io/dhill/
+repo_url: https://github.com/hudasol/dhill
+repo_name: hudasol/dhill
+copyright: Copyright 2026 Huda Mueen. Apache License 2.0.
+docs_dir: docs
+exclude_docs: |
+  environment-v0.8.txt
+theme:
+  name: material
+  language: en
+  palette:
+    scheme: default
+    primary: custom
+    accent: custom
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+extra_css:
+  - stylesheets/dhill.css
+markdown_extensions:
+  - tables
+  - admonition
+  - toc:
+      permalink: true
+nav:
+  - Home: index.md
+  - Using Dhill:
+      - Architecture: architecture.md
+      - REST API: api.md
+      - Edge integration: edge-integration.md
+      - Parameters: parameters.md
+      - Data sources: data-sources.md
+      - Logging session quickstart: logging-session-quickstart.md
+      - Field test kit: field-test-kit.md
+  - Evidence:
+      - Model card: model-card.md
+      - Results: results.md
+      - Preregistration v0.8: preregistration-v0.8.md
+      - Results of the v0.8 predictions: prereg-results-v08.md
+      - Results of the v0.7 predictions: prereg-results-v07.md
+      - Validation protocol: validation-protocol.md
+      - Sensitivity: sensitivity.md
+      - Jackal sensitivity: jackal-sensitivity.md
+      - Operating calendar: operating-calendar.md
+      - Route simulation: route-simulation.md
+      - Policy comparison: policy-comparison.md
+  - Honest limits:
+      - Known issues: known-issues.md
+      - Requirements traceability: requirements-traceability.md
+      - Roadmap to v1: roadmap-to-v1.md
+      - Literature log: literature-log.md
+      - Robot sources: robot-sources.md
+      - Threat model: threat-model.md
+  - Project:
+      - Pilot kit: pilot-kit.md
+      - Concept of operations: conops.md
+      - UAE alignment: uae-alignment.md
+      - Decisions:
+          - Lumped thermal network: adr/0001-lumped-thermal-network.md
+          - Licensing: adr/0002-licensing.md
+          - Uncertainty by provenance: adr/0003-uncertainty-by-provenance.md

@@ -1,0 +1,114 @@
+{
+ "seed": 2000,
+ "robots_per_class": 68,
+ "classes": {
+  "small_ugv": {
+   "offsets_k": [
+    0.8898665896960551,
+    -4.866419451108186,
+    5.306284568245758,
+    -24.95097804460073,
+    2.0697972752942064
+   ],
+   "components": {
+    "battery": {
+     "offset_k": 0.8898665896960551,
+     "cases": 8024,
+     "coverage_before": 0.9106430707876371
+    },
+    "compute_die": {
+     "offset_k": -4.866419451108186,
+     "cases": 8024,
+     "coverage_before": 0.9914007976071785
+    },
+    "lidar": {
+     "offset_k": 5.306284568245758,
+     "cases": 8024,
+     "coverage_before": 0.8306331006979063
+    },
+    "motor": {
+     "offset_k": -24.95097804460073,
+     "cases": 8024,
+     "coverage_before": 1.0
+    },
+    "interior": {
+     "offset_k": 2.0697972752942064,
+     "cases": 8024,
+     "coverage_before": 0.8670239282153539
+    }
+   }
+  },
+  "delivery": {
+   "offsets_k": [
+    -0.6935986424938392,
+    -10.792953562826028,
+    1.7743957427098849,
+    -13.99975260762119,
+    -3.021528680678614
+   ],
+   "components": {
+    "battery": {
+     "offset_k": -0.6935986424938392,
+     "cases": 13804,
+     "coverage_before": 0.9733410605621559
+    },
+    "compute_die": {
+     "offset_k": -10.792953562826028,
+     "cases": 13804,
+     "coverage_before": 1.0
+    },
+    "lidar": {
+     "offset_k": 1.7743957427098849,
+     "cases": 13804,
+     "coverage_before": 0.9092292089249493
+    },
+    "motor": {
+     "offset_k": -13.99975260762119,
+     "cases": 13804,
+     "coverage_before": 1.0
+    },
+    "interior": {
+     "offset_k": -3.021528680678614,
+     "cases": 13804,
+     "coverage_before": 0.9980440452042886
+    }
+   }
+  },
+  "pv_cleaner": {
+   "offsets_k": [
+    0.3192378708851038,
+    -15.689977323707865,
+    -1.627152700709587,
+    -6.116865964995668,
+    -2.920921249355274
+   ],
+   "components": {
+    "battery": {
+     "offset_k": 0.3192378708851038,
+     "cases": 6052,
+     "coverage_before": 0.9428288169200264
+    },
+    "compute_die": {
+     "offset_k": -15.689977323707865,
+     "cases": 6052,
+     "coverage_before": 1.0
+    },
+    "lidar": {
+     "offset_k": -1.627152700709587,
+     "cases": 6052,
+     "coverage_before": 0.9786847323198943
+    },
+    "motor": {
+     "offset_k": -6.116865964995668,
+     "cases": 6052,
+     "coverage_before": 0.9983476536682089
+    },
+    "interior": {
+     "offset_k": -2.920921249355274,
+     "cases": 6052,
+     "coverage_before": 0.9938863185723728
+    }
+   }
+  }
+ }
+}
